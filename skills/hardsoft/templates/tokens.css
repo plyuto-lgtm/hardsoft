@@ -1,0 +1,94 @@
+/* hardsoft: color tokens as plain CSS variables.
+   https://plyuto.design/article/soft-and-hard-surfaces
+
+   The values are samples: put in the system's own colors.
+   If the project's variables have a prefix (like --ds-), add it to every name. */
+
+:root {
+	/* Masters: the only real colors in the system */
+	--gray-darkest: #131416;
+	--gray-medium: #7a7e85;
+	--gray-brightest: #ffffff;
+	--brand-primary: #40c6ff;
+	--brand-secondary: #007aff;
+	--system-negative: #ff3b30;
+	--system-positive: #34c759;
+	--system-attention: #ff9500;
+
+	/* Steps: each master at 80, 40, 20, 10 and 5 percent. Not new colors: they follow their master.
+	   Delete the ones the system does not use */
+	--gray-darkest-80: color-mix(in srgb, var(--gray-darkest) 80%, transparent);
+	--gray-darkest-40: color-mix(in srgb, var(--gray-darkest) 40%, transparent);
+	--gray-darkest-20: color-mix(in srgb, var(--gray-darkest) 20%, transparent);
+	--gray-darkest-10: color-mix(in srgb, var(--gray-darkest) 10%, transparent);
+	--gray-darkest-5: color-mix(in srgb, var(--gray-darkest) 5%, transparent);
+	--gray-medium-80: color-mix(in srgb, var(--gray-medium) 80%, transparent);
+	--gray-medium-40: color-mix(in srgb, var(--gray-medium) 40%, transparent);
+	--gray-medium-20: color-mix(in srgb, var(--gray-medium) 20%, transparent);
+	--gray-medium-10: color-mix(in srgb, var(--gray-medium) 10%, transparent);
+	--gray-medium-5: color-mix(in srgb, var(--gray-medium) 5%, transparent);
+	--gray-brightest-80: color-mix(in srgb, var(--gray-brightest) 80%, transparent);
+	--gray-brightest-40: color-mix(in srgb, var(--gray-brightest) 40%, transparent);
+	--gray-brightest-20: color-mix(in srgb, var(--gray-brightest) 20%, transparent);
+	--gray-brightest-10: color-mix(in srgb, var(--gray-brightest) 10%, transparent);
+	--gray-brightest-5: color-mix(in srgb, var(--gray-brightest) 5%, transparent);
+
+	--brand-primary-80: color-mix(in srgb, var(--brand-primary) 80%, transparent);
+	--brand-primary-40: color-mix(in srgb, var(--brand-primary) 40%, transparent);
+	--brand-primary-20: color-mix(in srgb, var(--brand-primary) 20%, transparent);
+	--brand-primary-10: color-mix(in srgb, var(--brand-primary) 10%, transparent);
+	--brand-primary-5: color-mix(in srgb, var(--brand-primary) 5%, transparent);
+	--brand-secondary-80: color-mix(in srgb, var(--brand-secondary) 80%, transparent);
+	--brand-secondary-40: color-mix(in srgb, var(--brand-secondary) 40%, transparent);
+	--brand-secondary-20: color-mix(in srgb, var(--brand-secondary) 20%, transparent);
+	--brand-secondary-10: color-mix(in srgb, var(--brand-secondary) 10%, transparent);
+	--brand-secondary-5: color-mix(in srgb, var(--brand-secondary) 5%, transparent);
+
+	--system-negative-80: color-mix(in srgb, var(--system-negative) 80%, transparent);
+	--system-negative-40: color-mix(in srgb, var(--system-negative) 40%, transparent);
+	--system-negative-20: color-mix(in srgb, var(--system-negative) 20%, transparent);
+	--system-negative-10: color-mix(in srgb, var(--system-negative) 10%, transparent);
+	--system-negative-5: color-mix(in srgb, var(--system-negative) 5%, transparent);
+	--system-positive-80: color-mix(in srgb, var(--system-positive) 80%, transparent);
+	--system-positive-40: color-mix(in srgb, var(--system-positive) 40%, transparent);
+	--system-positive-20: color-mix(in srgb, var(--system-positive) 20%, transparent);
+	--system-positive-10: color-mix(in srgb, var(--system-positive) 10%, transparent);
+	--system-positive-5: color-mix(in srgb, var(--system-positive) 5%, transparent);
+	--system-attention-80: color-mix(in srgb, var(--system-attention) 80%, transparent);
+	--system-attention-40: color-mix(in srgb, var(--system-attention) 40%, transparent);
+	--system-attention-20: color-mix(in srgb, var(--system-attention) 20%, transparent);
+	--system-attention-10: color-mix(in srgb, var(--system-attention) 10%, transparent);
+	--system-attention-5: color-mix(in srgb, var(--system-attention) 5%, transparent);
+
+	/* Hovers of the colors: the darkest gray at 10% in a plus-darker blend, worked out as a number.
+	   Each offset is 0.10 × (255 − ink channel). For the ink #131416 that is 23.6, 23.5 and 23.3.
+	   Use the light theme's ink, and work the offsets out again if it changes.
+	   A gray has no hover token: its hover is its next step (5 → 10, 10 → 20) */
+	--brand-primary-hover: rgb(from var(--brand-primary) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+	--brand-secondary-hover: rgb(from var(--brand-secondary) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+	--system-negative-hover: rgb(from var(--system-negative) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+	--system-positive-hover: rgb(from var(--system-positive) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+	--system-attention-hover: rgb(from var(--system-attention) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+}
+
+/* Dark mode: swap the grays. The ink turns from black to white, the ground from white to dark.
+   The steps and the names stay the same.
+   If the project switches themes with a class or an attribute, use that selector in place of the media query,
+   for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--gray-darkest: #ffffff;
+		--gray-brightest: #131416;
+	}
+}
+
+/* Browsers without relative colors: a plain layer of the light theme's ink at 10% */
+@supports not (color: rgb(from red r g b)) {
+	:root {
+		--brand-primary-hover: color-mix(in srgb, var(--brand-primary) 90%, #131416);
+		--brand-secondary-hover: color-mix(in srgb, var(--brand-secondary) 90%, #131416);
+		--system-negative-hover: color-mix(in srgb, var(--system-negative) 90%, #131416);
+		--system-positive-hover: color-mix(in srgb, var(--system-positive) 90%, #131416);
+		--system-attention-hover: color-mix(in srgb, var(--system-attention) 90%, #131416);
+	}
+}

@@ -1,0 +1,19 @@
+{
+  "name": "plyuto",
+  "owner": {
+    "name": "Alexander Plyuto",
+    "url": "https://plyuto.design"
+  },
+  "metadata": {
+    "description": "Skills by Alexander Plyuto."
+  },
+  "plugins": [
+    {
+      "name": "hardsoft",
+      "source": "./",
+      "description": "Apply the hard and soft surfaces approach to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones.",
+      "homepage": "https://plyuto.design/article/soft-and-hard-surfaces",
+      "category": "design"
+    }
+  ]
+}
