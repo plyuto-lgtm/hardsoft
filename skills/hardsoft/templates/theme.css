@@ -16,21 +16,24 @@
 	--color-gray-brightest: <the system's brightest gray>;
 	--color-brand-primary: <the system's main brand color>;
 
-	/* 2. Transparent tokens: a master at each step of the scale. One line per step */
+	/* 2. Transparent tokens: a master at each step it uses. One line per step */
 	--color-gray-darkest-<step>: --alpha(var(--color-gray-darkest) / <step>%);
 	--color-brand-primary-<step>: --alpha(var(--color-brand-primary) / <step>%);
 
-	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 14).
-	   A transparent token has no hover token: its hover is its next step */
+	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 14). It follows the ink, so it is darker in light mode
+	   and lighter in dark mode. A transparent token has no hover token: its hover is its next step, or one more ink layer */
 	--color-brand-primary-hover: color-mix(in srgb, var(--color-brand-primary) 90%, var(--color-gray-darkest));
 }
 
-/* 4. Dark mode: the darkest and the brightest gray trade values (rule 15). Nothing else changes.
+/* 4. Dark mode: only the ink and the ground change (rule 15). Use the light pair swapped, or the project's own dark pair.
+   Something that must look the same in both themes (text on a color, a tooltip, the dim layer under a modal) goes through
+   a semantic token that points at the other gray here.
    If the project switches themes with a class or an attribute, use that selector in place of the media query,
-   for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there */
+   for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there.
+   Only a preview that shows both themes side by side sets the tokens again on each theme's box */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color-gray-darkest: <the brightest gray of the light theme>;
-		--color-gray-brightest: <the darkest gray of the light theme>;
+		--color-gray-darkest: <the dark theme's ink>;
+		--color-gray-brightest: <the dark theme's ground>;
 	}
 }

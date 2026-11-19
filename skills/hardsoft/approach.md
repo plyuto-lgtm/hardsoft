@@ -79,32 +79,35 @@ For any new element, ask one question: is it in the flow, or above it?
 
 ### The scale
 
-4. **One alpha scale** for all masters.
+4. **One alpha scale** for all masters. Each master uses only the steps it needs.
 5. **The steps come from the system.** Use the alphas it already has. Where it has solid grays, convert each one to the closest alpha of the ink over the background it sits on.
 6. **The user chooses between fewer steps and the same look.** With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Show both, with the number of steps in each.
 7. **A new system starts from 80, 40, 20, 10 and 5.** Use this only when there is nothing to take the steps from.
 
 ### Surfaces
 
-8. **In the flow is soft.** A soft surface is a transparent token over whatever is under it. It never gets a solid color of its own.
+8. **In the flow is soft.** A soft surface is a transparent token over whatever is under it. It never gets a solid color of its own. Most soft surfaces are the ink at a step, so they are a bit darker than what is under them. An element that must be lighter than what is under it, like a light button on a gray card, is the brightest gray at a step.
 9. **Above the flow is hard.** A hard surface hides what is under it. It is a solid color, or a background blur with a transparent token over it. Either way it resets the count: everything inside it starts from zero.
 10. **Hard surfaces can have a few solid grays of their own**, up to about four tints. But solid grays are not bricks for a thousand elements: the elements in the flow are built from transparent tokens.
 11. **A hard surface needs an edge** when it has the same color as what is under it: a stroke or a shadow.
-12. **A transparent stroke on a transparent fill is a shadow, not a border.** Draw it as a shadow with spread and no blur. Make it an inner shadow when the surface is darker than the background under it, and an outer shadow when it is brighter.
-13. **Nesting adds no colors.** A nested level uses the same tokens as the level above it. Point out places where soft surfaces are nested deeper than 3 or 4 levels.
+12. **A transparent stroke on a transparent fill is a shadow, not a border.** Draw it as a shadow with spread and no blur. Make it an inner shadow when the surface is darker than the background under it, and an outer shadow when it is brighter. Decide it in the light theme and keep it in dark, so an element's size never changes between themes.
+13. **Nesting adds no colors.** A nested level uses the same tokens as the level above it. Semantic tokens that named each level, like `surface-1` and `surface-2`, end up with the same value: say so, and let the user merge them. Point out places where soft surfaces are nested deeper than 3 or 4 levels.
 
 ### States and themes
 
-14. **Hover is one more layer of ink at 10%.** A transparent token moves to its next step. A solid color gets the ink at 10% laid over it. No hover is a new color.
-15. **Dark mode swaps the grays.** The darkest and the brightest gray trade places, so the ink turns from black to white. The scale, the names and the other masters stay the same. Change a brand or system color only if it is hard to read on the dark ground.
+14. **Hover is one more layer of ink.** A transparent token moves to its next step, or gets one more layer of ink: either works, pick what fits the system. A solid color gets a layer of ink laid over it. The layer is 10%, unless the system already uses another step for its hovers. A hover moves toward the ink, so it is darker in light mode and lighter in dark mode. No hover is a new color.
+15. **Dark mode changes only the grays.** The ink turns from dark to light, and the ground from light to dark. The dark values can be the light pair swapped, or the project's own dark pair. The scale, the names and the other masters stay the same. Change a brand or system color only if it is hard to read on the dark ground.
+    - Something that must look the same in both themes, like white text on a brand button, a dark tooltip, the dim layer under a modal or a shadow, is a gray at a step through a semantic token: 100% for text and solid fills, lower for an overlay or a shadow. In dark mode the semantic token points at the other gray, so the look stays. A dark tooltip may then match the dark ground: give it an edge (rule 11), or make it the medium gray (rule 3).
+    - A step that reads too weak or too strong on the dark ground, like a brand tint or secondary text, may take another step in dark mode, through its semantic token. The scale stays the same.
+    - Check the hovers in dark mode too: a solid color's hover gets lighter there, so text on it loses contrast (rule 19).
 
 ### Tokens
 
 16. **No new colors.** A color that is not a master is a master at a step.
 17. **A transparent token is named by its master and its step**, like `gray-darkest-20`. If the project already has a way to name them, keep it.
-18. **Semantics are left as they are.** If the project has semantic tokens, keep them and point each one at a master or a transparent token. If it has none, add none.
+18. **Semantics are left as they are.** If the project has semantic tokens, keep them and point each one at a master or a transparent token. If it has none, add only the few that rule 15 needs.
 
 ### Care
 
 19. **Text must stay readable.** Check the contrast of text at the deepest level of nesting, and say where it is too low.
-20. **Leave non-interface colors alone**: photos, illustrations, charts and code highlighting. List them as left out.
+20. **Leave non-interface colors alone**: photos, illustrations, charts, code highlighting, decorative drawings inside the interface, and the colors of tools around the product, like Storybook's own frame. List them as left out.
