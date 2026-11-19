@@ -1,82 +1,33 @@
-/* hardsoft: color tokens as plain CSS variables.
+/* hardsoft: the shape of the color tokens as plain CSS variables.
    https://plyuto.design/article/soft-and-hard-surfaces
 
-   Every value, name and step here is a sample: use the system's own (rules 1, 5 and 17 in approach.md).
-   If the project's variables have a prefix (like --ds-), add it to every name. */
+   This is a pattern, not a palette. It has no colors of its own.
+   - <...> is a value to take from the system: its own colors (rule 1) and its own steps (rule 5).
+   - The names are the default ones. If the project already names its tokens, keep its names (rule 17).
+   - The usual masters are gray-darkest, gray-medium, gray-brightest, brand-primary, brand-secondary,
+     system-negative, system-positive and system-attention. Repeat the pattern for each one the system has. */
 
 :root {
-	/* Masters: the only real colors in the system */
-	--gray-darkest: #111111;
-	--gray-medium: #808080;
-	--gray-brightest: #ffffff;
-	--brand-primary: #2563eb;
-	--brand-secondary: #7c3aed;
-	--system-negative: #dc2626;
-	--system-positive: #16a34a;
-	--system-attention: #d97706;
+	/* 1. Masters: the system's own solid colors */
+	--gray-darkest: <the system's darkest gray>;
+	--gray-brightest: <the system's brightest gray>;
+	--brand-primary: <the system's main brand color>;
 
-	/* Transparent tokens: each master at the steps of one alpha scale. Not new colors: they follow their master.
-	   Delete the ones the system does not use.
-	   The darkest gray is the ink. The medium gray is for softer toning, like the overlay under a modal */
-	--gray-darkest-80: color-mix(in srgb, var(--gray-darkest) 80%, transparent);
-	--gray-darkest-40: color-mix(in srgb, var(--gray-darkest) 40%, transparent);
-	--gray-darkest-20: color-mix(in srgb, var(--gray-darkest) 20%, transparent);
-	--gray-darkest-10: color-mix(in srgb, var(--gray-darkest) 10%, transparent);
-	--gray-darkest-5: color-mix(in srgb, var(--gray-darkest) 5%, transparent);
-	--gray-medium-80: color-mix(in srgb, var(--gray-medium) 80%, transparent);
-	--gray-medium-40: color-mix(in srgb, var(--gray-medium) 40%, transparent);
-	--gray-medium-20: color-mix(in srgb, var(--gray-medium) 20%, transparent);
-	--gray-medium-10: color-mix(in srgb, var(--gray-medium) 10%, transparent);
-	--gray-medium-5: color-mix(in srgb, var(--gray-medium) 5%, transparent);
-	--gray-brightest-80: color-mix(in srgb, var(--gray-brightest) 80%, transparent);
-	--gray-brightest-40: color-mix(in srgb, var(--gray-brightest) 40%, transparent);
-	--gray-brightest-20: color-mix(in srgb, var(--gray-brightest) 20%, transparent);
-	--gray-brightest-10: color-mix(in srgb, var(--gray-brightest) 10%, transparent);
-	--gray-brightest-5: color-mix(in srgb, var(--gray-brightest) 5%, transparent);
+	/* 2. Transparent tokens: a master at each step of the scale. One line per step */
+	--gray-darkest-<step>: color-mix(in srgb, var(--gray-darkest) <step>%, transparent);
+	--brand-primary-<step>: color-mix(in srgb, var(--brand-primary) <step>%, transparent);
 
-	--brand-primary-80: color-mix(in srgb, var(--brand-primary) 80%, transparent);
-	--brand-primary-40: color-mix(in srgb, var(--brand-primary) 40%, transparent);
-	--brand-primary-20: color-mix(in srgb, var(--brand-primary) 20%, transparent);
-	--brand-primary-10: color-mix(in srgb, var(--brand-primary) 10%, transparent);
-	--brand-primary-5: color-mix(in srgb, var(--brand-primary) 5%, transparent);
-	--brand-secondary-80: color-mix(in srgb, var(--brand-secondary) 80%, transparent);
-	--brand-secondary-40: color-mix(in srgb, var(--brand-secondary) 40%, transparent);
-	--brand-secondary-20: color-mix(in srgb, var(--brand-secondary) 20%, transparent);
-	--brand-secondary-10: color-mix(in srgb, var(--brand-secondary) 10%, transparent);
-	--brand-secondary-5: color-mix(in srgb, var(--brand-secondary) 5%, transparent);
-
-	--system-negative-80: color-mix(in srgb, var(--system-negative) 80%, transparent);
-	--system-negative-40: color-mix(in srgb, var(--system-negative) 40%, transparent);
-	--system-negative-20: color-mix(in srgb, var(--system-negative) 20%, transparent);
-	--system-negative-10: color-mix(in srgb, var(--system-negative) 10%, transparent);
-	--system-negative-5: color-mix(in srgb, var(--system-negative) 5%, transparent);
-	--system-positive-80: color-mix(in srgb, var(--system-positive) 80%, transparent);
-	--system-positive-40: color-mix(in srgb, var(--system-positive) 40%, transparent);
-	--system-positive-20: color-mix(in srgb, var(--system-positive) 20%, transparent);
-	--system-positive-10: color-mix(in srgb, var(--system-positive) 10%, transparent);
-	--system-positive-5: color-mix(in srgb, var(--system-positive) 5%, transparent);
-	--system-attention-80: color-mix(in srgb, var(--system-attention) 80%, transparent);
-	--system-attention-40: color-mix(in srgb, var(--system-attention) 40%, transparent);
-	--system-attention-20: color-mix(in srgb, var(--system-attention) 20%, transparent);
-	--system-attention-10: color-mix(in srgb, var(--system-attention) 10%, transparent);
-	--system-attention-5: color-mix(in srgb, var(--system-attention) 5%, transparent);
-
-	/* Hovers of the solid colors: the ink at 10% laid over the color (rule 14).
+	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 14).
 	   A transparent token has no hover token: its hover is its next step */
 	--brand-primary-hover: color-mix(in srgb, var(--brand-primary) 90%, var(--gray-darkest));
-	--brand-secondary-hover: color-mix(in srgb, var(--brand-secondary) 90%, var(--gray-darkest));
-	--system-negative-hover: color-mix(in srgb, var(--system-negative) 90%, var(--gray-darkest));
-	--system-positive-hover: color-mix(in srgb, var(--system-positive) 90%, var(--gray-darkest));
-	--system-attention-hover: color-mix(in srgb, var(--system-attention) 90%, var(--gray-darkest));
 }
 
-/* Dark mode: swap the grays (rule 15). The ink turns from black to white, the ground from white to dark.
-   The steps and the names stay the same.
+/* 4. Dark mode: the darkest and the brightest gray trade values (rule 15). Nothing else changes.
    If the project switches themes with a class or an attribute, use that selector in place of the media query,
    for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--gray-darkest: #ffffff;
-		--gray-brightest: #111111;
+		--gray-darkest: <the brightest gray of the light theme>;
+		--gray-brightest: <the darkest gray of the light theme>;
 	}
 }

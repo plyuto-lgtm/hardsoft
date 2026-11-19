@@ -1,83 +1,36 @@
-/* hardsoft: color tokens for Tailwind 4.
+/* hardsoft: the shape of the color tokens in Tailwind 4.
    https://plyuto.design/article/soft-and-hard-surfaces
 
-   Paste this into the CSS file that has @import "tailwindcss".
-   Every value, name and step here is a sample: use the system's own (rules 1, 5 and 17 in approach.md).
-   Every token becomes a utility: bg-gray-darkest-5, text-gray-darkest-80, hover:bg-brand-primary-hover.
-   Tailwind leaves out the tokens nobody uses. */
+   This is a pattern, not a palette. It has no colors of its own.
+   - <...> is a value to take from the system: its own colors (rule 1) and its own steps (rule 5).
+   - The names are the default ones. If the project already names its tokens, keep its names (rule 17).
+   - The usual masters are gray-darkest, gray-medium, gray-brightest, brand-primary, brand-secondary,
+     system-negative, system-positive and system-attention. Repeat the pattern for each one the system has.
+
+   It goes into the CSS file that has @import "tailwindcss". Every token becomes a utility:
+   bg-gray-darkest-5, text-gray-darkest-80, hover:bg-brand-primary-hover. */
 
 @theme {
-	/* Masters: the only real colors in the system */
-	--color-gray-darkest: #111111;
-	--color-gray-medium: #808080;
-	--color-gray-brightest: #ffffff;
-	--color-brand-primary: #2563eb;
-	--color-brand-secondary: #7c3aed;
-	--color-system-negative: #dc2626;
-	--color-system-positive: #16a34a;
-	--color-system-attention: #d97706;
+	/* 1. Masters: the system's own solid colors */
+	--color-gray-darkest: <the system's darkest gray>;
+	--color-gray-brightest: <the system's brightest gray>;
+	--color-brand-primary: <the system's main brand color>;
 
-	/* Transparent tokens: each master at the steps of one alpha scale. Not new colors: they follow their master.
-	   The darkest gray is the ink. The medium gray is for softer toning, like the overlay under a modal */
-	--color-gray-darkest-80: --alpha(var(--color-gray-darkest) / 80%);
-	--color-gray-darkest-40: --alpha(var(--color-gray-darkest) / 40%);
-	--color-gray-darkest-20: --alpha(var(--color-gray-darkest) / 20%);
-	--color-gray-darkest-10: --alpha(var(--color-gray-darkest) / 10%);
-	--color-gray-darkest-5: --alpha(var(--color-gray-darkest) / 5%);
-	--color-gray-medium-80: --alpha(var(--color-gray-medium) / 80%);
-	--color-gray-medium-40: --alpha(var(--color-gray-medium) / 40%);
-	--color-gray-medium-20: --alpha(var(--color-gray-medium) / 20%);
-	--color-gray-medium-10: --alpha(var(--color-gray-medium) / 10%);
-	--color-gray-medium-5: --alpha(var(--color-gray-medium) / 5%);
-	--color-gray-brightest-80: --alpha(var(--color-gray-brightest) / 80%);
-	--color-gray-brightest-40: --alpha(var(--color-gray-brightest) / 40%);
-	--color-gray-brightest-20: --alpha(var(--color-gray-brightest) / 20%);
-	--color-gray-brightest-10: --alpha(var(--color-gray-brightest) / 10%);
-	--color-gray-brightest-5: --alpha(var(--color-gray-brightest) / 5%);
+	/* 2. Transparent tokens: a master at each step of the scale. One line per step */
+	--color-gray-darkest-<step>: --alpha(var(--color-gray-darkest) / <step>%);
+	--color-brand-primary-<step>: --alpha(var(--color-brand-primary) / <step>%);
 
-	--color-brand-primary-80: --alpha(var(--color-brand-primary) / 80%);
-	--color-brand-primary-40: --alpha(var(--color-brand-primary) / 40%);
-	--color-brand-primary-20: --alpha(var(--color-brand-primary) / 20%);
-	--color-brand-primary-10: --alpha(var(--color-brand-primary) / 10%);
-	--color-brand-primary-5: --alpha(var(--color-brand-primary) / 5%);
-	--color-brand-secondary-80: --alpha(var(--color-brand-secondary) / 80%);
-	--color-brand-secondary-40: --alpha(var(--color-brand-secondary) / 40%);
-	--color-brand-secondary-20: --alpha(var(--color-brand-secondary) / 20%);
-	--color-brand-secondary-10: --alpha(var(--color-brand-secondary) / 10%);
-	--color-brand-secondary-5: --alpha(var(--color-brand-secondary) / 5%);
-
-	--color-system-negative-80: --alpha(var(--color-system-negative) / 80%);
-	--color-system-negative-40: --alpha(var(--color-system-negative) / 40%);
-	--color-system-negative-20: --alpha(var(--color-system-negative) / 20%);
-	--color-system-negative-10: --alpha(var(--color-system-negative) / 10%);
-	--color-system-negative-5: --alpha(var(--color-system-negative) / 5%);
-	--color-system-positive-80: --alpha(var(--color-system-positive) / 80%);
-	--color-system-positive-40: --alpha(var(--color-system-positive) / 40%);
-	--color-system-positive-20: --alpha(var(--color-system-positive) / 20%);
-	--color-system-positive-10: --alpha(var(--color-system-positive) / 10%);
-	--color-system-positive-5: --alpha(var(--color-system-positive) / 5%);
-	--color-system-attention-80: --alpha(var(--color-system-attention) / 80%);
-	--color-system-attention-40: --alpha(var(--color-system-attention) / 40%);
-	--color-system-attention-20: --alpha(var(--color-system-attention) / 20%);
-	--color-system-attention-10: --alpha(var(--color-system-attention) / 10%);
-	--color-system-attention-5: --alpha(var(--color-system-attention) / 5%);
-
-	/* Hovers of the solid colors: the ink at 10% laid over the color (rule 14).
+	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 14).
 	   A transparent token has no hover token: its hover is its next step */
 	--color-brand-primary-hover: color-mix(in srgb, var(--color-brand-primary) 90%, var(--color-gray-darkest));
-	--color-brand-secondary-hover: color-mix(in srgb, var(--color-brand-secondary) 90%, var(--color-gray-darkest));
-	--color-system-negative-hover: color-mix(in srgb, var(--color-system-negative) 90%, var(--color-gray-darkest));
-	--color-system-positive-hover: color-mix(in srgb, var(--color-system-positive) 90%, var(--color-gray-darkest));
-	--color-system-attention-hover: color-mix(in srgb, var(--color-system-attention) 90%, var(--color-gray-darkest));
 }
 
-/* Dark mode: swap the grays (rule 15). The ink turns from black to white, the ground from white to dark.
-   The steps and the names stay the same.
+/* 4. Dark mode: the darkest and the brightest gray trade values (rule 15). Nothing else changes.
    If the project switches themes with a class or an attribute, use that selector in place of the media query,
    for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color-gray-darkest: #ffffff;
-		--color-gray-brightest: #111111;
+		--color-gray-darkest: <the brightest gray of the light theme>;
+		--color-gray-brightest: <the darkest gray of the light theme>;
 	}
 }

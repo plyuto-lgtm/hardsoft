@@ -65,8 +65,8 @@ In a chat, add your tokens, a screenshot or a link, and ask the same. Nothing ch
 
 - [skills/hardsoft/SKILL.md](skills/hardsoft/SKILL.md): the instructions.
 - [skills/hardsoft/approach.md](skills/hardsoft/approach.md): the concept and its 20 rules.
-- [skills/hardsoft/templates/theme.css](skills/hardsoft/templates/theme.css): the tokens for Tailwind 4.
-- [skills/hardsoft/templates/tokens.css](skills/hardsoft/templates/tokens.css): the tokens as plain CSS variables.
+- [skills/hardsoft/templates/theme.css](skills/hardsoft/templates/theme.css): the shape of the tokens for Tailwind 4. A pattern with no colors: yours go in.
+- [skills/hardsoft/templates/tokens.css](skills/hardsoft/templates/tokens.css): the same pattern as plain CSS variables.
 
 ## Licence
 

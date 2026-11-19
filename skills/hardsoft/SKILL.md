@@ -35,6 +35,7 @@ It works in a codebase (Claude Code, Cursor, Codex and other agents) and in a ch
 
 5. **Apply it after a yes.**
    - Write the tokens in the project's own format: a Tailwind 4 `@theme` block if it uses Tailwind ([templates/theme.css](templates/theme.css)), otherwise the format it already has ([templates/tokens.css](templates/tokens.css) for plain CSS variables). In a chat, write a `@theme` block.
+   - The templates are patterns with no colors. Every color, step and name you write comes from the system.
    - Point the semantic tokens at the new tokens, if the project has them (rule 18). Otherwise move the components onto the new tokens, one group at a time.
    - Check the result: the project builds, and the preview and a few real screens look right in light and in dark.
    - Say what changed and what is left.
