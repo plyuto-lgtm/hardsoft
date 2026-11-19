@@ -11,7 +11,7 @@
     {
       "name": "hardsoft",
       "source": "./",
-      "description": "Apply the hard and soft surfaces approach to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones.",
+      "description": "Apply the hard and soft surfaces concept to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones.",
       "homepage": "https://plyuto.design/article/soft-and-hard-surfaces",
       "category": "design"
     }

@@ -1,18 +1,20 @@
 # hardsoft
 
-A skill that applies the hard and soft surfaces approach to your design system.
+A skill that applies the hard and soft surfaces concept to your design system.
 
-Most design systems collect dozens of grays and shades. This approach needs only a few master colors and one alpha scale (80, 40, 20, 10, 5), with one rule: hard surfaces are solid, soft surfaces are transparent. The article explains it in full: [Hard and soft surfaces: a concept of a highly flexible design system](https://plyuto.design/article/soft-and-hard-surfaces).
+Most design systems collect dozens of grays and shades. This concept needs only a few master colors and one transparency scale, with one rule: hard surfaces are solid, soft surfaces are transparent. The article explains it: [Hard and soft surfaces: a concept of a highly flexible design system](https://plyuto.design/article/soft-and-hard-surfaces).
 
 The skill is for designers and developers. It works inside a project with a coding agent, and in a chat with your tokens or screenshots.
 
 ## What it does
 
 1. Finds your current system: tokens, theme, components.
-2. Puts every color on a master and a step, and lists what does not fit.
+2. Puts every color on a master and a step of transparency, and lists what does not fit.
 3. Asks you 3 or 4 questions, once.
 4. Shows a plan and a preview, and waits.
 5. Applies it after you say yes, in your project's own token format.
+
+It keeps your colors, your token names and your semantic tokens, if you have them. It changes only what the colors are made from.
 
 ## Install
 
@@ -62,7 +64,7 @@ In a chat, add your tokens, a screenshot or a link, and ask the same. Nothing ch
 ## What is inside
 
 - [skills/hardsoft/SKILL.md](skills/hardsoft/SKILL.md): the instructions.
-- [skills/hardsoft/approach.md](skills/hardsoft/approach.md): the approach in full.
+- [skills/hardsoft/approach.md](skills/hardsoft/approach.md): the concept and its 20 rules.
 - [skills/hardsoft/templates/theme.css](skills/hardsoft/templates/theme.css): the tokens for Tailwind 4.
 - [skills/hardsoft/templates/tokens.css](skills/hardsoft/templates/tokens.css): the tokens as plain CSS variables.
 

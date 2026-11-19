@@ -1,10 +1,10 @@
-# Hard and soft surfaces: the approach
+# Hard and soft surfaces: the concept and its rules
 
-This is the approach from the article [Hard and soft surfaces: a concept of a highly flexible design system](https://plyuto.design/article/soft-and-hard-surfaces) by Alexander Plyuto, written out in full, so you can apply it without opening the article.
+This is the concept from the article [Hard and soft surfaces: a concept of a highly flexible design system](https://plyuto.design/article/soft-and-hard-surfaces) by Alexander Plyuto, extended into rules you can apply to a real system.
 
-In one line: a system needs a few master colors and one alpha scale. Hard surfaces take solid colors, soft surfaces take transparent ones, and every hard surface resets the count.
+In one line: a system needs a few master colors and one transparency scale. Hard surfaces take solid colors, soft surfaces take transparent ones, and every hard surface resets the count.
 
-## The problem it solves
+## The problem
 
 In most design systems the list of grays and color shades keeps growing. A card needs a gray a bit darker than the page. A card inside it needs another. Hover needs a third. Then dark mode doubles all of it.
 
@@ -12,140 +12,99 @@ Semantic tokens (tokens named by their role, like `surface-raised-hover`) don't 
 
 The result is a palette nobody fully remembers. A small visual change means editing dozens of values and matching contrast by hand.
 
-## Master colors
+## The concept
 
-A master is a solid color that other colors are made from. A system needs only a few:
+### Three layers
 
-| Group | Masters | What they are |
-| --- | --- | --- |
-| Gray | darkest, medium, brightest | Darkest is the ink: the color of text, and the base of almost every transparent layer. Brightest is the ground: the page background. Medium is a solid middle gray for the few places where a transparent gray can't be used, like text on a label that floats over a photo. |
-| Brand | primary, secondary | The colors of the brand. |
-| System | negative, positive, attention | Error, success and warning. |
+1. **Masters.** A few solid colors. Everything else is made from them.
+2. **Transparent tokens.** Each master at the steps of one alpha scale. Alpha is how solid a color is: 100% is fully solid, 0% is invisible. These are not new colors, because each one depends on its master.
+3. **Semantics.** Role names like `bg-neutral`, if the project has them. They sit on top and point at the first two layers.
 
-A system can have fewer masters, for example one brand color. It should rarely have more.
+The concept is about the first two layers. Semantics are not part of it: a project can have them or not.
 
-## One alpha scale
+### Few colors, one scale
 
-Alpha is how solid a color is: 100% is fully solid, 0% is invisible.
+It is enough to have only several master colors:
 
-On top of the masters there is one range of transparent versions: each master at 80, 40, 20, 10 and 5 percent. These are not new colors, because they all depend on a master. Change a master and all its steps follow. So the only independent scale in the system is transparency.
+- Gray: darkest, medium, brightest
+- Brand: primary, secondary
+- System: negative, positive, attention
 
-Each step is half of the one before, so two steps are always easy to tell apart. Start from this scale and change a step only when the system clearly needs it.
+On top of them there is one range of transparent versions: black at 5%, 10%, 20% and so on. They all depend on the masters, so the only independent scale in the system is transparency.
 
-A good starting point for the darkest gray:
+### Hard and soft surfaces
 
-| Step | Where it is used |
-| --- | --- |
-| the master itself | main text |
-| 80 | secondary text |
-| 40 | placeholders, hints, disabled text |
-| 20 | strokes: the borders of inputs and buttons |
-| 10 | buttons, tags, dividers |
-| 5 | cards and other large fills |
+Transparency isn't new. What was missing is a rule for when to use it.
 
-These are starting points, not rules. Where a step is used is its role, so a step does not need a second name.
+**Hard surfaces use solid colors.** A hard surface is the base that other elements sit on. There are two cases: the global background, and anything that lives out of the flow, like context menus, modals and floating elements.
 
-## Hard and soft surfaces
+"The flow" is the normal layout of the page, where elements sit next to and inside each other. A menu is out of the flow, because it floats above the page and can cover anything.
 
-Transparency isn't new. What was missing is a rule for when to use it. The rule is hard and soft surfaces.
+**Soft surfaces use transparent colors.** A soft surface is any element that lives in the flow: a card, a button, a text button, an input, a button's border, a divider.
 
-**Hard surfaces use solid colors.** A hard surface is the base that other elements sit on. There are two cases:
+Each one is its background plus ink at some alpha. The ink is the darkest gray. An input, for example, is text at 60 and a stroke at 20: it has no color of its own.
 
-- the global background (the ground),
-- anything that lives out of the flow: context menus, dropdowns, modals, popovers, tooltips, toasts and other floating elements.
+### Nesting
 
-"The flow" is the normal layout of the page, where elements sit next to and inside each other. A menu is out of the flow because it floats above the page and can cover anything.
+With a classic approach every level of nesting is a separate decision: a card on the page, a card in a card, a button in that card. Every level needs its own contrast matching and new names. Or the levels end up looking inconsistent, because their relative contrast differs.
 
-**Soft surfaces use transparent colors.** A soft surface is any element that lives in the flow: a card, a button, a text button, an input, a button's border, a divider, secondary text.
+With soft surfaces this is gone. A transparent layer is always a bit darker than whatever it sits on, so the relative contrast is always consistent.
 
-Each soft surface is its background plus ink at some alpha. In the article's example, an input is text at 60 and a stroke at 20: it has no color of its own, only two steps of the ink over whatever is under it. (The numbers are steps of that system's scale. On the default scale here, the text would be 80.)
+Layers don't stack forever, because a hard surface resets the count. A dropdown gets a solid color, and everything inside it starts from zero again. The only limit is common sense about how deep to nest. The same rule works for brand, error, success and warning colors.
 
-| Element | Kind | Color |
-| --- | --- | --- |
-| Page background | hard | `gray-brightest` |
-| Menu, dropdown, modal, toast | hard | `gray-brightest` |
-| Card | soft | `gray-darkest-5` |
-| Button | soft | `gray-darkest-10` |
-| Input stroke, divider | soft | `gray-darkest-20` |
-| Secondary text | soft | `gray-darkest-80` |
-| Error message background | soft | `system-negative-10` |
-
-A hard surface often has the same color as the ground. Tell it apart with a stroke of the darkest gray at 10, or a shadow.
-
-## Nesting
-
-With a classic approach every level of nesting is a separate decision: a card on the page, a card in a card, a button in that card. Every level needs its own contrast matching and new token names. Or the levels end up looking inconsistent, because their contrast against the background differs.
-
-With soft surfaces this problem is gone. A transparent layer is always a bit darker than whatever it sits on, so the relative contrast is the same at every level. A card at 5 on the page, a card at 5 inside it, and a button at 10 inside that all read correctly, with no new colors.
-
-Layers don't stack forever, because a hard surface resets the count. A dropdown gets a solid color, and everything inside it starts from zero again. The only limit is common sense about how deep to nest.
-
-The same rule works for brand, error, success and warning colors: a soft red area is `system-negative` at a step, not a new pale red.
-
-## Hover
-
-A hover is not a new color either. There are two cases.
-
-**A gray's hover is its next step on the scale.** A button at 10 becomes 20. A card at 5 becomes 10.
-
-**A color's hover is the darkest gray at 10% laid over it in a plus-darker blend.** Plus-darker is a blend mode (Figma calls it "Plus darker") that subtracts the darkness of the top layer from the color under it. It keeps the color rich, where a normal layer makes it a bit gray.
-
-In code, don't use a live blend mode: browsers don't all support this one, and blend modes on many elements are slow. Work the result out as a number instead. For each channel (red, green, blue, from 0 to 255):
-
-```text
-offset        = 0.10 × (255 − ink channel)
-hover channel = max(0, color channel − offset)
-```
-
-For the ink `#131416` (19, 20, 22) the offsets are 23.6, 23.5 and 23.3. For pure black they are all 25.5.
-
-In CSS this is a relative color, a color written as a change to another color:
-
-```css
---brand-secondary-hover: rgb(from var(--brand-secondary) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
-```
-
-With `#007aff` this gives about `#0063e8`.
-
-Where relative colors or the blend are missing (older browsers, some design tools), the fallback is a plain layer of the darkest gray at 10% over the color:
-
-```css
---brand-secondary-hover: color-mix(in srgb, var(--brand-secondary) 90%, #131416);
-```
-
-The offsets are worked out from the light theme's ink and stay the same in dark mode, so a color and its hover look the same in both themes.
-
-## Dark mode
-
-A dark theme is mostly swapping the grays. The darkest and the brightest gray trade places: the ink turns from black to white, and the ground from white to dark.
-
-Nothing else changes. The scale stays the same, the token names stay the same, and every step follows its master on its own. A card is still `gray-darkest-5`: in the light theme it darkens the ground a little, in the dark theme it lightens it a little, with the same relative contrast.
-
-Brand and system colors stay as they are. Change one only if it is hard to read on the dark ground.
-
-## Is transparency slow?
-
-It used to be, when browsers drew everything on the CPU. Today opacity is one of the two properties browsers can animate cheaply.
-
-In a test in the worst case (Chrome with the GPU off), solid colors took 2.41 ms per frame, alpha colors 2.83 ms and alpha with a multiply blend 3.18 ms. A frame at 60 fps has 16.7 ms, so alpha adds about 0.4 ms.
-
-One thing to avoid is blend modes on hundreds of elements: they cost more than plain transparency. This is why the hover above is worked out as a number.
-
-## Token names
-
-Name a token by its master and its step: `gray-darkest-20`, `brand-primary-10`, `system-negative-40`. A master alone is the solid color: `gray-brightest`, `brand-primary`. A color's hover is the master plus `hover`: `brand-primary-hover`.
-
-Don't name tokens by role (`border-subtle`, `surface-raised`). Role names are how the list grows back to 60.
-
-## What you get
+### What you get
 
 - **Predictable contrast.** It holds at any level of nesting, without picking colors by hand.
 - **Quick tuning.** Change one gray or one alpha step and the whole UI follows.
-- **Easy themes.** A dark theme is mostly swapping the grays and switching the ink from black to white.
+- **Easy theme conversion.** A dark theme is mostly swapping the grays and switching the ink from black to white.
 - **Fewer colors.** A few colors and one transparency scale in place of dozens of grays.
 
-## The one question
+### Is transparency slow?
+
+It used to be, when browsers drew everything on the CPU. Today opacity is one of the two properties browsers can animate cheaply. In a worst-case test (Chrome with the GPU off) alpha added about 0.4 ms per frame, and a frame has 16.7 ms.
+
+One thing to avoid is blend modes on hundreds of elements. They cost more than plain transparency.
+
+### The one question
 
 For any new element, ask one question: is it in the flow, or above it?
 
-In the flow, it is soft: a master at a step. Above the flow, it is hard: a solid color, and everything inside it starts from zero.
+## The rules
+
+### Masters
+
+1. **Few masters.** The usual set is three grays (darkest, medium, brightest), two brand colors (primary, secondary) and three system colors (negative, positive, attention). They are the system's own colors. Fewer is fine. More needs a reason.
+2. **The darkest gray is the ink.** Text and almost every transparent layer are made from it. The brightest gray is the ground: the global background.
+3. **The medium gray is for softer toning.** For example the muting overlay under a modal, or a transparent fill used together with a background blur. It is rare, but some systems need it.
+
+### The scale
+
+4. **One alpha scale** for all masters.
+5. **The steps come from the system.** Use the alphas it already has. Where it has solid grays, convert each one to the closest alpha of the ink over the background it sits on.
+6. **The user chooses between fewer steps and the same look.** With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Show both, with the number of steps in each.
+7. **A new system starts from 80, 40, 20, 10 and 5.** Use this only when there is nothing to take the steps from.
+
+### Surfaces
+
+8. **In the flow is soft.** A soft surface is a transparent token over whatever is under it. It never gets a solid color of its own.
+9. **Above the flow is hard.** A hard surface hides what is under it. It is a solid color, or a background blur with a transparent token over it. Either way it resets the count: everything inside it starts from zero.
+10. **Hard surfaces can have a few solid grays of their own**, up to about four tints. But solid grays are not bricks for a thousand elements: the elements in the flow are built from transparent tokens.
+11. **A hard surface needs an edge** when it has the same color as what is under it: a stroke or a shadow.
+12. **A transparent stroke on a transparent fill is a shadow, not a border.** Draw it as a shadow with spread and no blur. Make it an inner shadow when the surface is darker than the background under it, and an outer shadow when it is brighter.
+13. **Nesting adds no colors.** A nested level uses the same tokens as the level above it. Point out places where soft surfaces are nested deeper than 3 or 4 levels.
+
+### States and themes
+
+14. **Hover is one more layer of ink at 10%.** A transparent token moves to its next step. A solid color gets the ink at 10% laid over it. No hover is a new color.
+15. **Dark mode swaps the grays.** The darkest and the brightest gray trade places, so the ink turns from black to white. The scale, the names and the other masters stay the same. Change a brand or system color only if it is hard to read on the dark ground.
+
+### Tokens
+
+16. **No new colors.** A color that is not a master is a master at a step.
+17. **A transparent token is named by its master and its step**, like `gray-darkest-20`. If the project already has a way to name them, keep it.
+18. **Semantics are left as they are.** If the project has semantic tokens, keep them and point each one at a master or a transparent token. If it has none, add none.
+
+### Care
+
+19. **Text must stay readable.** Check the contrast of text at the deepest level of nesting, and say where it is too low.
+20. **Leave non-interface colors alone**: photos, illustrations, charts and code highlighting. List them as left out.

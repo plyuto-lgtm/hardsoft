@@ -2,25 +2,23 @@
    https://plyuto.design/article/soft-and-hard-surfaces
 
    Paste this into the CSS file that has @import "tailwindcss".
-   The values are samples: put in the system's own colors.
-   Every token becomes a utility: bg-gray-darkest-5, border-gray-darkest-20, text-gray-darkest-80,
-   hover:bg-brand-primary-hover. Tailwind leaves out the tokens nobody uses. */
+   Every value, name and step here is a sample: use the system's own (rules 1, 5 and 17 in approach.md).
+   Every token becomes a utility: bg-gray-darkest-5, text-gray-darkest-80, hover:bg-brand-primary-hover.
+   Tailwind leaves out the tokens nobody uses. */
 
 @theme {
-	/* When no component uses Tailwind's own palette any more, turn it off, so nobody can add a color:
-	--color-*: initial; */
-
 	/* Masters: the only real colors in the system */
-	--color-gray-darkest: #131416;
-	--color-gray-medium: #7a7e85;
+	--color-gray-darkest: #111111;
+	--color-gray-medium: #808080;
 	--color-gray-brightest: #ffffff;
-	--color-brand-primary: #40c6ff;
-	--color-brand-secondary: #007aff;
-	--color-system-negative: #ff3b30;
-	--color-system-positive: #34c759;
-	--color-system-attention: #ff9500;
+	--color-brand-primary: #2563eb;
+	--color-brand-secondary: #7c3aed;
+	--color-system-negative: #dc2626;
+	--color-system-positive: #16a34a;
+	--color-system-attention: #d97706;
 
-	/* Steps: each master at 80, 40, 20, 10 and 5 percent. Not new colors: they follow their master */
+	/* Transparent tokens: each master at the steps of one alpha scale. Not new colors: they follow their master.
+	   The darkest gray is the ink. The medium gray is for softer toning, like the overlay under a modal */
 	--color-gray-darkest-80: --alpha(var(--color-gray-darkest) / 80%);
 	--color-gray-darkest-40: --alpha(var(--color-gray-darkest) / 40%);
 	--color-gray-darkest-20: --alpha(var(--color-gray-darkest) / 20%);
@@ -64,35 +62,22 @@
 	--color-system-attention-10: --alpha(var(--color-system-attention) / 10%);
 	--color-system-attention-5: --alpha(var(--color-system-attention) / 5%);
 
-	/* Hovers of the colors: the darkest gray at 10% in a plus-darker blend, worked out as a number.
-	   Each offset is 0.10 × (255 − ink channel). For the ink #131416 that is 23.6, 23.5 and 23.3.
-	   Use the light theme's ink, and work the offsets out again if it changes.
-	   A gray has no hover token: its hover is its next step (5 → 10, 10 → 20) */
-	--color-brand-primary-hover: rgb(from var(--color-brand-primary) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
-	--color-brand-secondary-hover: rgb(from var(--color-brand-secondary) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
-	--color-system-negative-hover: rgb(from var(--color-system-negative) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
-	--color-system-positive-hover: rgb(from var(--color-system-positive) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
-	--color-system-attention-hover: rgb(from var(--color-system-attention) max(0, r - 23.6) max(0, g - 23.5) max(0, b - 23.3));
+	/* Hovers of the solid colors: the ink at 10% laid over the color (rule 14).
+	   A transparent token has no hover token: its hover is its next step */
+	--color-brand-primary-hover: color-mix(in srgb, var(--color-brand-primary) 90%, var(--color-gray-darkest));
+	--color-brand-secondary-hover: color-mix(in srgb, var(--color-brand-secondary) 90%, var(--color-gray-darkest));
+	--color-system-negative-hover: color-mix(in srgb, var(--color-system-negative) 90%, var(--color-gray-darkest));
+	--color-system-positive-hover: color-mix(in srgb, var(--color-system-positive) 90%, var(--color-gray-darkest));
+	--color-system-attention-hover: color-mix(in srgb, var(--color-system-attention) 90%, var(--color-gray-darkest));
 }
 
-/* Dark mode: swap the grays. The ink turns from black to white, the ground from white to dark.
+/* Dark mode: swap the grays (rule 15). The ink turns from black to white, the ground from white to dark.
    The steps and the names stay the same.
    If the project switches themes with a class or an attribute, use that selector in place of the media query,
    for example :root[data-theme="dark"]. Keep it on the root element: the steps are worked out there */
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-gray-darkest: #ffffff;
-		--color-gray-brightest: #131416;
-	}
-}
-
-/* Browsers without relative colors: a plain layer of the light theme's ink at 10% */
-@supports not (color: rgb(from red r g b)) {
-	:root {
-		--color-brand-primary-hover: color-mix(in srgb, var(--color-brand-primary) 90%, #131416);
-		--color-brand-secondary-hover: color-mix(in srgb, var(--color-brand-secondary) 90%, #131416);
-		--color-system-negative-hover: color-mix(in srgb, var(--color-system-negative) 90%, #131416);
-		--color-system-positive-hover: color-mix(in srgb, var(--color-system-positive) 90%, #131416);
-		--color-system-attention-hover: color-mix(in srgb, var(--color-system-attention) 90%, #131416);
+		--color-gray-brightest: #111111;
 	}
 }
