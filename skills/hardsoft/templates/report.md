@@ -1,63 +1,80 @@
 <!-- hardsoft: the shape of the report. The same file is the report, then the plan, then the record of what was done.
-     Keep the headings and the order. Leave a section out only when it is empty, and say "None" under "Does not fit".
-     <...> is a value to fill in. No long explanations: numbers, tables, short lines. -->
+     Keep the headings and the order. Leave a section out only when it is empty.
+     <...> is a value to fill in. The part above "Details" is for a reader with two minutes: plain words, no rule numbers.
+     The part below it is tables. -->
 
 # hardsoft report: <project>
 
 **<Report only: nothing has changed. | Plan: waiting for a yes. | Applied on <date>.>**
 
-<Two or three lines: what the system wins, in numbers.>
+## In short
 
-## Benchmarks
+**<Worth it. | Some to win. | Little to win: the system already works this way.>** <One sentence: the biggest win, in the user's own words from the interview.>
 
-| | Before | After |
+| | Today | With hardsoft |
 | --- | --- | --- |
-| Independent tokens | <n> | <n>: <n> masters, <n> solid grays of hard surfaces, <n> kept as they are |
-| Dependent tokens | <n> | <n> |
+| Colors with a value of their own | <n> | <n> |
+| Solid colors | <n> | <n> masters and one scale of <n> steps |
+| Colors that only name a level or a state | <n> | 0 |
+| Values to edit to change all the grays | <n> | 1 |
+| Values a second theme needs | <n> | <n> |
 
-**Closeness: <n>%.** <n> of <n> colors look the same. Average shift <n>, biggest <n>.
+**It stays <n>% the same.** <n> of <n> colors look exactly as they do today. <The ones that move, by name, and how visibly.>
 
-An independent token has a value of its own. A dependent one is made from another token. A color looks the same when its shift is 2 or less.
+**What does not change:** your token names, your components, your brand colors, <anything else the interview protected>.
 
-## What you win
+## Your answers
 
-| Goal | Now | After |
-| --- | --- | --- |
-| Fewer colors | <n> solid colors | <n> masters and <n> steps |
-| Predictable contrast | <n> colors that only name a level or a state | 0: a level is the same token again |
-| Quick tuning | <n> values to edit to change the grays | 1: the ink |
-| Easy theme conversion | <n> values for a second theme | <n>: the ink, the ground and <what must look the same> |
+| Question | Answer |
+| --- | --- |
+| <the interview question, short> | <the answer, or "Assumed: <guess>"> |
 
-## Masters
+## Decisions for you
+
+<Numbered. Only what is really open. Each with its options and what each one costs. "None" if nothing is open.>
+
+1. **<The decision, as a question.>** <One line of why it comes up.>
+   - <Option>: <what happens, with the number>
+   - <Option>: <what happens, with the number>
+
+## What would change
+
+<Three to six lines, in plain words, by what the user sees: "The 11 grays become one ink at 7 steps." "Cards at every level use one token." "The button hover is the ink laid over the brand color.">
+
+---
+
+## Details
+
+### Masters
 
 | Master | Value | Role |
 | --- | --- | --- |
 | <name> | <value> | <ink, ground, brand, negative...> |
 
-## The scale
+### The scale
 
-| Version | Steps | Biggest shift |
-| --- | --- | --- |
-| Same look | <n>: <list> | <shift> |
-| Fewer steps | <n>: <list> | <shift> |
+| Version | Steps | Biggest shift | Closeness |
+| --- | --- | --- | --- |
+| Same look | <n>: <list> | <shift> | <n>% |
+| Fewer steps | <n>: <list> | <shift> | <n>% |
 
-<After the answer: "Chosen: <version>." Before it: no recommendation (rule 8).>
+<After the answer: "Chosen: <version>.">
 
-Shift is how far a color moves. Under 2 the eye barely sees it.
+Shift is how far a color moves. Under 2 the eye barely sees it. Closeness is the share of colors with a shift of 2 or less.
 
-## Old to new
+### Old to new
 
 | Token | Was | Sits on | Now | Shift |
 | --- | --- | --- | --- | --- |
 | <name> | <value> | <background> | <master>-<step> | <shift> |
 
-## Surfaces
+### Surfaces
 
 | Surface | Hard or soft | Made of | Rule |
 | --- | --- | --- | --- |
 | <card, menu, sticky header...> | <hard, soft> | <token, or solid color with its edge> | <number> |
 
-## Strokes
+### Strokes
 
 Each one measured over what it really lies on (rule 16).
 
@@ -65,19 +82,19 @@ Each one measured over what it really lies on (rule 16).
 | --- | --- | --- | --- | --- |
 | <input border, divider...> | <value> | <the fill, the surface behind> | <token> | <yes, with the file, or no> |
 
-## States
+### States
 
 | Element | State | Was | Now |
 | --- | --- | --- | --- |
 | <button> | <hover, pressed, selected, disabled, focus> | <value> | <token or layer> |
 
-## Does not fit
+### Does not fit
 
 | Color | Where | Why | Options |
 | --- | --- | --- | --- |
 | <name and value> | <use> | <closest master and step, with the shift> | <keep, move to a step, new master, tint the ink> |
 
-## Contrast
+### Contrast
 
 Measured against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text.
 
@@ -85,7 +102,7 @@ Measured against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text.
 | --- | --- | --- | --- | --- |
 | <token> | <layers, deepest nesting> | <ratio> | <low before, became low> | <step> |
 
-## Components with their own colors
+### Components with their own colors
 
 Not edited (rule 27). Each one should use the token next to it.
 
@@ -93,7 +110,7 @@ Not edited (rule 27). Each one should use the token next to it.
 | --- | --- | --- |
 | <path:line> | <value> | <token> |
 
-## Removable
+### Removable
 
 Every old name still works (rule 26). These can go when the team chooses.
 
@@ -101,11 +118,11 @@ Every old name still works (rule 26). These can go when the team chooses.
 | --- | --- |
 | <name> | <same as another token, unused, unused shade of a ramp> |
 
-## Left out
+### Left out
 
 <Gradients, photos, illustrations, charts, code highlighting, tool colors (rule 29). One line each.>
 
-## Decisions
+### Decisions made
 
 | Decision | Choice | Who | Rule |
 | --- | --- | --- | --- |
@@ -113,7 +130,7 @@ Every old name still works (rule 26). These can go when the team chooses.
 
 <Clashes with the project's own rules, if any: which rule lost and why.>
 
-## Screens
+### Screens
 
 <After applying. The same screens before and after, in each theme.>
 
@@ -125,4 +142,4 @@ Every old name still works (rule 26). These can go when the team chooses.
 
 ## What is left
 
-<Short list: questions still open, components to move, tokens to remove.>
+<Short list: decisions still open, components to move, tokens to remove, who must update the design source.>

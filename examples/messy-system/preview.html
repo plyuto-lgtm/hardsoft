@@ -16,6 +16,16 @@
 const system = {
 	name: 'Messy system',
 
+	summary: {
+		verdict: 'Worth it',
+		numbers: [
+			{ label: 'Colors with a value of their own', before: 36, after: 8 },
+			{ label: 'Values to change all the grays', before: 23, after: 1 },
+			{ label: 'Values a second theme needs', before: 28, after: 5 },
+		],
+		closeness: 97,
+	},
+
 	ink: { name: 'gray-900', light: '#111111', dark: null },
 	ground: { name: 'page', light: '#ffffff', dark: null },
 	medium: null,
@@ -61,7 +71,10 @@ const system = {
 	html { font: 14px/20px system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
 	body { background: var(--ground); color: var(--ink); }
 
-	.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); min-height: 100vh; }
+	.summary { background: var(--ground); color: var(--ink); padding: 32px 24px 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+	.summary .figure { font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: -0.02em; }
+	.summary .figure s { text-decoration: none; color: var(--placeholder); }
+	.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); }
 	.theme { background: var(--ground); color: var(--ink); padding: 32px 24px 48px; display: grid; gap: 40px; align-content: start; }
 	.theme > header { display: flex; justify-content: space-between; align-items: baseline; }
 	h1 { font-size: 20px; line-height: 28px; font-weight: 500; }
@@ -108,6 +121,7 @@ const system = {
 </style>
 </head>
 <body>
+<div class="summary" id="summary" hidden></div>
 <div class="themes" id="themes"></div>
 <script>
 const mix = (color, step) => `color-mix(in srgb, ${color} ${step}%, transparent)`;
@@ -182,6 +196,19 @@ function theme(mode) {
 		]));
 	}
 	return box;
+}
+
+if (system.summary) {
+	const strip = document.getElementById('summary');
+	const ink = system.ink.light;
+	for (const [key, value] of Object.entries({ '--ink': ink, '--ground': system.ground.light, '--secondary': mix(ink, system.parts.secondary), '--placeholder': mix(ink, system.parts.placeholder) })) strip.style.setProperty(key, value);
+	const figure = (big, label) => el('div', {}, [el('div', { className: 'figure' }, big), el('div', { className: 'quiet small', textContent: label })]);
+	strip.append(
+		figure([system.summary.verdict], system.name),
+		...system.summary.numbers.map((n) => figure([el('s', { textContent: `${n.before} ` }), `${n.after}`], n.label)),
+		figure([`${system.summary.closeness}%`], 'Stays the same'),
+	);
+	strip.hidden = false;
 }
 
 document.title = `${system.name}: hardsoft preview`;

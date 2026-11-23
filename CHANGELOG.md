@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+- The report starts with an interview: 3 to 6 questions with options made from the project's own names, asked with the agent's question tool.
+- A clearer report. The first screen says if it is worth it, what you win and what stays the same. Then the decisions for you. The tables are below a line.
+- The preview page has a top strip with the same numbers.
+
 ## 2.0.0
 
 The rules have new numbers, so anything that points at a rule by its number must be checked.

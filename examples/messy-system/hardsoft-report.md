@@ -2,29 +2,51 @@
 
 **Applied. This is the worked example of the skill: an invented system, with the answers an imagined user gave.**
 
-35 solid colors became 6 masters and one scale of 8 steps. Three colors that only named a level or a state are gone. A dark theme would now need 5 values, not 28.
+## In short
 
-## Benchmarks
+**Worth it.** The grays were the problem: 23 of them, with a new one for every level and state. Now there is one ink, and a level is the same token again.
 
-| | Before | After |
+| | Before | Now |
 | --- | --- | --- |
-| Independent tokens | 36 | 8: 6 masters, 2 kept as they are |
-| Dependent tokens | 3 | 46 |
+| Colors with a value of their own | 36 | 8 |
+| Solid colors | 35 | 6 masters and one scale of 8 steps |
+| Colors that only name a level or a state | 3 | 0 |
+| Values to edit to change all the grays | 23 | 1 |
+| Values a second theme needs | 28 | 5 |
 
-**Closeness: 97%.** 34 of 35 colors look the same. Average shift 0.7, biggest 2.2.
+**It stays 97% the same.** 34 of 35 colors look exactly as they did. One moved a little: the overlay under modals is a touch lighter.
 
-An independent token has a value of its own. A dependent one is made from another token. A color looks the same when its shift is 2 or less.
+**What did not change:** every token name, every component, the brand blue, red and green.
 
-## What you win
+## Your answers
 
-| Goal | Before | After |
-| --- | --- | --- |
-| Fewer colors | 35 solid colors | 6 masters and 8 steps, plus 2 colors kept as they are |
-| Predictable contrast | 3 colors that only name a level or a state | 0: a level is the same token again |
-| Quick tuning | 23 values to edit to change the grays | 1: the ink |
-| Easy theme conversion | 28 values for a second theme | 5: the ink, the ground, text on a color, the overlay, the shadow |
+| Question | Answer |
+| --- | --- |
+| What bothers you most? | Nesting and states need new colors |
+| Which screens matter most? | Orders, Settings, the order modal |
+| How close must it stay? | Small shifts are fine for fewer steps |
+| Sticky table header: does content pass under it? | Yes |
+| The five slate grays: on purpose or left over? | Left over from an older redesign |
+| Where is the source of truth? | The token file. Figma is updated by hand |
 
-## Masters
+## Decisions for you
+
+All answered. They are in "Decisions made" below.
+
+## What changed
+
+- The 18 neutral grays are one ink at 7 steps.
+- Cards at every level use one token. The nested-card color and the card-hover color are gone as colors, and their names still work.
+- The blue, red and green tints are their master at a step.
+- The primary button's hover is the ink laid over the blue.
+- blue-900 became a second master: it is darker than the blue, so no alpha makes it.
+- Two slate grays fit nothing and are kept as they are.
+
+---
+
+## Details
+
+### Masters
 
 | Master | Value | Role |
 | --- | --- | --- |
@@ -35,19 +57,19 @@ An independent token has a value of its own. A dependent one is made from anothe
 | red-600 | #dc2626 | Negative |
 | green-600 | #16a34a | Positive |
 
-## The scale
+### The scale
 
-| Version | Steps | Biggest shift |
-| --- | --- | --- |
-| Same look | 20: 3, 5, 6, 7, 8, 10, 11, 12, 16, 18, 20, 23, 30, 40, 41, 43, 60, 61, 70, 82 | 1.6 |
-| Fewer steps | 9: 5, 12, 18, 23, 30, 41, 61, 70, 82 | 2.4 |
-| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 2.2 |
+| Version | Steps | Biggest shift | Closeness |
+| --- | --- | --- | --- |
+| Same look | 20: 3, 5, 6, 7, 8, 10, 11, 12, 16, 18, 20, 23, 30, 40, 41, 43, 60, 61, 70, 82 | 1.6 | 100% |
+| Fewer steps | 9: 5, 12, 18, 23, 30, 41, 61, 70, 82 | 2.4 | 94% |
+| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 2.2 | 97% |
 
 Chosen: fewer steps, rounded. The user asked for round numbers, and the skill scored that scale with `map --steps`.
 
-Shift is how far a color moves. Under 2 the eye barely sees it.
+Shift is how far a color moves. Under 2 the eye barely sees it. Closeness is the share of colors with a shift of 2 or less.
 
-## Old to new
+### Old to new
 
 | Token | Was | Sits on | Now | Shift |
 | --- | --- | --- | --- | --- |
@@ -80,7 +102,7 @@ Shift is how far a color moves. Under 2 the eye barely sees it.
 | red-50 | #fdf0f0 | page | red-600-5 | 1 |
 | green-50 | #edf8f1 | page | green-600-10 | 1 |
 
-## Surfaces
+### Surfaces
 
 | Surface | Hard or soft | Made of | Rule |
 | --- | --- | --- | --- |
@@ -92,7 +114,7 @@ Shift is how far a color moves. Under 2 the eye barely sees it.
 | Modal | Hard | page, over the overlay gray-900-40 | 11 |
 | Sticky table header | Hard | page: rows scroll under it | 12 |
 
-## Strokes
+### Strokes
 
 Each one measured over what it really lies on (rule 16).
 
@@ -104,7 +126,7 @@ Each one measured over what it really lies on (rule 16).
 
 A card border over the card's own transparent fill would read as two layers. As a hairline it is one.
 
-## States
+### States
 
 | Element | State | Was | Now |
 | --- | --- | --- | --- |
@@ -112,7 +134,7 @@ A card border over the card's own transparent fill would read as two layers. As 
 | Primary button | Hover | blue-700 | blue-600 with the ink at 10 over it |
 | Input | Focus | 2 px ring, blue-600 | The same ring, blue-600 |
 
-## Does not fit
+### Does not fit
 
 | Color | Where | Why | Options |
 | --- | --- | --- | --- |
@@ -122,7 +144,7 @@ A card border over the card's own transparent fill would read as two layers. As 
 
 The five slate grays share a blue tint. A tinted ink (#000b3c) would fit them, biggest shift 1.4. The 19 grays with no tint would then move by up to 7.5. Offered, and declined.
 
-## Contrast
+### Contrast
 
 Measured against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text.
 
@@ -134,7 +156,7 @@ Measured against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text.
 | White on the button hover | Primary button | 5.96 | Fine | - |
 | blue-900 | blue-600-10 | 9.02 | Fine | - |
 
-## Components with their own colors
+### Components with their own colors
 
 Not edited (rule 27). Each one should use the token next to it.
 
@@ -144,7 +166,7 @@ Not edited (rule 27). Each one should use the token next to it.
 | src/components/Table.css:40 | #fafafa | gray-900-5, or none |
 | src/components/Tooltip.css:8 | #222222 | gray-900 |
 
-## Removable
+### Removable
 
 Every old name still works (rule 26). These can go when the team chooses.
 
@@ -156,12 +178,12 @@ Every old name still works (rule 26). These can go when the team chooses.
 | surface-card-hover | The same as gray-200 |
 | blue-700 | The same as button-primary-hover |
 
-## Left out
+### Left out
 
 - The gradient on the marketing banner (rule 29).
 - The chart palette.
 
-## Decisions
+### Decisions made
 
 | Decision | Choice | Who | Rule |
 | --- | --- | --- | --- |
@@ -176,12 +198,13 @@ Every old name still works (rule 26). These can go when the team chooses.
 | Strokes | Two hairline tokens added, borders listed | Skill | 16 |
 | Dark theme | Not added: nobody asked | Skill | 21 |
 
-## Screens
+### Screens
 
 The example has no product to take screenshots of. See [preview.html](preview.html).
 
 ## What is left
 
+- Figma needs the same change, by hand: the token file is the source.
 - Three components still carry their own colors.
 - Two borders should move to the hairline tokens.
 - Eight tokens can be removed.

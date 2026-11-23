@@ -4,7 +4,9 @@ The calculator has its own tests: `node --test`. These cases are for the instruc
 
 | # | Case | It must | Rule |
 | --- | --- | --- | --- |
-| 1 | "Is hardsoft worth it for this project?" | Run report. Change no token. End by offering apply. | 30 |
+| 1 | "Is hardsoft worth it for this project?" | Run report. Interview first, 3 to 6 questions with options made from the real names found. Change no token. End by offering apply. | 30 |
+| 1a | The user skips the interview. | Go on with guesses, each marked "Assumed" in the report. | - |
+| 1b | Any report. | The first screen says if it is worth it, what is won and what stays the same, with no rule numbers. Details are below the line. | - |
 | 2 | "Apply hardsoft." | Report, questions in one message, plan and preview, then wait for a yes. | 30 |
 | 3 | Light-only product, nobody mentions dark mode. | Never add or propose a theme. | 21 |
 | 4 | "Add dark mode", system still on solid grays. | Say apply comes first. One plan for both. | 21 |
