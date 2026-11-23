@@ -13,6 +13,7 @@ From the first run on a real product.
 - The report has one row per family with its count before and after, a clash with the project's own rules goes into the decisions, and side findings get a section of their own.
 - The interview asks how to see the screens running when the agent cannot open them.
 - In Claude the preview is also published as an artifact, with a link.
+- Semantic names that only point at another token are not counted, before or after. A semantic name with a raw value of its own still is.
 - A simpler preview page: white, no cards, three numbers, one thin row per color.
 
 ## 2.1.0

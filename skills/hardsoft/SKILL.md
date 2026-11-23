@@ -40,7 +40,7 @@ The article promises four things. The report measures the system against each of
 
 The report opens with two short benchmarks, both from `map`:
 
-- **Independent tokens**, before and after. An independent token has a value of its own. A dependent one is made from another token. After, the independent ones are the masters, the solid grays of hard surfaces, and any color kept as it is.
+- **Independent tokens**, before and after. An independent token has a value of its own. A dependent one is made from another token. Count by where the value comes from, not by the layer a token is in: a semantic name that only points at another token (`--text: var(--gray-900)`) is dependent already and is never counted, before or after. Write it in `system.json` with `"alias": "gray-900"` and no value. A semantic name with a raw value of its own (`--surface-card: #f3f3f3`) is an independent color under a role name: it is counted, and it is usually where the win is. After, the independent ones are the masters, the solid grays of hard surfaces, and any color kept as it is.
 - **Closeness**: the share of the colors that still look the way they did, as a percent. A color looks the same when its shift is 2 or less. Give it with the average and the biggest shift.
 
 Count honestly. If a number does not get better, say so. If the system already fits, say that there is little to win and stop there.

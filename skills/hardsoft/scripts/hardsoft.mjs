@@ -160,9 +160,14 @@ export function contrastReport(text, layers, steps = []) {
  * "on" is the background a color sits on: a color, the name of another color in the list, or
  * nothing for the ground. "master" forces a master, for a color you already know the family of.
  * "hard": true marks a solid gray that belongs to a hard surface: it stays solid (rule 14).
+ * "alias": "<token>" marks a name that only points at another token: it is left out of every count.
  * steps: a scale of your own to score, like [5, 10, 20, 40, 60, 80].
  */
-export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {}) {
+export function map(input, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {}) {
+	// A name that only points at another token ("alias": "gray-900") has no value of its own.
+	// It is dependent already, so it is not mapped and not counted, before or after.
+	const pointers = input.colors.filter((c) => c.alias);
+	const system = { ...input, colors: input.colors.filter((c) => !c.alias) };
 	const ground = parse(system.ground);
 	const names = Object.keys(system.masters);
 	const ink = system.ink ?? names[0];
@@ -279,6 +284,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		misfits: misfits.map((r) => r.name),
 		tint,
 		// An independent token has a value of its own. A dependent one is made from another token.
+		pointers: pointers.map((c) => ({ name: c.name, alias: c.alias })),
 		tokens: { independentBefore: system.colors.length + listed, independentAfter: usedMasters.size + hard.length + misfits.length },
 		wins: { colorsBefore: distinct, masters: usedMasters.size, stepsSameLook: sameLook.length, stepsFewer: fewer.length, leftOver: misfits.length },
 	};
@@ -365,8 +371,9 @@ export function preview(system, { scale = 'fewer', fit = FIT, tolerance = TOLERA
 	const d = system.dark;
 	const darkValue = (name) => d?.values?.[name] ?? d?.masters?.[name];
 
+	const own = system.colors.filter((c) => !c.alias);
 	const tokens = result.rows.map((r, i) => {
-		const entry = system.colors[i];
+		const entry = own[i];
 		const token = { name: r.name, group: entry.group ?? family(r.name), value: entry.value, on: r.on, kind: 'kept', ...(entry.why ? { why: entry.why } : {}) };
 		if (r.isMaster) token.kind = 'master';
 		else if (r.isUntouched) token.kind = 'untouched';
@@ -388,7 +395,7 @@ export function preview(system, { scale = 'fewer', fit = FIT, tolerance = TOLERA
 		}
 		return token;
 	});
-	if (!system.colors.some((c) => parse(c.value).a === 1 && shift(parse(c.value), ground) < 0.5)) {
+	if (!own.some((c) => parse(c.value).a === 1 && shift(parse(c.value), ground) < 0.5)) {
 		tokens.unshift({ name: 'ground', group: 'Ground', value: system.ground, on: hex(ground), kind: 'master', ...(d ? { dark: { value: d.ground, on: d.ground } } : {}) });
 	}
 	const ink = system.ink ?? Object.keys(system.masters)[0];
@@ -400,6 +407,7 @@ export function preview(system, { scale = 'fewer', fit = FIT, tolerance = TOLERA
 		light: { ground: system.ground, ink: system.masters[ink] },
 		...(d ? { dark: { ground: d.ground, ink: d.masters?.[ink] ?? system.masters[ink] } } : {}),
 		tokens,
+		pointers: result.pointers.length,
 		screens: system.screens ?? [],
 	};
 }
@@ -424,7 +432,7 @@ function table(result) {
 		`Fewer steps: ${fewer.count} steps (${fewer.steps.join(', ')}), biggest shift ${fewer.maxShift}, closeness ${fewer.closeness}%.`,
 		`Round steps: ${result.scales.round.count} steps (${result.scales.round.steps.join(', ')}), biggest shift ${result.scales.round.maxShift}, closeness ${result.scales.round.closeness}%.`,
 		...(own ? [`Your scale: ${own.count} steps (${own.steps.join(', ')}), biggest shift ${own.maxShift}, closeness ${own.closeness}%.`] : []),
-		`Independent tokens: ${result.tokens.independentBefore} before, ${result.tokens.independentAfter} after (the masters, the solid grays of hard surfaces, and the colors that fit nothing).`,
+		`Independent tokens: ${result.tokens.independentBefore} before, ${result.tokens.independentAfter} after (the masters, the solid grays of hard surfaces, and the colors that fit nothing).${result.pointers.length ? ` ${result.pointers.length} names that only point at another token are not counted.` : ''}`,
 		`Colors: ${w.colorsBefore} before. After: ${w.masters} masters and ${w.stepsSameLook} steps (same look) or ${w.stepsFewer} steps (fewer).`,
 	);
 	if (result.misfits.length) lines.push(`Does not fit: ${result.misfits.join(', ')}.`);
