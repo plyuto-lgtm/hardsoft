@@ -19,8 +19,8 @@ It is made for work inside a codebase with a coding agent (Claude Code, Cursor, 
 
 | Action | What it does | What it changes |
 | --- | --- | --- |
-| **report** | Finds the system, maps it, and shows what it would win. | Nothing. It writes the report and the preview. |
-| **apply** | The report, then questions, a plan and a preview, a yes, the new tokens, and the report again with the real numbers. | The token layer only (rule 27). |
+| **report** | Finds the system, maps it, asks a short interview, and shows what it would win. | Nothing. It writes the report and the preview. |
+| **apply** | The report with its interview, then the open decisions, a plan and a preview, a yes, the new tokens, and the report again with the real numbers. | The token layer only (rule 27). |
 | **theme** | Adds a dark mode, or another theme, on top of masters and steps. | The theme's grays, and the few semantic tokens it needs. |
 
 Pick the action from the request. "Audit", "check", "what would change", "is it worth it": report. "Apply", "refactor", "set up", "simplify", "do it": apply. "Add dark mode", "add a theme": theme. If you can't tell, do the report: it changes nothing, and it ends by offering apply.
@@ -150,17 +150,50 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 - Note what counts as unused only after the theme decision: a token that one theme doesn't use may be the ink of the other.
 - Count the four goals of the target, now and after, and take the two benchmarks from `map`.
 
-### 3. Write the report
+### 3. Interview
+
+A report built only from the files is a guess about what matters. Before you write it, ask the user a short series of questions. This is the part that makes the report theirs.
+
+How to ask:
+
+- Ask after you have found and mapped the system, never before. Every question and every option uses the real names you found: their tokens, their screens, their components.
+- Use your environment's question tool, the one that shows a question with options to pick: `AskUserQuestion` in Claude Code, the ask tool in Codex, a question card in a chat. One question at a time where the tool allows it. Without such a tool, ask in plain messages, one question each.
+- Each question has 2 to 4 options, short, with one line on what each leads to. The user can always answer in their own words.
+- 3 to 6 questions. Never ask what the code already answers. Skip a question when the system leaves nothing open in it.
+- If the user says skip, or does not answer, go on with your best guess and mark it "Assumed" in the report.
+
+The questions, in this order:
+
+| # | Ask | Options come from | It decides |
+| --- | --- | --- | --- |
+| 1 | What bothers you most about the colors today? | Too many grays. Nesting and states need new colors. Themes are painful. Nothing, just curious. | What the summary leads with |
+| 2 | Which screens matter most? | The 3 or 4 routes or pages you found with the most nesting, forms and menus | The screens you read and check (see "Seeing the real screens") |
+| 3 | How close must it stay to today's look? | Exactly the same. Small shifts are fine for fewer steps. Free to clean up. | Which scale the report leads with. It still shows both (rule 8) |
+| 4 | Which of these float above the page, or have content passing under them? | Only the surfaces you could not classify, by name | Hard or soft (rules 10 to 13) |
+| 5 | These grays share a tint. On purpose, or left over? | Only when the tint check found some, by name | Tint the ink, or list them (rule 4) |
+| 6 | Where is the source of truth for colors? | The token file. A Figma file. Both, kept in sync by hand. | Who must change what, in "What is left" |
+
+Don't ask about a new theme (rule 21). If the system already has a second theme, ask which one is the main one.
+
+### 4. Write the report
 
 Fill [templates/report.md](templates/report.md) and save it as `hardsoft-report.md` where the project keeps its documents, or in its root. In a chat, give it as a file or an artifact.
 
-Draw the preview from [templates/preview.html](templates/preview.html): copy the file, fill in the `system` object at its top and change nothing else, so every project gets the same page. For a report, use the same-look scale, so nothing in it has moved. It goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report. In a chat it is an artifact, or the HTML file.
+The report is read by a designer or a design engineer who has two minutes. So:
 
-**The report action ends here.** Say in two or three lines what the system would win, link the report and the preview, and offer apply. Ask nothing else.
+- The first screen answers three things: is it worth it, what do I win, what stays the same.
+- Then what needs their decision, each with options.
+- Everything else is detail, below a line, in tables.
+- No rule numbers in the summary. Plain words first, the rule in the details.
+- A term is explained once, the first time it is used.
 
-### 4. Ask once (apply and theme)
+Draw the preview from [templates/preview.html](templates/preview.html): copy the file, fill in the `system` object at its top and change nothing else, so every project gets the same page. Its top strip carries the same numbers as the report's summary. For a report, use the scale the user's answer points to, or the same-look scale if they skipped. It goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report. In a chat it is an artifact, or the HTML file.
 
-Ask only the decisions you can't make from what you found, in one message, each with 2 or 3 options. If your environment has a question widget, use it. The usual ones:
+**The report action ends here.** Say in two or three lines what the system would win, link the report and the preview, and offer apply.
+
+### 5. Ask once (apply and theme)
+
+The interview has already answered some of these. Ask only the decisions that are still open, the same way as the interview, each with 2 or 3 options. The usual ones:
 
 - Fewer steps or the same look. Show both with their numbers of steps and biggest shifts, and don't recommend one (rule 8).
 - A tinted ink, when the tint check finds one (rule 4). Give both sides: how many tinted grays then fit, and how far the other grays move.
@@ -171,11 +204,11 @@ Ask only the decisions you can't make from what you found, in one message, each 
 
 For everything else, choose on your own, write the choice and its rule in the plan, and move on. If something you find later changes an answer, say so in the plan.
 
-### 5. Show the plan and the preview, then wait
+### 6. Show the plan and the preview, then wait
 
 The plan is the same report, updated with the answers: the chosen scale, the old-to-new table, what is kept, what is listed. Update the preview to the chosen scale. Then stop and wait for a yes (rule 30).
 
-### 6. Apply after a yes
+### 7. Apply after a yes
 
 - Write the tokens in the format the project already has: where they live, how they are mixed and how they are named. [formats.md](formats.md) shows the pattern in each format: Tailwind 4, Tailwind 3, CSS variables, Sass, JS or TS, and JSON tokens. Use Tailwind 4 `@theme` when a Tailwind project has no color tokens yet, and in a chat.
 - The templates are patterns with no colors. Every color, step and name you write comes from the system.

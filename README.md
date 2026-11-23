@@ -44,11 +44,11 @@ It has three actions.
 
 | Action | What you get | What it changes |
 | --- | --- | --- |
-| **Report** | What your system would win, in numbers, and a preview page. | Nothing. |
+| **Report** | A short interview, then what your system would win, in numbers, and a preview page. | Nothing. |
 | **Apply** | The report, a few questions, a plan and a preview. After your yes: the new tokens, and the report again with the real numbers. | Your tokens only. |
 | **Theme** | A dark mode on top of the new tokens. Only when you ask for it. | The theme's grays. |
 
-Start with the report. It is free to try: it changes nothing and tells you if there is anything to win.
+Start with the report. It is free to try: it changes nothing and tells you if there is anything to win. It asks you a few questions first, like which screens matter and how close the result must stay, so the report is about your product and not a guess.
 
 ## What the report shows
 
