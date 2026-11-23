@@ -21,11 +21,11 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	* { box-sizing: border-box; margin: 0; }
 	:root {
 		color-scheme: light dark;
-		--bg: #f5f5f7; --card: #fff; --label: #1d1d1f; --second: #6e6e73; --third: #aeaeb2; --hair: rgb(0 0 0 / 0.1);
-		--fill: rgb(118 118 128 / 0.12); --seg: #fff; --bar: rgb(245 245 247 / 0.72); --warn: #b25000;
+		--bg: #fff; --card: transparent; --label: #1d1d1f; --second: #6e6e73; --third: #aeaeb2; --hair: rgb(0 0 0 / 0.1);
+		--fill: rgb(118 118 128 / 0.12); --seg: #fff; --bar: rgb(255 255 255 / 0.8); --warn: #b25000;
 	}
 	@media (prefers-color-scheme: dark) {
-		:root { --bg: #000; --card: #1c1c1e; --label: #f5f5f7; --second: #98989d; --third: #636366; --hair: rgb(255 255 255 / 0.14); --fill: rgb(118 118 128 / 0.24); --seg: #636366; --bar: rgb(0 0 0 / 0.72); --warn: #ff9f0a; }
+		:root { --bg: #000; --card: transparent; --label: #f5f5f7; --second: #98989d; --third: #636366; --hair: rgb(255 255 255 / 0.14); --fill: rgb(118 118 128 / 0.24); --seg: #636366; --bar: rgb(0 0 0 / 0.72); --warn: #ff9f0a; }
 	}
 	html { font: 17px/1.47 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.022em; }
 	body { background: var(--bg); color: var(--label); }
@@ -38,21 +38,21 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	nav b { font-weight: 600; }
 	main { max-width: 1080px; margin: 0 auto; padding: 0 24px 120px; }
 
-	.hero { padding: 88px 0 56px; text-align: center; }
+	.hero { padding: 96px 0 72px; }
 	.hero h1 { font: 600 clamp(40px, 7vw, 72px)/1.05 -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif; letter-spacing: -0.035em; }
 	.hero h1 s { text-decoration: none; color: var(--third); }
-	.hero p { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.3; color: var(--second); max-width: 620px; margin: 20px auto 0; letter-spacing: -0.02em; }
+	.hero p { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.3; color: var(--second); max-width: 620px; margin: 16px 0 0; letter-spacing: -0.02em; }
 
-	.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-	.stat { background: var(--card); border-radius: 12px; padding: 24px; display: grid; gap: 20px; align-content: space-between; min-height: 200px; }
-	.stat .big { font: 600 48px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.03em; margin-bottom: 8px; }
+	.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; padding-top: 24px; border-top: 0.5px solid var(--hair); }
+	.stat { display: grid; gap: 16px; align-content: start; }
+	.stat .big { font: 600 40px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.03em; margin-bottom: 8px; }
 	.stat .big s { text-decoration: none; color: var(--third); }
 	.dots { display: flex; flex-wrap: wrap; gap: 5px; }
 	.dot { width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 0.5px var(--hair); }
 
-	section { margin-top: 96px; }
+	section { margin-top: 88px; }
 	.title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 24px; }
-	h2 { font: 600 32px/1.12 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.028em; }
+	h2 { font: 600 24px/1.2 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.028em; }
 	.title p { color: var(--second); margin-top: 6px; }
 	h3 { font-size: 17px; font-weight: 600; }
 	.card { background: var(--card); border-radius: 12px; }
@@ -63,7 +63,7 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.seg button[aria-pressed='true'] { background: var(--seg); box-shadow: 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04); font-weight: 600; }
 
 	/* The screen, before and after */
-	.compare { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; user-select: none; box-shadow: 0 0 0 0.5px var(--hair), 0 24px 60px rgb(0 0 0 / 0.12); }
+	.compare { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; user-select: none; box-shadow: 0 0 0 0.5px var(--hair); }
 	.compare img { display: block; width: 100%; }
 	.compare .old { position: absolute; inset: 0; overflow: hidden; width: var(--at, 50%); }
 	.compare .old img { width: auto; height: 100%; max-width: none; }
@@ -75,8 +75,7 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.compare .tag.now { right: 16px; }
 
 	/* What replaces what */
-	.swap { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 20px; align-items: start; padding: 24px; }
-	.swap + .swap { border-top: 0.5px solid var(--hair); }
+	.swap { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 20px; align-items: start; padding: 20px 0; border-top: 0.5px solid var(--hair); }
 	.swap .arrow { color: var(--third); text-align: center; font-size: 20px; line-height: 24px; }
 	.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 	.chip { width: 36px; height: 36px; border-radius: 6px; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.12); position: relative; overflow: hidden; }
@@ -87,18 +86,17 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.checker { background-image: conic-gradient(rgb(128 128 128 / 0.2) 25%, transparent 0 50%, rgb(128 128 128 / 0.2) 0 75%, transparent 0); background-size: 8px 8px; }
 
 	/* Every color: grouped lists */
-	.group { margin-top: 32px; }
-	.group > header { display: flex; align-items: baseline; gap: 10px; padding: 0 24px 8px; }
+	.group { margin-top: 28px; }
+	.group > header { display: flex; align-items: baseline; gap: 10px; padding: 0 0 8px; border-bottom: 0.5px solid var(--hair); margin-bottom: 4px; }
 	.group > header span { color: var(--second); }
-	.cols { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; padding: 0 24px 8px; color: var(--second); }
-	.row { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; align-items: center; padding: 10px 24px; position: relative; }
+	.cols { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; padding: 0 0 4px; color: var(--second); }
+	.row { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; align-items: center; padding: 4px 0; }
 	.one .cols, .one .row { grid-template-columns: 200px minmax(0, 1fr) 240px; }
-	.row + .row::before { content: ''; position: absolute; top: 0; left: 24px; right: 0; border-top: 0.5px solid var(--hair); }
-	.name { overflow-wrap: anywhere; font-weight: 500; }
+	.name { overflow-wrap: anywhere; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
 	.name div + div { font-weight: 400; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0; }
 	/* A bar is a piece of the theme's ground with the color on it, so dark reads as dark */
-	.bar { padding: 6px; border-radius: 8px; box-shadow: inset 0 0 0 0.5px var(--hair); }
-	.tile { display: grid; grid-template-columns: 1fr 1fr; height: 32px; border-radius: 4px; overflow: hidden; }
+	.bar { padding: 4px; border-radius: 6px; box-shadow: inset 0 0 0 0.5px var(--hair); }
+	.tile { display: grid; grid-template-columns: 1fr 1fr; height: 24px; border-radius: 3px; overflow: hidden; }
 	.tile > div { position: relative; }
 	.now { display: flex; align-items: center; gap: 8px; min-width: 0; }
 	.mark { flex: none; width: 18px; height: 18px; border-radius: 3px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.15); }
@@ -137,7 +135,7 @@ const themes = ['light', ...(system.dark ? ['dark'] : [])];
 const soft = tokens.filter((t) => t.kind === 'soft');
 const solid = tokens.filter((t) => t.kind !== 'soft');
 const moved = soft.filter((t) => t.shift > system.fit);
-const WORDS = { master: 'Key color, unchanged', kept: 'Unchanged', hard: 'Unchanged, solid on a hard surface', untouched: 'Unchanged' };
+const WORDS = { master: 'Key color', kept: 'Unchanged', hard: 'Unchanged', untouched: 'Unchanged' };
 
 // A segmented control: pick one of a few.
 function segmented(options, onPick) {
@@ -178,19 +176,18 @@ const page = document.getElementById('page');
 // 1. The claim, then the proofs: fewer values, the key colors stay, it looks the same.
 page.append(el('header', { className: 'hero' }, [
 	el('h1', { className: 'num' }, [el('s', { textContent: `${tokens.length} colors.` }), el('br'), `Now ${solid.length}.`]),
-	el('p', { textContent: `${plural(soft.length, 'color')} became a key color at a transparency. The app looks the same.` }),
+	el('p', { textContent: `${soft.length} are now a key color at a transparency.` }),
 ]));
 const stat = (big, label, extra) => el('div', { className: 'stat' }, [el('div', {}, [el('div', { className: 'big num' }, big), el('div', { textContent: label })]), extra]);
 const dots = (list) => el('div', { className: 'dots' }, list.map((t) => { const d = el('div', { className: 'dot', title: t.name }); d.style.background = t.value; return d; }));
 const stats = el('div', { className: 'stats' }, [
-	stat([el('s', { textContent: `${tokens.length} ` }), `${solid.length}`], 'Colors with a value of their own', el('div', { className: 'second foot', textContent: `${soft.length} are now made from the ${solid.length}.` })),
-	stat([`${solid.length}`], 'Stay exactly as they are', dots(solid)),
-	stat([`${soft.length - moved.length}`, el('s', { textContent: ` of ${soft.length}` })], 'Replaced colors look the same', el('div', { className: 'second foot', textContent: moved.length ? `${moved.map((t) => t.name).join(', ')} ${moved.length === 1 ? 'moves' : 'move'} a little.` : 'None of them moves.' })),
+	stat([`${solid.length}`], 'Unchanged', dots(solid)),
+	stat([`${soft.length - moved.length}`, el('s', { textContent: ` of ${soft.length}` })], 'Replaced colors look the same', moved.length ? el('div', { className: 'second foot', textContent: `${moved.map((t) => t.name).join(', ')} ${moved.length === 1 ? 'moves' : 'move'} a little.` }) : null),
 ]);
 if (system.dark) {
 	const had = tokens.filter((t) => t.dark);
 	const need = had.filter((t) => t.kind !== 'soft' || t.dark.shift > system.fit + 1);
-	stats.append(stat([el('s', { textContent: `${had.length} ` }), `${need.length}`], 'Values the dark theme needs', el('div', { className: 'second foot', textContent: 'Dark uses the same tokens. Only the key colors change.' })));
+	stats.append(stat([el('s', { textContent: `${had.length} ` }), `${need.length}`], 'Values the dark theme needs', null));
 }
 page.append(stats);
 
@@ -205,7 +202,7 @@ if (system.screens.length) {
 	};
 	show(system.screens[0]);
 	page.append(el('section', {}, [
-		el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'Your screens' }), el('p', { textContent: 'Drag to compare.' })]), system.screens.length > 1 ? segmented(system.screens.map((s) => [s, s.name]), show) : null]),
+		el('div', { className: 'title' }, [el('h2', { textContent: 'Screens' }), system.screens.length > 1 ? segmented(system.screens.map((s) => [s, s.name]), show) : null]),
 		view,
 	]));
 }
@@ -225,16 +222,16 @@ if (used.length) {
 		card.append(el('div', { className: 'swap' }, [
 			el('div', {}, [el('h3', { textContent: plural(mine.length, 'color') }), olds]),
 			el('div', { className: 'arrow', textContent: '→' }),
-			el('div', {}, [el('h3', { textContent: `${name} at ${plural(steps.length, 'step')}` }), news]),
+			el('div', {}, [el('h3', { textContent: `${name}, ${plural(steps.length, 'step')}` }), news]),
 		]));
 	}
-	page.append(el('section', {}, [el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'What replaces what' }), el('p', { textContent: 'Checkered tiles are transparent.' })])]), card]));
+	page.append(el('section', {}, [el('div', { className: 'title' }, [el('h2', { textContent: 'What replaces what' })]), card]));
 }
 
 // 4. Every color of the system, grouped the way the system groups them.
 const groups = [...new Set(tokens.map((t) => t.group))];
 const list = el('div', { className: themes.length === 1 ? 'one' : '' });
-list.append(el('div', { className: 'cols foot' }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `On the ${th} ground: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]));
+list.append(el('div', { className: 'cols foot' }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `${th[0].toUpperCase()}${th.slice(1)}: today | new` : 'Today | new' })), el('span')]));
 for (const g of groups) {
 	const mine = tokens.filter((t) => t.group === g);
 	const left = mine.filter((t) => t.kind !== 'soft').length;
@@ -242,19 +239,19 @@ for (const g of groups) {
 		const now = el('div', { className: 'now foot' });
 		if (t.kind === 'soft') {
 			const far = t.shift > system.fit || (t.dark?.shift ?? 0) > system.fit;
-			now.append(paint(el('span', { className: 'mark checker' }), '#fff', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
-		} else now.append(el('span', { className: 'second', textContent: t.why ? `${WORDS[t.kind]}: ${t.why}` : WORDS[t.kind] }));
+			now.append(el('span', {}, [`${t.master} ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
+		} else now.append(el('span', { className: 'second', textContent: WORDS[t.kind] }));
 		const row = el('div', { className: 'row' }, [el('div', { className: 'name foot' }, [el('div', { textContent: t.name }), el('div', { className: 'second', textContent: t.value })]), ...themes.map((th) => bar(t, th)), now]);
 		row.dataset.kind = t.kind === 'soft' ? 'soft' : 'solid';
 		return row;
 	}));
 	list.append(el('div', { className: 'group' }, [el('header', {}, [el('h3', { textContent: g }), el('span', { className: 'foot num', textContent: left === mine.length ? `${mine.length}, unchanged` : `${mine.length} → ${left}` })]), rows]));
 }
-const filters = segmented([['all', `All ${tokens.length}`], ['soft', `Now transparent ${soft.length}`], ['solid', `Unchanged ${solid.length}`]], (kind) => {
+const filters = segmented([['all', `All ${tokens.length}`], ['soft', `Transparent ${soft.length}`], ['solid', `Unchanged ${solid.length}`]], (kind) => {
 	list.querySelectorAll('.row').forEach((r) => (r.hidden = kind !== 'all' && r.dataset.kind !== kind));
 	list.querySelectorAll('.group').forEach((gr) => (gr.hidden = !gr.querySelector('.row:not([hidden])')));
 });
-page.append(el('section', {}, [el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'Every color' }), el('p', { textContent: 'Left half today, right half with hardsoft.' })]), filters]), list]));
+page.append(el('section', {}, [el('div', { className: 'title' }, [el('h2', { textContent: 'Every color' }), filters]), list]));
 
 document.title = `${system.name}: hardsoft preview`;
 </script>
