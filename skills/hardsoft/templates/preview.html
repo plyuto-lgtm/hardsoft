@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hardsoft preview</title>
+<!--
+	hardsoft: the preview page. https://plyuto.design/article/soft-and-hard-surfaces
+
+	Fill in the "system" object below and nothing else. The page draws itself from it, the same way
+	for every project: the masters, the scale with hovers, three nested cards with text, an input and
+	buttons, a hard menu above them, and the old colors next to the new ones.
+	The values here are placeholders from the example. Every color, step and name comes from the system.
+-->
+<script>
+const system = {
+	name: 'Example',
+
+	// The grays. "dark" is null when the system has no dark theme and nobody asked for one (rule 21).
+	ink: { name: 'gray-darkest', light: '#111111', dark: '#f4f4f4' },
+	ground: { name: 'gray-brightest', light: '#ffffff', dark: '#141414' },
+	medium: null, // { name: 'gray-medium', light: '#808080', dark: '#808080' }
+
+	// The scale: the steps of the ink. One scale for all masters (rule 6).
+	steps: [5, 10, 20, 40, 60, 80],
+
+	// The other masters, each with only the steps it uses. The first one is the brand button.
+	// Add dark: '#...' only when a color is hard to read on the dark ground (rule 20).
+	masters: [
+		{ name: 'brand-primary', value: '#2563eb', steps: [10, 30] },
+		{ name: 'system-negative', value: '#dc2626', steps: [10] },
+		{ name: 'system-positive', value: '#16a34a', steps: [10] },
+	],
+
+	// The layer a hover adds (rule 18), and which step plays which part in the demo.
+	hover: 10,
+	parts: { card: 5, fill: 10, stroke: 20, placeholder: 40, secondary: 60, text: 100 },
+
+	// Old colors next to the new ones, in the light theme. "on" is the background the color sits on.
+	// Leave it empty for a new system.
+	before: [
+		{ name: 'gray-100', value: '#f3f3f3', master: 'gray-darkest', step: 5 },
+		{ name: 'gray-200', value: '#e7e7e7', master: 'gray-darkest', step: 10 },
+		{ name: 'gray-400', value: '#a0a0a0', master: 'gray-darkest', step: 40 },
+		{ name: 'blue-100', value: '#dbe6fc', master: 'brand-primary', step: 10 },
+	],
+};
+</script>
+<style>
+	* { box-sizing: border-box; margin: 0; }
+	html { font: 14px/20px system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+	body { background: var(--ground); color: var(--ink); }
+
+	.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); min-height: 100vh; }
+	.theme { background: var(--ground); color: var(--ink); padding: 32px 24px 48px; display: grid; gap: 40px; align-content: start; }
+	.theme > header { display: flex; justify-content: space-between; align-items: baseline; }
+	h1 { font-size: 20px; line-height: 28px; font-weight: 500; }
+	h2 { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--secondary); margin-bottom: 12px; }
+	.quiet { color: var(--secondary); }
+	.small { font-size: 12px; line-height: 16px; }
+
+	.row { display: flex; flex-wrap: wrap; gap: 8px; }
+	.swatch { display: grid; gap: 8px; width: 104px; align-content: start; }
+	.scale .swatch { width: 56px; }
+	.scale .chip { height: 56px; }
+	.chip { height: 56px; border-radius: 8px; background-color: var(--c); }
+	.chip.edge { box-shadow: inset 0 0 0 1px var(--stroke); }
+	.chip.live { cursor: pointer; }
+	.chip.live:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
+	.chip.solid.live:hover { background-image: none; background-color: color-mix(in srgb, var(--c) calc(100% - var(--hover)), var(--ink)); }
+	.swatch b { font-weight: 500; display: block; overflow-wrap: anywhere; }
+	.scale { display: grid; gap: 16px; }
+	.line { display: grid; grid-template-columns: 112px 1fr; gap: 12px; }
+	.line > b { font-weight: 500; overflow-wrap: anywhere; }
+
+	/* Soft surfaces: transparent tokens over whatever is under them */
+	.stage { position: relative; padding-bottom: 96px; }
+	.card { background: var(--card); border-radius: 16px; padding: 16px; display: grid; gap: 16px; }
+	.card .card { border-radius: 12px; }
+	.card .card .card { border-radius: 8px; }
+	.card p + p { margin-top: 4px; }
+	.input { height: 40px; border-radius: 8px; padding: 0 12px; display: flex; align-items: center; color: var(--placeholder); box-shadow: inset 0 0 0 1px var(--stroke); }
+	.button { height: 40px; border-radius: 8px; padding: 0 16px; border: 0; font: inherit; font-weight: 500; color: var(--ink); background-color: var(--fill); cursor: pointer; }
+	.button:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
+	.button.brand { background-color: var(--brand); color: var(--on-brand); }
+	.button.brand:hover { background-image: none; background-color: color-mix(in srgb, var(--brand) calc(100% - var(--hover)), var(--ink)); }
+	.divider { height: 1px; background: var(--fill); }
+
+	/* A hard surface: solid, with an edge, and the count starts again inside it */
+	.menu { position: absolute; right: 16px; bottom: 0; width: 224px; padding: 4px; border-radius: 12px; background: var(--ground); box-shadow: 0 0 0 1px var(--fill), 0 12px 32px var(--shadow); }
+	.menu div { height: 36px; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+	.menu div:hover, .menu .on { background: var(--card); }
+	.menu .on:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
+
+	.pairs { display: grid; gap: 8px; }
+	.pair { display: grid; grid-template-columns: 112px 1fr; gap: 12px; align-items: center; }
+	.halves { display: grid; grid-template-columns: 1fr 1fr; height: 40px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px var(--fill); }
+</style>
+</head>
+<body>
+<div class="themes" id="themes"></div>
+<script>
+const mix = (color, step) => `color-mix(in srgb, ${color} ${step}%, transparent)`;
+const el = (tag, props = {}, children = []) => {
+	const node = Object.assign(document.createElement(tag), props);
+	node.append(...[].concat(children));
+	return node;
+};
+const swatch = (name, note, color, className = '') => {
+	const chip = el('div', { className: `chip live ${className}` });
+	chip.style.setProperty('--c', color);
+	return el('div', { className: 'swatch small' }, [chip, el('div', {}, [el('b', { textContent: name }), ...(note ? [el('span', { className: 'quiet', textContent: note })] : [])])]);
+};
+
+const line = (name, steps, color) => el('div', { className: 'line small' }, [el('b', { textContent: name }), el('div', { className: 'row' }, steps.map((s) => swatch(s, '', mix(color, s))))]);
+
+function theme(mode) {
+	const ink = system.ink[mode];
+	const ground = system.ground[mode];
+	const p = system.parts;
+	const colors = system.masters.map((m) => ({ ...m, value: (mode === 'dark' && m.dark) || m.value }));
+	const box = el('section', { className: 'theme' });
+	const vars = {
+		'--ink': ink, '--ground': ground, '--hover': `${system.hover}%`, '--layer': mix(ink, system.hover),
+		'--card': mix(ink, p.card), '--fill': mix(ink, p.fill), '--stroke': mix(ink, p.stroke),
+		'--placeholder': mix(ink, p.placeholder), '--secondary': mix(ink, p.secondary),
+		// These look the same in both themes (rule 20): the light ground on a brand color, a dark shadow.
+		'--brand': colors[0]?.value ?? ink, '--on-brand': colors[0] ? system.ground.light : ground,
+		'--shadow': mix(mode === 'dark' ? ground : system.ink.light, 20),
+	};
+	for (const [key, value] of Object.entries(vars)) box.style.setProperty(key, value);
+
+	box.append(el('header', {}, [el('h1', { textContent: system.name }), el('span', { className: 'quiet', textContent: mode })]));
+
+	const grays = [[system.ink.name, ink, ''], ...(system.medium ? [[system.medium.name, system.medium[mode], '']] : []), [system.ground.name, ground, 'edge']];
+	box.append(el('div', {}, [
+		el('h2', { textContent: 'Masters' }),
+		el('div', { className: 'row' }, [...grays.map(([n, v, c]) => swatch(n, v, v, `solid ${c}`)), ...colors.map((m) => swatch(m.name, m.value, m.value, 'solid'))]),
+	]));
+
+	box.append(el('div', {}, [
+		el('h2', { textContent: `Scale: ${system.steps.join(', ')}` }),
+		el('div', { className: 'scale' }, [
+			line(system.ink.name, system.steps, ink),
+			...colors.filter((m) => m.steps?.length).map((m) => line(m.name, m.steps, m.value)),
+		]),
+	]));
+
+	const inner = el('div', { className: 'card' }, [
+		el('div', {}, [el('p', { textContent: 'Third level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: `Text at ${p.secondary}, stroke at ${p.stroke}` })]),
+		el('div', { className: 'input', textContent: 'Placeholder' }),
+		el('div', { className: 'row' }, [el('button', { className: 'button brand', textContent: 'Primary' }), el('button', { className: 'button', textContent: 'Secondary' })]),
+	]);
+	const second = el('div', { className: 'card' }, [el('div', {}, [el('p', { textContent: 'Second level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: 'The same token again' })]), el('div', { className: 'divider' }), inner]);
+	const first = el('div', { className: 'card' }, [el('div', {}, [el('p', { textContent: 'First level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: `${system.ink.name} at ${p.card}` })]), second]);
+	const menu = el('div', { className: 'menu' }, ['Solid', 'Resets the count', 'Has an edge'].map((text, i) => el('div', { className: i === 1 ? 'on' : '' }, [el('span', { textContent: text })])));
+	box.append(el('div', {}, [el('h2', { textContent: 'Soft surfaces, three levels deep, and a hard menu' }), el('div', { className: 'stage' }, [first, menu])]));
+
+	if (mode === 'light' && system.before?.length) {
+		const value = (b) => (b.master === system.ink.name ? ink : b.master === system.ground.name ? ground : colors.find((m) => m.name === b.master)?.value ?? ink);
+		box.append(el('div', {}, [
+			el('h2', { textContent: 'Before and after' }),
+			el('div', { className: 'pairs' }, system.before.map((b) => {
+				const old = el('div');
+				old.style.background = b.value;
+				const now = el('div');
+				now.style.background = b.step >= 100 ? value(b) : mix(value(b), b.step);
+				const halves = el('div', { className: 'halves' }, [old, now]);
+				halves.style.backgroundColor = b.on ?? ground;
+				return el('div', { className: 'pair small' }, [el('div', {}, [el('b', { textContent: b.name, style: 'font-weight: 500; display: block' }), el('span', { className: 'quiet', textContent: b.step >= 100 ? b.master : `${b.master}-${b.step}` })]), halves]);
+			})),
+		]));
+	}
+	return box;
+}
+
+document.title = `${system.name}: hardsoft preview`;
+document.getElementById('themes').append(...['light', 'dark'].filter((mode) => system.ink[mode] && system.ground[mode]).map(theme));
+</script>
+</body>
+</html>

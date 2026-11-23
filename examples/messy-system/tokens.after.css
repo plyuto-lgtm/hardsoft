@@ -1,0 +1,68 @@
+/* The system after hardsoft: 6 masters and one scale of 8 steps.
+   Every old name still works (rule 26). Two colors are kept as they are, on the user's word. */
+
+:root {
+	/* 1. Masters */
+	--gray-900: #111111; /* the ink */
+	--page: #ffffff; /* the ground */
+	--blue-600: #2563eb;
+	--blue-900: #1e3a8a; /* a second master, approved: text on blue tints (rule 5) */
+	--red-600: #dc2626;
+	--green-600: #16a34a;
+
+	/* 2. Transparent tokens: a master at each step it uses. The scale is 5, 10, 20, 30, 40, 60, 70, 80 */
+	--gray-900-5: color-mix(in srgb, var(--gray-900) 5%, transparent);
+	--gray-900-10: color-mix(in srgb, var(--gray-900) 10%, transparent);
+	--gray-900-20: color-mix(in srgb, var(--gray-900) 20%, transparent);
+	--gray-900-40: color-mix(in srgb, var(--gray-900) 40%, transparent);
+	--gray-900-60: color-mix(in srgb, var(--gray-900) 60%, transparent);
+	--gray-900-70: color-mix(in srgb, var(--gray-900) 70%, transparent);
+	--gray-900-80: color-mix(in srgb, var(--gray-900) 80%, transparent);
+	--blue-600-10: color-mix(in srgb, var(--blue-600) 10%, transparent);
+	--blue-600-20: color-mix(in srgb, var(--blue-600) 20%, transparent);
+	--blue-600-30: color-mix(in srgb, var(--blue-600) 30%, transparent);
+	--red-600-5: color-mix(in srgb, var(--red-600) 5%, transparent);
+	--green-600-10: color-mix(in srgb, var(--green-600) 10%, transparent);
+
+	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 18) */
+	--blue-600-hover: color-mix(in srgb, var(--blue-600) 90%, var(--gray-900));
+
+	/* 4. Old names, kept (rule 26) */
+	--gray-700: var(--gray-900-80);
+	--gray-600: var(--gray-900-70);
+	--gray-500: var(--gray-900-60);
+	--gray-400: var(--gray-900-40);
+	--gray-300: var(--gray-900-20);
+	--gray-250: var(--gray-900-20);
+	--gray-200: var(--gray-900-10);
+	--gray-150: var(--gray-900-10);
+	--gray-100: var(--gray-900-5);
+	--gray-50: var(--gray-900-5);
+	--slate-200: var(--gray-900-10);
+	--slate-100: var(--gray-900-5);
+	--blue-700: var(--blue-600-hover);
+	--blue-200: var(--blue-600-30);
+	--blue-100: var(--blue-600-20);
+	--blue-50: var(--blue-600-10);
+	--red-50: var(--red-600-5);
+	--green-50: var(--green-600-10);
+
+	/* Kept as they are: they fit no master at any step, and the user chose to keep them (rule 23) */
+	--slate-500: #6f7f96;
+	--slate-300: #c3cddb;
+
+	/* 5. Semantic tokens: the same names, pointed at the new tokens (rule 25) */
+	--surface-card: var(--gray-900-5);
+	--surface-card-nested: var(--gray-900-5); /* the same token again (rule 17) */
+	--surface-card-hover: var(--gray-900-10);
+	--sidebar-bg: var(--gray-900-5);
+	--border-subtle: var(--gray-900-10);
+	--border-strong: var(--gray-900-20);
+	--text: var(--gray-900);
+	--text-muted: var(--gray-900-60);
+	--text-placeholder: var(--gray-900-40);
+	--button-primary: var(--blue-600);
+	--button-primary-hover: var(--blue-600-hover);
+	--overlay: var(--gray-900-40);
+	--shadow-color: var(--gray-900-10);
+}

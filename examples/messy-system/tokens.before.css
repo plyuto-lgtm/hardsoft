@@ -1,0 +1,50 @@
+/* The system before hardsoft: 35 solid colors, and a new one for every level and every state. */
+
+:root {
+	/* Grays */
+	--gray-900: #111111;
+	--gray-700: #3d3d3d;
+	--gray-600: #585858;
+	--gray-500: #707070;
+	--gray-400: #a0a0a0;
+	--gray-300: #cfcfcf;
+	--gray-250: #d4d4d4;
+	--gray-200: #e7e7e7;
+	--gray-150: #ebebeb;
+	--gray-100: #f3f3f3;
+	--gray-50: #f7f7f7;
+
+	/* A second family of grays, from an older redesign */
+	--slate-500: #6f7f96;
+	--slate-300: #c3cddb;
+	--slate-200: #dde3ec;
+	--slate-100: #eef1f6;
+
+	/* Brand and system */
+	--blue-900: #1e3a8a;
+	--blue-700: #235bd5;
+	--blue-600: #2563eb;
+	--blue-200: #bed1f9;
+	--blue-100: #dbe6fc;
+	--blue-50: #eef3fe;
+	--red-600: #dc2626;
+	--red-50: #fdf0f0;
+	--green-600: #16a34a;
+	--green-50: #edf8f1;
+
+	/* Semantic */
+	--page: #ffffff;
+	--surface-card: #f3f3f3;
+	--surface-card-nested: #e8e8e8;
+	--surface-card-hover: #ececec;
+	--sidebar-bg: #f0f3f8;
+	--border-subtle: #e5e5e5;
+	--border-strong: #c9c9c9;
+	--text: var(--gray-900);
+	--text-muted: #6f6f6f;
+	--text-placeholder: #9e9e9e;
+	--button-primary: var(--blue-600);
+	--button-primary-hover: var(--blue-700);
+	--overlay: rgba(0, 0, 0, 0.4);
+	--shadow-color: rgba(17, 17, 17, 0.12);
+}

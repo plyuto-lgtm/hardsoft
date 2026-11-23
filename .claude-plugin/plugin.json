@@ -1,13 +1,19 @@
 {
   "name": "hardsoft",
-  "description": "Apply the hard and soft surfaces concept to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones.",
-  "version": "1.2.0",
+  "description": "Apply the hard and soft surfaces concept to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones. Report what you would win, then apply it.",
+  "version": "2.0.0",
   "author": {
-    "name": "Olexander Plyuto",
+    "name": "Alexander Plyuto",
     "url": "https://plyuto.design"
   },
   "homepage": "https://plyuto.design/article/soft-and-hard-surfaces",
   "repository": "https://github.com/plyuto-lgtm/hardsoft",
   "license": "MIT",
-  "keywords": ["design-system", "design-tokens", "color", "tailwind", "dark-mode"]
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "color",
+    "tailwind",
+    "dark-mode"
+  ]
 }
