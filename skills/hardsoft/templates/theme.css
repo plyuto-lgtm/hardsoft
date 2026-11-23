@@ -2,8 +2,8 @@
    https://plyuto.design/article/soft-and-hard-surfaces
 
    This is a pattern, not a palette. It has no colors of its own.
-   - <...> is a value to take from the system: its own colors (rule 1) and its own steps (rule 5).
-   - The names are the default ones. If the project already names its tokens, keep its names (rule 17).
+   - <...> is a value to take from the system: its own colors (rule 1) and its own steps (rule 7).
+   - The names are the default ones. If the project already names its tokens, keep its names (rule 24).
    - The usual masters are gray-darkest, gray-medium, gray-brightest, brand-primary, brand-secondary,
      system-negative, system-positive and system-attention. Repeat the pattern for each one the system has.
 
@@ -20,12 +20,19 @@
 	--color-gray-darkest-<step>: --alpha(var(--color-gray-darkest) / <step>%);
 	--color-brand-primary-<step>: --alpha(var(--color-brand-primary) / <step>%);
 
-	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 14). It follows the ink, so it is darker in light mode
+	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 18). It follows the ink, so it is darker in light mode
 	   and lighter in dark mode. A transparent token has no hover token: its hover is its next step, or one more ink layer */
 	--color-brand-primary-hover: color-mix(in srgb, var(--color-brand-primary) 90%, var(--color-gray-darkest));
+
+	/* 4. The hairline: a transparent stroke drawn as a shadow, not a border (rule 16). Add it to any other shadow:
+	   box-shadow: var(--shadow-hairline), <the element's own shadow>. Use "inset" when the surface is darker than what is under it */
+	--shadow-hairline: 0 0 0 1px var(--color-gray-darkest-<step>);
+
+	/* 5. Old names, kept (rule 26): each one points at a master or a transparent token */
+	--color-<old name>: var(--color-gray-darkest-<step>);
 }
 
-/* 4. Dark mode: only the ink and the ground change (rule 15). Use the light pair swapped, or the project's own dark pair.
+/* 6. Dark mode, only when the system has one or someone asked for it (rule 21): only the ink and the ground change (rule 20). Use the light pair swapped, or the project's own dark pair.
    Something that must look the same in both themes (text on a color, a tooltip, the dim layer under a modal) goes through
    a semantic token that points at the other gray here.
    If the project switches themes with a class or an attribute, use that selector in place of the media query,
