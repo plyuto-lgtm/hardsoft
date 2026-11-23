@@ -131,7 +131,7 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 ### 2. Map it
 
 - Sort what you found into the three layers: masters, transparent tokens, semantics.
-- Pick the masters from the colors the system already has (rules 1 to 3). The ink is the gray that text is made of. In a dark-first system it is the brightest gray: keep the project's names, and don't call it darkest.
+- Pick the masters from the colors the system already has (rules 1 to 3). The ink is the gray that text is made of: the system's own darkest color, as it is, usually very dark and not black. Never use `#000` unless the system does. In a dark-first system it is the brightest gray: keep the project's names, and don't call it darkest.
 - A ramp, like blue 50 to 900, is one master and its tints (rule 5). Note which shades the interface really uses.
 - Every family keeps its key color as a master, also the second and third brand colors and each status color. Never drop a family because it is rare, decorative or used in gradients. Only the user can put a family out of this. Then its colors are marked `"untouched": true` with a `"why"`, and they are still counted and still shown, unchanged.
 - Give each color a `"group"` when its name does not show its family (`surface-card` goes to "surface"). Put the second theme in `"dark"`: its ground, the dark value of each master, and the dark value each token has today.
