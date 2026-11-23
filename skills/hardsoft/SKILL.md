@@ -131,7 +131,7 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 - Sort what you found into the three layers: masters, transparent tokens, semantics.
 - Pick the masters from the colors the system already has (rules 1 to 3). The ink is the gray that text is made of. In a dark-first system it is the brightest gray: keep the project's names, and don't call it darkest.
 - A ramp, like blue 50 to 900, is one master and its tints (rule 5). Note which shades the interface really uses.
-- Write `system.json` and run `map`. It gives every color its master and step, the two scales (rule 8), what does not fit, and the tint check (rule 4).
+- Write `system.json` and run `map`. It gives every color its master and step, the three scales: same look, fewer steps, and the fewer steps moved to round numbers (rule 8), what does not fit, and the tint check (rule 4).
 - Mark every surface as hard or soft (rules 10 to 13). The cases people get wrong:
 
   | Element | It is |
@@ -168,7 +168,8 @@ The questions, in this order:
 | --- | --- | --- | --- |
 | 1 | What bothers you most about the colors today? | Too many grays. Nesting and states need new colors. Themes are painful. Nothing, just curious. | What the summary leads with |
 | 2 | Which screens matter most? | The 3 or 4 routes or pages you found with the most nesting, forms and menus | The screens you read and check (see "Seeing the real screens") |
-| 3 | How close must it stay to today's look? | Exactly the same. Small shifts are fine for fewer steps. Free to clean up. | Which scale the report leads with. It still shows both (rule 8) |
+| 2a | How can I see them running? | Only when you cannot open them yourself (a sign-in, no dev server). A localhost that is already running. Storybook or a component page. Read the code only. | Whether the screens are measured or read from code. Say which in the report's first line |
+| 3 | How close must it stay to today's look? | Exactly the same. Small shifts are fine for fewer steps. Free to clean up. | Which scale the report leads with. It still shows all three (rule 8) |
 | 4 | Which of these float above the page, or have content passing under them? | Only the surfaces you could not classify, by name | Hard or soft (rules 10 to 13) |
 | 5 | These grays share a tint. On purpose, or left over? | Only when the tint check found some, by name | Tint the ink, or list them (rule 4) |
 | 6 | Where is the source of truth for colors? | The token file. A Figma file. Both, kept in sync by hand. | Who must change what, in "What is left" |
@@ -195,7 +196,7 @@ Draw the preview from [templates/preview.html](templates/preview.html): copy the
 
 The interview has already answered some of these. Ask only the decisions that are still open, the same way as the interview, each with 2 or 3 options. The usual ones:
 
-- Fewer steps or the same look. Show both with their numbers of steps and biggest shifts, and don't recommend one (rule 8).
+- Fewer steps, round steps or the same look. Show all three with their numbers of steps, biggest shifts and closeness, and don't recommend one (rule 8).
 - A tinted ink, when the tint check finds one (rule 4). Give both sides: how many tinted grays then fit, and how far the other grays move.
 - A second master, when the interface uses a shade darker than its master (rule 5).
 - Each color that fits nothing: keep it as it is, or move it to the closest step, with the shift (rule 23).

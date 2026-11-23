@@ -237,11 +237,15 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		fewer = cheapest.steps;
 	}
 	const fewerCost = fewer.length ? cost(fewer) : { worst: 0, assigned: {} };
+	// Round steps: the fewer steps, each moved to the nearest 5. Easier to name and to remember.
+	const roundSteps = [...new Set(fewer.map((s) => Math.min(95, Math.max(5, Math.round(s / 5) * 5))))].sort((a, b) => a - b);
+	const roundCost = roundSteps.length ? cost(roundSteps) : { worst: 0, assigned: {} };
 	const given = steps.length ? [...steps].sort((a, b) => a - b) : null;
 	const givenCost = given ? cost(given) : null;
 	const tint = suggestTint(rows.filter((r) => r.master === ink && !r.isMaster && !r.isHard), masters[ink], ground, fit);
 	for (const r of rows) {
 		if (fewerCost.assigned[r.name]) r.fewer = fewerCost.assigned[r.name];
+		if (roundCost.assigned[r.name]) r.round = roundCost.assigned[r.name];
 		if (givenCost?.assigned[r.name]) r.given = givenCost.assigned[r.name];
 		delete r._color;
 		delete r._bg;
@@ -265,6 +269,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		scales: {
 			sameLook: { steps: sameLook, count: sameLook.length, maxShift: round(Math.max(0, ...fitting.map((r) => r.shift))), ...closeness(fitting.map((r) => r.shift)) },
 			fewer: { steps: fewer, count: fewer.length, maxShift: round(fewerCost.worst), ...closeness(fewerCost.shifts ?? []) },
+			round: { steps: roundSteps, count: roundSteps.length, maxShift: round(roundCost.worst), ...closeness(roundCost.shifts ?? []) },
 			...(given ? { given: { steps: given, count: given.length, maxShift: round(givenCost.worst), ...closeness(givenCost.shifts) } } : {}),
 		},
 		misfits: misfits.map((r) => r.name),
@@ -353,6 +358,7 @@ function table(result) {
 		'',
 		`Same look: ${sameLook.count} steps (${sameLook.steps.join(', ')}), biggest shift ${sameLook.maxShift}, closeness ${sameLook.closeness}%.`,
 		`Fewer steps: ${fewer.count} steps (${fewer.steps.join(', ')}), biggest shift ${fewer.maxShift}, closeness ${fewer.closeness}%.`,
+		`Round steps: ${result.scales.round.count} steps (${result.scales.round.steps.join(', ')}), biggest shift ${result.scales.round.maxShift}, closeness ${result.scales.round.closeness}%.`,
 		...(own ? [`Your scale: ${own.count} steps (${own.steps.join(', ')}), biggest shift ${own.maxShift}, closeness ${own.closeness}%.`] : []),
 		`Independent tokens: ${result.tokens.independentBefore} before, ${result.tokens.independentAfter} after (the masters, the solid grays of hard surfaces, and the colors that fit nothing).`,
 		`Colors: ${w.colorsBefore} before. After: ${w.masters} masters and ${w.stepsSameLook} steps (same look) or ${w.stepsFewer} steps (fewer).`,

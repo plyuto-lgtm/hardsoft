@@ -11,6 +11,8 @@
 	for every project: the masters, the scale with hovers, three nested cards with text, an input and
 	buttons, a hard menu above them, and the old colors next to the new ones.
 	The values here are placeholders from the example. Every color, step and name comes from the system.
+	List every master, with or without steps, every color that is kept as it is ("kept"), and every old
+	color in "before", not a sample. When dark has steps of its own, write steps and parts as { light, dark }.
 -->
 <script>
 const system = {
@@ -46,6 +48,9 @@ const system = {
 	// The layer a hover adds (rule 18), and which step plays which part in the demo.
 	hover: 10,
 	parts: { card: 5, fill: 10, stroke: 20, placeholder: 40, secondary: 60, text: 100 },
+
+	// Colors that fit no master and stay solid: { name, value, dark? }. Leave empty when there are none.
+	kept: [],
 
 	// Old colors next to the new ones, in the light theme. "on" is the background the color sits on.
 	// Leave it empty for a new system.
@@ -127,12 +132,15 @@ const swatch = (name, note, color, className = '') => {
 	return el('div', { className: 'swatch small' }, [chip, el('div', {}, [el('b', { textContent: name }), ...(note ? [el('span', { className: 'quiet', textContent: note })] : [])])]);
 };
 
+// Steps and parts can be one list for both themes, or { light, dark } when the themes differ.
+const per = (value, mode) => (value && !Array.isArray(value) && value[mode] ? value[mode] : value);
 const line = (name, steps, color) => el('div', { className: 'line small' }, [el('b', { textContent: name }), el('div', { className: 'row' }, steps.map((s) => swatch(s, '', mix(color, s))))]);
 
 function theme(mode) {
 	const ink = system.ink[mode];
 	const ground = system.ground[mode];
-	const p = system.parts;
+	const p = per(system.parts, mode);
+	const steps = per(system.steps, mode);
 	const colors = system.masters.map((m) => ({ ...m, value: (mode === 'dark' && m.dark) || m.value }));
 	const box = el('section', { className: 'theme' });
 	const vars = {
@@ -154,12 +162,20 @@ function theme(mode) {
 	]));
 
 	box.append(el('div', {}, [
-		el('h2', { textContent: `Scale: ${system.steps.join(', ')}` }),
+		el('h2', { textContent: `Scale: ${steps.join(', ')}` }),
 		el('div', { className: 'scale' }, [
-			line(system.ink.name, system.steps, ink),
+			line(system.ink.name, steps, ink),
 			...colors.filter((m) => m.steps?.length).map((m) => line(m.name, m.steps, m.value)),
 		]),
 	]));
+
+	const kept = (system.kept ?? []).filter((k) => (mode === 'dark' ? k.dark : k.value));
+	if (kept.length) {
+		box.append(el('div', {}, [
+			el('h2', { textContent: `Kept as they are: ${kept.length}` }),
+			el('div', { className: 'row' }, kept.map((k) => swatch(k.name, (mode === 'dark' && k.dark) || k.value, (mode === 'dark' && k.dark) || k.value, 'solid'))),
+		]));
+	}
 
 	const inner = el('div', { className: 'card' }, [
 		el('div', {}, [el('p', { textContent: 'Third level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: `Text at ${p.secondary}, stroke at ${p.stroke}` })]),
@@ -192,7 +208,7 @@ function theme(mode) {
 if (system.summary) {
 	const strip = document.getElementById('summary');
 	const ink = system.ink.light;
-	for (const [key, value] of Object.entries({ '--ink': ink, '--ground': system.ground.light, '--secondary': mix(ink, system.parts.secondary), '--placeholder': mix(ink, system.parts.placeholder) })) strip.style.setProperty(key, value);
+	for (const [key, value] of Object.entries({ '--ink': ink, '--ground': system.ground.light, '--secondary': mix(ink, per(system.parts, 'light').secondary), '--placeholder': mix(ink, per(system.parts, 'light').placeholder) })) strip.style.setProperty(key, value);
 	const figure = (big, label) => el('div', {}, [el('div', { className: 'figure' }, big), el('div', { className: 'quiet small', textContent: label })]);
 	strip.append(
 		figure([system.summary.verdict], system.name),

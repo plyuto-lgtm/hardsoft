@@ -121,3 +121,13 @@ test('shift is zero for the same color and grows with the difference', () => {
 	assert.equal(shift(parse('#777'), parse('#777')), 0);
 	assert.ok(shift(parse('#777'), parse('#787878')) < shift(parse('#777'), parse('#888')));
 });
+
+test('map offers round steps, each a multiple of 5', async () => {
+	const { map } = await import('../skills/hardsoft/scripts/hardsoft.mjs');
+	const { readFileSync } = await import('node:fs');
+	const system = JSON.parse(readFileSync(new URL('../examples/messy-system/system.json', import.meta.url)));
+	const { scales, rows } = map(system);
+	assert.ok(scales.round.steps.length > 0 && scales.round.steps.length <= scales.fewer.steps.length);
+	assert.ok(scales.round.steps.every((s) => s % 5 === 0 && s >= 5 && s <= 95));
+	assert.ok(rows.filter((r) => r.fewer).every((r) => r.round));
+});

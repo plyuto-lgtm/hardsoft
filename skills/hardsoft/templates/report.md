@@ -32,6 +32,7 @@
 ## Decisions for you
 
 <Numbered. Only what is really open. Each with its options and what each one costs. "None" if nothing is open.>
+<A clash with a rule the project wrote for itself (a frozen value, "do not add a gray") always goes first here, never in Details.>
 
 1. **<The decision, as a question.>** <One line of why it comes up.>
    - <Option>: <what happens, with the number>
@@ -40,6 +41,10 @@
 ## What would change
 
 <Three to six lines, in plain words, by what the user sees: "The 11 grays become one ink at 7 steps." "Cards at every level use one token." "The button hover is the ink laid over the brand color.">
+
+## Found along the way
+
+<Only when the audit turned up problems that are not about this approach: class names that point at tokens that do not exist, two tokens a hair apart, dead values. A table of file, what, and what happens. Not fixed here.>
 
 ---
 
@@ -57,6 +62,7 @@
 | --- | --- | --- | --- |
 | Same look | <n>: <list> | <shift> | <n>% |
 | Fewer steps | <n>: <list> | <shift> | <n>% |
+| Round steps | <n>: <list> | <shift> | <n>% |
 
 <After the answer: "Chosen: <version>.">
 

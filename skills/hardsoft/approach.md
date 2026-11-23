@@ -89,7 +89,7 @@ Every rule has a level. The level says how far it can bend.
 
 6. **One alpha scale** for all masters. `Strict` Each master uses only the steps it needs.
 7. **The steps come from the system.** `Default` Use the alphas it already has. Where it has solid grays, convert each one to the closest alpha of the ink over the background it sits on.
-8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Show both, with the number of steps and the biggest color shift in each. Don't recommend one.
+8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Round steps are the fewer steps moved to the nearest 5, which are easier to name: 5, 10, 20 instead of 4, 9, 21. Show all three, with the number of steps and the biggest color shift in each. Don't recommend one.
 9. **A new system starts from 80, 40, 20, 10 and 5.** `Advice` Use this only when there is nothing to take the steps from.
 
 ### Surfaces
