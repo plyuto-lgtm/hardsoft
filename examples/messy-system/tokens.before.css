@@ -1,17 +1,17 @@
-/* The system before hardsoft: 35 solid colors, and a new one for every level and every state. */
+/* The system before hardsoft: 41 solid colors, a new one for every level and every state, and all of them again for dark. */
 
 :root {
 	/* Grays */
-	--gray-900: #111111;
-	--gray-700: #3d3d3d;
-	--gray-600: #585858;
-	--gray-500: #707070;
-	--gray-400: #a0a0a0;
-	--gray-300: #cfcfcf;
-	--gray-250: #d4d4d4;
-	--gray-200: #e7e7e7;
-	--gray-150: #ebebeb;
-	--gray-100: #f3f3f3;
+	--gray-900: #16181d;
+	--gray-700: #414347;
+	--gray-600: #5b5d60;
+	--gray-500: #737477;
+	--gray-400: #a2a3a5;
+	--gray-300: #d0d0d1;
+	--gray-250: #d5d5d6;
+	--gray-200: #e7e8e8;
+	--gray-150: #ebecec;
+	--gray-100: #f3f3f4;
 	--gray-50: #f7f7f7;
 
 	/* A second family of grays, from an older redesign */
@@ -22,7 +22,7 @@
 
 	/* Brand and system */
 	--blue-900: #1e3a8a;
-	--blue-700: #235bd5;
+	--blue-700: #245cd6;
 	--blue-600: #2563eb;
 	--blue-200: #bed1f9;
 	--blue-100: #dbe6fc;
@@ -32,19 +32,73 @@
 	--green-600: #16a34a;
 	--green-50: #edf8f1;
 
+	/* A second brand color, and the chart series */
+	--violet-600: #7c3aed;
+	--violet-100: #e5d8fb;
+	--violet-50: #f2ebfd;
+	--chart-1: #f59e0b;
+	--chart-2: #06b6d4;
+	--chart-3: #ec4899;
+
 	/* Semantic */
 	--page: #ffffff;
-	--surface-card: #f3f3f3;
-	--surface-card-nested: #e8e8e8;
-	--surface-card-hover: #ececec;
+	--surface-card: #f3f3f4;
+	--surface-card-nested: #e8e8e9;
+	--surface-card-hover: #eceded;
 	--sidebar-bg: #f0f3f8;
-	--border-subtle: #e5e5e5;
-	--border-strong: #c9c9c9;
+	--border-subtle: #e6e6e6;
+	--border-strong: #cacbcc;
 	--text: var(--gray-900);
-	--text-muted: #6f6f6f;
-	--text-placeholder: #9e9e9e;
+	--text-muted: #727376;
+	--text-placeholder: #a0a1a3;
 	--button-primary: var(--blue-600);
 	--button-primary-hover: var(--blue-700);
 	--overlay: rgba(0, 0, 0, 0.4);
-	--shadow-color: rgba(17, 17, 17, 0.12);
+	--shadow-color: rgba(22, 24, 29, 0.12);
+}
+
+/* Dark: every value set by hand again */
+[data-theme='dark'] {
+	--page: #17181a;
+	--gray-900: #f2f2f2;
+	--gray-700: #c6c6c7;
+	--gray-600: #b0b1b1;
+	--gray-500: #9a9b9c;
+	--gray-400: #717173;
+	--gray-300: #454647;
+	--gray-250: #414143;
+	--gray-200: #2f3032;
+	--gray-150: #2b2c2d;
+	--gray-100: #242527;
+	--gray-50: #202123;
+	--surface-card: #222325;
+	--surface-card-nested: #2c2d2f;
+	--surface-card-hover: #2d2e30;
+	--border-subtle: #2f3032;
+	--border-strong: #434445;
+	--text-muted: #9d9d9e;
+	--text-placeholder: #6f6f70;
+	--slate-100: #222325;
+	--slate-200: #2d2e30;
+	--slate-300: #2b3340;
+	--slate-500: #7f8da3;
+	--sidebar-bg: #222325;
+	--blue-600: #3b76f0;
+	--blue-50: #1b212f;
+	--blue-100: #1f2c47;
+	--blue-200: #213358;
+	--blue-700: #4d82f0;
+	--blue-900: #93b4f8;
+	--red-600: #ef4444;
+	--red-50: #241b1d;
+	--green-600: #22c55e;
+	--green-50: #182921;
+	--violet-600: #8b5cf6;
+	--violet-100: #2e2646;
+	--violet-50: #231f30;
+	--chart-1: #f59e0b;
+	--chart-2: #06b6d4;
+	--chart-3: #ec4899;
+	--overlay: rgba(0, 0, 0, 0.6);
+	--shadow-color: rgba(0, 0, 0, 0.4);
 }

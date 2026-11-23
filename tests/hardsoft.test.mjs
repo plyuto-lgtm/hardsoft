@@ -1,7 +1,7 @@
 // Run with: node --test
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, unlinkSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { parse, hex, over, shift, contrast, fitAlpha, parseLayer, stack, contrastReport, map } from '../skills/hardsoft/scripts/hardsoft.mjs';
 
@@ -66,7 +66,9 @@ test('the map: masters, steps, misfits', () => {
 	assert.equal(row('surface-card-nested').step, 5, 'nested card is measured over its parent');
 	assert.equal(row('blue-50').master, 'blue-600', 'a pale tint belongs to its own master, not to the ink');
 	assert.equal(row('red-50').master, 'red-600');
-	assert.deepEqual(r.misfits, ['slate-300', 'slate-500', 'blue-900']);
+	assert.deepEqual(r.misfits, ['slate-300', 'slate-500']);
+	assert.equal(row('blue-900').isMaster, true, 'an approved second master');
+	assert.equal(row('chart-1').isUntouched, true);
 	assert.deepEqual([row('blue-700').master, row('blue-700').step], ['gray-900', 10], 'a hover is a layer of ink over the color it sits on');
 });
 
@@ -96,7 +98,7 @@ test('the map: offers a tinted ink and says what it costs', () => {
 
 test('the map: counts independent tokens and closeness', () => {
 	const r = map(example, { steps: [5, 10, 20, 30, 40, 60, 70, 80] });
-	assert.deepEqual(r.tokens, { independentBefore: 36, independentAfter: 8 });
+	assert.deepEqual(r.tokens, { independentBefore: 42, independentAfter: 12 });
 	assert.equal(r.scales.sameLook.closeness, 100);
 	assert.ok(r.scales.given.closeness < 100 && r.scales.given.closeness > 90);
 	assert.ok(r.scales.given.averageShift < r.scales.given.maxShift);
@@ -106,7 +108,7 @@ test('the map: a solid gray of a hard surface stays solid', () => {
 	const r = map({ ...example, colors: [...example.colors, { name: 'menu-bg', value: '#fafafa', hard: true }] });
 	const row = r.rows.find((x) => x.name === 'menu-bg');
 	assert.equal(row.isHard, true);
-	assert.equal(r.tokens.independentAfter, 9);
+	assert.equal(r.tokens.independentAfter, 13);
 	assert.ok(!r.misfits.includes('menu-bg'));
 });
 
@@ -120,4 +122,39 @@ test('the shift command: an element on screen, old against new', () => {
 test('shift is zero for the same color and grows with the difference', () => {
 	assert.equal(shift(parse('#777'), parse('#777')), 0);
 	assert.ok(shift(parse('#777'), parse('#787878')) < shift(parse('#777'), parse('#888')));
+});
+
+test('map offers round steps, each a multiple of 5', async () => {
+	const { map } = await import('../skills/hardsoft/scripts/hardsoft.mjs');
+	const { readFileSync } = await import('node:fs');
+	const system = JSON.parse(readFileSync(new URL('../examples/messy-system/system.json', import.meta.url)));
+	const { scales, rows } = map(system);
+	assert.ok(scales.round.steps.length > 0 && scales.round.steps.length <= scales.fewer.steps.length);
+	assert.ok(scales.round.steps.every((s) => s % 5 === 0 && s >= 5 && s <= 95));
+	assert.ok(rows.filter((r) => r.fewer).every((r) => r.round));
+});
+
+test('the preview holds every color of the system, in both themes', async () => {
+	const { preview } = await import('../skills/hardsoft/scripts/hardsoft.mjs');
+	const data = preview(example, { scale: 'given', steps: [5, 10, 20, 30, 40, 60, 70, 80] });
+	// Every color of the file is there, plus the ground when the file does not list it.
+	for (const c of example.colors) assert.ok(data.tokens.some((t) => t.name === c.name), c.name);
+	assert.equal(data.tokens.length, example.colors.length + 1);
+	assert.equal(data.tokens.find((t) => t.name === 'chart-1').kind, 'untouched');
+	assert.equal(data.tokens.find((t) => t.name === 'violet-600').kind, 'master');
+	const soft = data.tokens.filter((t) => t.kind === 'soft');
+	assert.ok(soft.every((t) => data.steps.includes(t.step)));
+	// Dark uses the same step of the same master, and lands close to the dark value of today.
+	const gray = data.tokens.find((t) => t.name === 'gray-500');
+	assert.ok(gray.dark.shift <= 2, `gray-500 in dark moved ${gray.dark.shift}`);
+	assert.equal(data.screens.length, 2);
+});
+
+test('the preview command writes one file with the screens inside', () => {
+	const out = new URL('../examples/messy-system/.test-preview.html', import.meta.url);
+	execFileSync('node', [new URL('../skills/hardsoft/scripts/hardsoft.mjs', import.meta.url).pathname, 'preview', new URL('../examples/messy-system/system.json', import.meta.url).pathname, '--out', out.pathname]);
+	const page = readFileSync(out, 'utf8');
+	unlinkSync(out);
+	assert.ok(page.includes('data:image/png;base64,'));
+	assert.ok(!page.includes('screens/orders-before.png'));
 });

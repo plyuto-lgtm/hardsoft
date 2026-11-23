@@ -19,6 +19,11 @@
 | Values to edit to change all the grays | <n> | 1 |
 | Values a second theme needs | <n> | <n> |
 
+| Family | Colors today | With a value of their own after | What they become |
+| --- | --- | --- | --- |
+| <every family of the system, one row each, none missing> | <n> | <n> | <"<master> at <n> steps", or "unchanged"> |
+| **All** | **<n>** | **<n>** | |
+
 **It stays <n>% the same.** <n> of <n> colors look exactly as they do today. <The ones that move, by name, and how visibly.>
 
 **What does not change:** your token names, your components, your brand colors, <anything else the interview protected>.
@@ -32,6 +37,7 @@
 ## Decisions for you
 
 <Numbered. Only what is really open. Each with its options and what each one costs. "None" if nothing is open.>
+<A clash with a rule the project wrote for itself (a frozen value, "do not add a gray") always goes first here, never in Details.>
 
 1. **<The decision, as a question.>** <One line of why it comes up.>
    - <Option>: <what happens, with the number>
@@ -40,6 +46,10 @@
 ## What would change
 
 <Three to six lines, in plain words, by what the user sees: "The 11 grays become one ink at 7 steps." "Cards at every level use one token." "The button hover is the ink laid over the brand color.">
+
+## Found along the way
+
+<Only when the audit turned up problems that are not about this approach: class names that point at tokens that do not exist, two tokens a hair apart, dead values. A table of file, what, and what happens. Not fixed here.>
 
 ---
 
@@ -57,6 +67,7 @@
 | --- | --- | --- | --- |
 | Same look | <n>: <list> | <shift> | <n>% |
 | Fewer steps | <n>: <list> | <shift> | <n>% |
+| Round steps | <n>: <list> | <shift> | <n>% |
 
 <After the answer: "Chosen: <version>.">
 
@@ -118,9 +129,9 @@ Every old name still works (rule 26). These can go when the team chooses.
 | --- | --- |
 | <name> | <same as another token, unused, unused shade of a ramp> |
 
-### Left out
+### Untouched
 
-<Gradients, photos, illustrations, charts, code highlighting, tool colors (rule 29). One line each.>
+<Colors that are counted and shown but not changed: gradients, photos, illustrations, charts, code highlighting, tool colors (rule 29), and any family the user put out of this, with their words. One line each. Never a brand or status family on your own call.>
 
 ### Decisions made
 

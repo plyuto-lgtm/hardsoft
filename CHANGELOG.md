@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.2.0
+
+From the first run on a real product.
+
+- The preview is rebuilt around one proof: the same app, with fewer values. It shows how many colors had a value of their own and how many do now, the colors that stay exactly as they are, which solid colors each key color at a step replaces, and every color of the system, today next to with hardsoft.
+- The screens picked in the interview are in the preview, before and after, with a slider.
+- Light and dark are drawn side by side from the same tokens, so both themes show the same list. Dark is measured as the same step of the same master.
+- The whole design system is read, not the part one page uses. No family is dropped: a second or third brand color keeps its key color, and what the user puts out of this is shown as untouched.
+- The preview is made by the calculator (`preview`), not filled in by hand, so its numbers match the map.
+- A third scale, round steps: the fewer steps moved to the nearest 5.
+- The report has one row per family with its count before and after, a clash with the project's own rules goes into the decisions, and side findings get a section of their own.
+- The interview asks how to see the screens running when the agent cannot open them.
+
 ## 2.1.0
 
 - The report starts with an interview: 3 to 6 questions with options made from the project's own names, asked with the agent's question tool.

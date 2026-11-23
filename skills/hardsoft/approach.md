@@ -80,7 +80,7 @@ Every rule has a level. The level says how far it can bend.
 ### Masters
 
 1. **Few masters.** `Default` The usual set is three grays (darkest, medium, brightest), two brand colors (primary, secondary) and three system colors (negative, positive, attention). They are the system's own colors. Fewer is fine. More needs a reason. Three grays is the goal for what the transparent scale is built from, not a limit on solid grays: hard surfaces may add a few of their own (rule 14).
-2. **The darkest gray is the ink.** `Strict` Text and almost every transparent layer are made from it. The brightest gray is the ground: the global background.
+2. **The darkest gray is the ink.** `Strict` Text and almost every transparent layer are made from it. The brightest gray is the ground: the global background. The ink is the system's own darkest color, which is usually very dark but not black, and often has a slight tint. Never put `#000` in its place. The same holds for the ground of a dark theme: it is very dark, not black. When some see-through tokens are made of pure black while the text is a near-black, the system has two inks: say so, and offer to move them to the one ink.
 3. **The medium gray is for softer toning.** `Advice` For example the muting overlay under a modal, or a transparent fill used together with a background blur. It is rare, but some systems need it.
 4. **Tinted grays tint the ink.** `Default` When several grays share a tint the ink does not have, like slightly blue grays with a pure black ink, they are not the ink at any step. Offer to tint the ink itself so they all fit, show the new ink in the preview, and change it only after a yes. One odd gray is not a reason to tint: keep it, list it and ask (rule 23).
 5. **A ramp is one master.** `Default` When a brand or system color comes as a ramp of shades, like blue 50 to 900, the master is the shade the interface uses as the color itself. The lighter tints are the master at a step. A shade darker than the master can't be made with alpha: if the interface really uses it, offer it as a second master, and add it only after a yes. Shades nobody uses are listed as removable (rule 26).
@@ -89,7 +89,7 @@ Every rule has a level. The level says how far it can bend.
 
 6. **One alpha scale** for all masters. `Strict` Each master uses only the steps it needs.
 7. **The steps come from the system.** `Default` Use the alphas it already has. Where it has solid grays, convert each one to the closest alpha of the ink over the background it sits on.
-8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Show both, with the number of steps and the biggest color shift in each. Don't recommend one.
+8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Round steps are the fewer steps moved to the nearest 5, which are easier to name: 5, 10, 20 instead of 4, 9, 21. Show all three, with the number of steps and the biggest color shift in each. Don't recommend one.
 9. **A new system starts from 80, 40, 20, 10 and 5.** `Advice` Use this only when there is nothing to take the steps from.
 
 ### Surfaces
@@ -127,5 +127,5 @@ Every rule has a level. The level says how far it can bend.
 ### Care
 
 28. **Text must stay readable.** `Default` Measure text against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text. Check it at the deepest level of nesting and in every theme. List every place that is too low with its number, whether it was low before or became low, and offer the nearest stronger step for each. The user says yes or no to each in the plan.
-29. **Leave non-interface colors alone**: gradients, photos, illustrations, charts, code highlighting, decorative drawings inside the interface, and the colors of tools around the product, like Storybook's own frame. `Strict` List them as left out.
+29. **Leave non-interface colors alone**: gradients, photos, illustrations, charts, code highlighting, decorative drawings inside the interface, and the colors of tools around the product, like Storybook's own frame. `Strict` They are untouched, not removed: count them and show them, unchanged. A brand or status family is never one of these unless the user says so.
 30. **Nothing changes before a yes.** `Strict` The plan and the preview come first. The preview carries its own copy of the tokens. The project's tokens change only after the user has seen both and said yes.

@@ -5,13 +5,15 @@
 //   node hardsoft.mjs shift <old color> --now <layer> [--on <ground> <layer> ...]
 //   node hardsoft.mjs contrast --text <layer> --on <layer> [<layer> ...] [--steps 40,60,80]
 //   node hardsoft.mjs map <system.json> [--json] [--fit 2] [--tolerance 3] [--steps 5,10,20,40,60,80]
+//   node hardsoft.mjs preview <system.json> [--out hardsoft-preview.html] [--scale fewer|round|same|given]
 //
 // A color is hex, rgb() or hsl(). A layer is a color, or a color at an alpha: "#111@60".
 // "Shift" is how far a color moves, as a distance in OKLab times 100. Under 2 the eye barely sees it.
 // "Closeness" is the share of the colors that still look the same: a shift of 2 or less.
 
-import { readFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, extname, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const FIT = 2; // a color fits a master when its shift is at most this
 export const TOLERANCE = 3; // how far a color may move in the "fewer steps" scale
@@ -185,6 +187,8 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		const color = parse(entry.value);
 		const target = color.a < 1 ? over(color, bg) : color;
 		// A solid gray of a hard surface stays solid (rule 14). It is not a master, and not a step of one.
+		// A color the user keeps out of this (a chart series, a tag hue, a logo) stays exactly as it is, and is still shown.
+		if (entry.untouched) return { name: entry.name, value: entry.value, on: hex(bg), master: null, alpha: 100, step: 100, shift: 0, fits: true, isUntouched: true };
 		if (entry.hard) return { name: entry.name, value: entry.value, on: hex(bg), master: null, alpha: 100, step: 100, shift: 0, fits: true, isHard: true };
 		const exact = order.find((n) => shift(target, masters[n]) < 0.5);
 		if (exact && !entry.master) {
@@ -210,7 +214,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		};
 	});
 
-	const fitting = rows.filter((r) => r.fits && !r.isMaster && !r.isHard);
+	const fitting = rows.filter((r) => r.fits && !r.isMaster && !r.isHard && !r.isUntouched);
 	const sameLook = [...new Set(fitting.map((r) => r.step))].sort((a, b) => a - b);
 
 	// Fewer steps: drop the step that costs the least, while no color moves further than the tolerance.
@@ -237,11 +241,15 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		fewer = cheapest.steps;
 	}
 	const fewerCost = fewer.length ? cost(fewer) : { worst: 0, assigned: {} };
+	// Round steps: the fewer steps, each moved to the nearest 5. Easier to name and to remember.
+	const roundSteps = [...new Set(fewer.map((s) => Math.min(95, Math.max(5, Math.round(s / 5) * 5))))].sort((a, b) => a - b);
+	const roundCost = roundSteps.length ? cost(roundSteps) : { worst: 0, assigned: {} };
 	const given = steps.length ? [...steps].sort((a, b) => a - b) : null;
 	const givenCost = given ? cost(given) : null;
-	const tint = suggestTint(rows.filter((r) => r.master === ink && !r.isMaster && !r.isHard), masters[ink], ground, fit);
+	const tint = suggestTint(rows.filter((r) => r.master === ink && !r.isMaster && !r.isHard && !r.isUntouched), masters[ink], ground, fit);
 	for (const r of rows) {
 		if (fewerCost.assigned[r.name]) r.fewer = fewerCost.assigned[r.name];
+		if (roundCost.assigned[r.name]) r.round = roundCost.assigned[r.name];
 		if (givenCost?.assigned[r.name]) r.given = givenCost.assigned[r.name];
 		delete r._color;
 		delete r._bg;
@@ -252,19 +260,20 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 	// The ground is a color of the system too, and a master: the brightest gray.
 	// Closeness: how much of the system still looks the way it did. Masters and kept colors have not moved.
 	const closeness = (shifts) => {
-		const all = [...shifts, ...rows.filter((r) => r.isMaster || r.isHard || !r.fits).map(() => 0)];
+		const all = [...shifts, ...rows.filter((r) => r.isMaster || r.isHard || r.isUntouched || !r.fits).map(() => 0)];
 		return { closeness: Math.round((100 * all.filter((d) => d <= fit).length) / all.length), averageShift: round(all.reduce((a, b) => a + b, 0) / all.length) };
 	};
 	const listed = new Set(system.colors.map((c) => hex(solid(c)))).has(hex(ground)) ? 0 : 1;
 	const distinct = new Set([hex(ground), ...system.colors.map((c) => hex(solid(c)))]).size;
-	const usedMasters = new Set([hex(ground), ...rows.filter((r) => r.fits && !r.isHard).map((r) => hex(masters[r.master]))]);
-	const hard = rows.filter((r) => r.isHard);
+	const usedMasters = new Set([hex(ground), ...rows.filter((r) => r.fits && !r.isHard && !r.isUntouched).map((r) => hex(masters[r.master]))]);
+	const hard = rows.filter((r) => r.isHard || r.isUntouched);
 
 	return {
 		rows,
 		scales: {
 			sameLook: { steps: sameLook, count: sameLook.length, maxShift: round(Math.max(0, ...fitting.map((r) => r.shift))), ...closeness(fitting.map((r) => r.shift)) },
 			fewer: { steps: fewer, count: fewer.length, maxShift: round(fewerCost.worst), ...closeness(fewerCost.shifts ?? []) },
+			round: { steps: roundSteps, count: roundSteps.length, maxShift: round(roundCost.worst), ...closeness(roundCost.shifts ?? []) },
 			...(given ? { given: { steps: given, count: given.length, maxShift: round(givenCost.worst), ...closeness(givenCost.shifts) } } : {}),
 		},
 		misfits: misfits.map((r) => r.name),
@@ -336,13 +345,73 @@ function keepDarkness(color, ground, target) {
 	return at((lo + hi) / 2);
 }
 
+// ---------- the preview ----------
+
+/**
+ * Everything the preview page draws, made from the map so that no color can be dropped.
+ * Every color of the system is in it, with what it was and what it is now:
+ * "master" (a key color, unchanged), "soft" (a master at a step), "kept" (fits no master, unchanged),
+ * "hard" (a solid gray of a hard surface, unchanged), "untouched" (out of scope, unchanged).
+ * system.dark = { ground, masters: { name: color }, values: { token: color } } adds the second theme,
+ * drawn with the same tokens: the same step of the same master, and how far that is from today's dark value.
+ * system.screens = [{ name, before, after }] are screenshots of the same real screen, old and new.
+ */
+export function preview(system, { scale = 'fewer', fit = FIT, tolerance = TOLERANCE, steps = [] } = {}) {
+	const family = (name) => name.replace(/[-_.]?\d+$/, '').replace(/[-_.]$/, '') || name;
+	const result = map(system, { fit, tolerance, steps });
+	const key = { same: 'sameLook', sameLook: 'sameLook', fewer: 'fewer', round: 'round', given: 'given' }[scale] ?? 'fewer';
+	const chosen = result.scales[key] ?? result.scales.fewer;
+	const ground = parse(system.ground);
+	const d = system.dark;
+	const darkValue = (name) => d?.values?.[name] ?? d?.masters?.[name];
+
+	const tokens = result.rows.map((r, i) => {
+		const entry = system.colors[i];
+		const token = { name: r.name, group: entry.group ?? family(r.name), value: entry.value, on: r.on, kind: 'kept', ...(entry.why ? { why: entry.why } : {}) };
+		if (r.isMaster) token.kind = 'master';
+		else if (r.isUntouched) token.kind = 'untouched';
+		else if (r.isHard) token.kind = 'hard';
+		else if (r.fits) {
+			const at = key === 'sameLook' ? { step: r.step, shift: r.shift } : (r[key] ?? r.fewer);
+			Object.assign(token, { kind: 'soft', master: r.master, masterValue: system.masters[r.master], step: at.step, shift: at.shift });
+		}
+		// The second theme uses the same token: the same master at the same step, with the master's dark value.
+		// Its shift says how far that lands from the dark value the system has today.
+		if (d && darkValue(r.name)) {
+			const under = entry.on && darkValue(entry.on) ? parse(darkValue(entry.on)) : parse(d.ground);
+			token.dark = { value: darkValue(r.name), on: hex(under) };
+			if (token.kind === 'soft') {
+				const master = d.masters?.[r.master] ?? system.masters[r.master];
+				const was = parse(token.dark.value);
+				Object.assign(token.dark, { masterValue: master, shift: round(shiftAt(was.a < 1 ? over(was, under) : was, parse(master), under, token.step)) });
+			}
+		}
+		return token;
+	});
+	if (!system.colors.some((c) => parse(c.value).a === 1 && shift(parse(c.value), ground) < 0.5)) {
+		tokens.unshift({ name: 'ground', group: 'Ground', value: system.ground, on: hex(ground), kind: 'master', ...(d ? { dark: { value: d.ground, on: d.ground } } : {}) });
+	}
+	const ink = system.ink ?? Object.keys(system.masters)[0];
+	return {
+		name: system.name ?? 'Design system',
+		scale: key,
+		fit,
+		steps: chosen.steps,
+		light: { ground: system.ground, ink: system.masters[ink] },
+		...(d ? { dark: { ground: d.ground, ink: d.masters?.[ink] ?? system.masters[ink] } } : {}),
+		tokens,
+		screens: system.screens ?? [],
+	};
+}
+
 // ---------- the command line ----------
 
 function table(result) {
 	const own = result.scales.given;
 	const lines = [`| Token | Value | On | Master | Same look | Shift | Fewer steps | Shift |${own ? ' Your scale | Shift |' : ''}`, `| --- | --- | --- | --- | --- | --- | --- | --- |${own ? ' --- | --- |' : ''}`];
 	for (const r of result.rows) {
-		if (r.isHard) lines.push(`| ${r.name} | ${r.value} | ${r.on} | solid, hard surface | - | 0 | - | 0 |${own ? ' - | 0 |' : ''}`);
+		if (r.isUntouched) lines.push(`| ${r.name} | ${r.value} | ${r.on} | untouched | - | 0 | - | 0 |${own ? ' - | 0 |' : ''}`);
+		else if (r.isHard) lines.push(`| ${r.name} | ${r.value} | ${r.on} | solid, hard surface | - | 0 | - | 0 |${own ? ' - | 0 |' : ''}`);
 		else if (r.isMaster) lines.push(`| ${r.name} | ${r.value} | ${r.on} | ${r.master} | master | 0 | master | 0 |${own ? ' master | 0 |' : ''}`);
 		else if (!r.fits) lines.push(`| ${r.name} | ${r.value} | ${r.on} | does not fit | - | ${r.shift} | - | - |${own ? ' - | - |' : ''}`);
 		else lines.push(`| ${r.name} | ${r.value} | ${r.on} | ${r.master} | ${r.step}% | ${r.shift} | ${r.fewer.step}% | ${r.fewer.shift} |${own ? ` ${r.given.step}% | ${r.given.shift} |` : ''}`);
@@ -353,6 +422,7 @@ function table(result) {
 		'',
 		`Same look: ${sameLook.count} steps (${sameLook.steps.join(', ')}), biggest shift ${sameLook.maxShift}, closeness ${sameLook.closeness}%.`,
 		`Fewer steps: ${fewer.count} steps (${fewer.steps.join(', ')}), biggest shift ${fewer.maxShift}, closeness ${fewer.closeness}%.`,
+		`Round steps: ${result.scales.round.count} steps (${result.scales.round.steps.join(', ')}), biggest shift ${result.scales.round.maxShift}, closeness ${result.scales.round.closeness}%.`,
 		...(own ? [`Your scale: ${own.count} steps (${own.steps.join(', ')}), biggest shift ${own.maxShift}, closeness ${own.closeness}%.`] : []),
 		`Independent tokens: ${result.tokens.independentBefore} before, ${result.tokens.independentAfter} after (the masters, the solid grays of hard surfaces, and the colors that fit nothing).`,
 		`Colors: ${w.colorsBefore} before. After: ${w.masters} masters and ${w.stepsSameLook} steps (same look) or ${w.stepsFewer} steps (fewer).`,
@@ -409,8 +479,28 @@ function main(argv) {
 		if (!a._[0]) throw new Error('Use: map <system.json> [--json] [--fit 2] [--tolerance 3] [--steps 5,10,20]');
 		const result = map(JSON.parse(readFileSync(a._[0], 'utf8')), { fit: Number(one('fit', FIT)), tolerance: Number(one('tolerance', TOLERANCE)), steps: one('steps', '').split(',').filter(Boolean).map(Number) });
 		console.log(a.json ? JSON.stringify(result, null, 2) : table(result));
+	} else if (command === 'preview') {
+		if (!a._[0]) throw new Error('Use: preview <system.json> [--out hardsoft-preview.html] [--scale fewer|round|same|given] [--steps 5,10,20]');
+		const file = a._[0];
+		const system = JSON.parse(readFileSync(file, 'utf8'));
+		const data = preview(system, { scale: one('scale', 'fewer'), fit: Number(one('fit', FIT)), tolerance: Number(one('tolerance', TOLERANCE)), steps: one('steps', '').split(',').filter(Boolean).map(Number) });
+		// Screenshots go inside the page, so the preview stays one file.
+		const inline = (path) => {
+			if (/^(data:|https?:)/.test(path)) return path;
+			const type = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' }[extname(path).slice(1).toLowerCase()] ?? 'image/png';
+			return `data:${type};base64,${readFileSync(resolve(dirname(file), path)).toString('base64')}`;
+		};
+		data.screens = data.screens.map((s) => ({ ...s, before: inline(s.before), after: inline(s.after) }));
+		const template = readFileSync(one('template', fileURLToPath(new URL('../templates/preview.html', import.meta.url))), 'utf8');
+		const [head, rest] = template.split('/*hardsoft:data*/');
+		if (rest === undefined) throw new Error('The template has no /*hardsoft:data*/ mark.');
+		const page = `${head}/*hardsoft:data*/ ${JSON.stringify(data)} /*hardsoft:end*/${rest.split('/*hardsoft:end*/')[1]}`;
+		const out = one('out', 'hardsoft-preview.html');
+		writeFileSync(out, page);
+		const t = data.tokens;
+		console.log(`${out}: ${t.length} colors, ${t.filter((x) => x.kind === 'soft').length} now transparent, ${t.filter((x) => x.kind !== 'soft').length} unchanged, ${data.screens.length} screens.`);
 	} else {
-		console.log('hardsoft: alpha, shift, contrast or map. See the top of this file.');
+		console.log('hardsoft: alpha, shift, contrast, map or preview. See the top of this file.');
 		process.exitCode = command ? 1 : 0;
 	}
 }
