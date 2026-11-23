@@ -13,7 +13,7 @@
 
 | | Today | With hardsoft |
 | --- | --- | --- |
-| Colors with a value of their own | <n> | <n> |
+| Colors with a value of their own (names that only point at another token are not counted) | <n> | <n> |
 | Solid colors | <n> | <n> masters and one scale of <n> steps |
 | Colors that only name a level or a state | <n> | 0 |
 | Values to edit to change all the grays | <n> | 1 |

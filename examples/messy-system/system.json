@@ -50,6 +50,9 @@
     {"name": "chart-1", "value": "#f59e0b", "untouched": true, "why": "chart series"},
     {"name": "chart-2", "value": "#06b6d4", "untouched": true, "why": "chart series"},
     {"name": "chart-3", "value": "#ec4899", "untouched": true, "why": "chart series"},
+    {"name": "text", "alias": "gray-900"},
+    {"name": "button-primary", "alias": "blue-600"},
+    {"name": "button-primary-hover", "alias": "blue-700"},
     {"name": "overlay", "value": "rgba(0, 0, 0, 0.4)", "group": "effects"},
     {"name": "shadow-color", "value": "rgba(22, 24, 29, 0.12)", "group": "effects"}
   ],

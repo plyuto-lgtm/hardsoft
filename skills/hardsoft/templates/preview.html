@@ -251,7 +251,7 @@ const filters = segmented([['all', `All ${tokens.length}`], ['soft', `Transparen
 	list.querySelectorAll('.row').forEach((r) => (r.hidden = kind !== 'all' && r.dataset.kind !== kind));
 	list.querySelectorAll('.group').forEach((gr) => (gr.hidden = !gr.querySelector('.row:not([hidden])')));
 });
-page.append(el('section', {}, [el('div', { className: 'title' }, [el('h2', { textContent: 'Every color' }), filters]), list]));
+page.append(el('section', {}, [el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'Every color' }), system.pointers ? el('p', { textContent: `${plural(system.pointers, 'name')} that only ${system.pointers === 1 ? 'points' : 'point'} at another token ${system.pointers === 1 ? 'is' : 'are'} not counted.` }) : null]), filters]), list]));
 
 document.title = `${system.name}: hardsoft preview`;
 </script>

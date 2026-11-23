@@ -138,8 +138,9 @@ test('the preview holds every color of the system, in both themes', async () => 
 	const { preview } = await import('../skills/hardsoft/scripts/hardsoft.mjs');
 	const data = preview(example, { scale: 'given', steps: [5, 10, 20, 30, 40, 60, 70, 80] });
 	// Every color of the file is there, plus the ground when the file does not list it.
-	for (const c of example.colors) assert.ok(data.tokens.some((t) => t.name === c.name), c.name);
-	assert.equal(data.tokens.length, example.colors.length + 1);
+	for (const c of example.colors.filter((x) => !x.alias)) assert.ok(data.tokens.some((t) => t.name === c.name), c.name);
+	assert.equal(data.tokens.length, example.colors.filter((x) => !x.alias).length + 1);
+	assert.equal(data.pointers, 3);
 	assert.equal(data.tokens.find((t) => t.name === 'chart-1').kind, 'untouched');
 	assert.equal(data.tokens.find((t) => t.name === 'violet-600').kind, 'master');
 	const soft = data.tokens.filter((t) => t.kind === 'soft');
@@ -157,4 +158,13 @@ test('the preview command writes one file with the screens inside', () => {
 	unlinkSync(out);
 	assert.ok(page.includes('data:image/png;base64,'));
 	assert.ok(!page.includes('screens/orders-before.png'));
+});
+
+test('a name that only points at another token is not counted', () => {
+	const r = map(example, { steps: [5, 10, 20, 30, 40, 60, 70, 80] });
+	assert.deepEqual(r.pointers.map((p) => p.name), ['text', 'button-primary', 'button-primary-hover']);
+	assert.ok(!r.rows.some((x) => x.name === 'text'));
+	assert.deepEqual(r.tokens, { independentBefore: 42, independentAfter: 12 });
+	// A semantic name with a raw value of its own is still a color of its own.
+	assert.ok(r.rows.some((x) => x.name === 'surface-card'));
 });
