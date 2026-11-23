@@ -69,8 +69,10 @@ const system = /*hardsoft:data*/ {"name":"Example","scale":"fewer","fit":2,"step
 	.row.one { grid-template-columns: 200px minmax(0, 1fr) 220px; }
 	.row.labels { color: var(--quiet); font-size: 12px; line-height: 16px; }
 	.name { overflow-wrap: anywhere; }
-	.bar { display: grid; grid-template-columns: 1fr 1fr; height: 36px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
-	.bar > div { position: relative; }
+	/* A bar is a piece of the theme's ground with the color on it, so dark reads as dark */
+	.bar { padding: 6px 8px; border-radius: 8px; box-shadow: 0 0 0 1px var(--line); }
+	.bar > div { display: grid; grid-template-columns: 1fr 1fr; height: 28px; border-radius: 6px; overflow: hidden; }
+	.bar > div > div { position: relative; }
 	.bar i { position: absolute; inset: 0; }
 	.now { display: flex; align-items: center; gap: 8px; min-width: 0; }
 	.mark { flex: none; width: 16px; height: 16px; border-radius: 4px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1); }
@@ -121,13 +123,15 @@ function look(t, theme) {
 
 function bar(t, theme) {
 	const l = look(t, theme);
-	const box = el('div', { className: 'bar' });
+	const box = el('div');
 	if (l.was && !l.fresh) box.append(paint(el('div'), l.ground, l.was));
 	const after = paint(el('div', { className: t.kind === 'soft' ? 'checker' : '' }), l.ground, l.now);
 	if (!l.was || l.fresh) after.style.gridColumn = '1 / -1';
 	box.append(after);
+	const wrap = el('div', { className: 'bar' }, [box]);
+	wrap.style.background = system[theme].ground;
 	box.title = l.fresh ? `${theme}: no value today` : `${theme}: was ${l.was}${l.shift !== undefined ? `, shift ${l.shift}` : ''}`;
-	return box;
+	return wrap;
 }
 
 const page = document.getElementById('page');
@@ -196,7 +200,7 @@ for (const g of groups) {
 	const mine = tokens.filter((t) => t.group === g);
 	const left = mine.filter((t) => t.kind !== 'soft').length;
 	const rows = el('div', { className: 'rows' }, [
-		el('div', { className: `row labels${one}` }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `${th[0].toUpperCase()}${th.slice(1)}: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]),
+		el('div', { className: `row labels${one}` }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `On the ${th} ground: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]),
 		...mine.map((t) => {
 			const now = el('div', { className: 'now small' });
 			if (t.kind === 'soft') {
