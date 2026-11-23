@@ -208,7 +208,9 @@ The page proves one thing: the same app, with fewer values. It shows, in this or
 
 If the app cannot be opened even after question 2a, build the picked screen's main parts from its real component code and real token names in one static HTML file, draw it with both stylesheets, and say in the report's first line that the screens are rebuilt, not captured. Never ship a preview with no screen in it.
 
-The preview goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report. In a chat it is an artifact, or the HTML file.
+The preview goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report.
+
+**In Claude, publish the preview as an artifact.** When you are Claude and have a way to publish one (the Artifact tool in Claude Code, an artifact in a Claude chat), publish the generated `hardsoft-preview.html` as an artifact and give the user its link, in addition to the file. The page is one self-contained file with the screenshots inside, so it publishes as it is. Name it "<project> hardsoft preview". An artifact starts private, and sharing it is the user's choice. In any other agent, or when no artifact tool is there, give the HTML file.
 
 **The report action ends here.** Say in two or three lines what the system would win, link the report and the preview, and offer apply.
 

@@ -12,6 +12,8 @@ From the first run on a real product.
 - A third scale, round steps: the fewer steps moved to the nearest 5.
 - The report has one row per family with its count before and after, a clash with the project's own rules goes into the decisions, and side findings get a section of their own.
 - The interview asks how to see the screens running when the agent cannot open them.
+- In Claude the preview is also published as an artifact, with a link.
+- A simpler preview page: white, no cards, three numbers, one thin row per color.
 
 ## 2.1.0
 
