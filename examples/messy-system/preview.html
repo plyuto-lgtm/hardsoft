@@ -44,26 +44,26 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.hero p { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.3; color: var(--second); max-width: 620px; margin: 20px auto 0; letter-spacing: -0.02em; }
 
 	.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-	.stat { background: var(--card); border-radius: 22px; padding: 24px; display: grid; gap: 20px; align-content: space-between; min-height: 200px; }
+	.stat { background: var(--card); border-radius: 12px; padding: 24px; display: grid; gap: 20px; align-content: space-between; min-height: 200px; }
 	.stat .big { font: 600 48px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.03em; margin-bottom: 8px; }
 	.stat .big s { text-decoration: none; color: var(--third); }
 	.dots { display: flex; flex-wrap: wrap; gap: 5px; }
-	.dot { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 0.5px var(--hair); }
+	.dot { width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 0.5px var(--hair); }
 
 	section { margin-top: 96px; }
 	.title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 24px; }
 	h2 { font: 600 32px/1.12 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.028em; }
 	.title p { color: var(--second); margin-top: 6px; }
 	h3 { font-size: 17px; font-weight: 600; }
-	.card { background: var(--card); border-radius: 22px; }
+	.card { background: var(--card); border-radius: 12px; }
 
 	/* Segmented control */
-	.seg { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--fill); }
-	.seg button { font: inherit; font-size: 13px; font-weight: 500; letter-spacing: -0.006em; border: 0; background: none; color: var(--label); height: 28px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+	.seg { display: inline-flex; padding: 2px; border-radius: 6px; background: var(--fill); }
+	.seg button { font: inherit; font-size: 13px; font-weight: 500; letter-spacing: -0.006em; border: 0; background: none; color: var(--label); height: 28px; padding: 0 14px; border-radius: 4px; cursor: pointer; }
 	.seg button[aria-pressed='true'] { background: var(--seg); box-shadow: 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04); font-weight: 600; }
 
 	/* The screen, before and after */
-	.compare { position: relative; border-radius: 22px; overflow: hidden; line-height: 0; user-select: none; box-shadow: 0 0 0 0.5px var(--hair), 0 24px 60px rgb(0 0 0 / 0.12); }
+	.compare { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; user-select: none; box-shadow: 0 0 0 0.5px var(--hair), 0 24px 60px rgb(0 0 0 / 0.12); }
 	.compare img { display: block; width: 100%; }
 	.compare .old { position: absolute; inset: 0; overflow: hidden; width: var(--at, 50%); }
 	.compare .old img { width: auto; height: 100%; max-width: none; }
@@ -79,10 +79,10 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.swap + .swap { border-top: 0.5px solid var(--hair); }
 	.swap .arrow { color: var(--third); text-align: center; font-size: 20px; line-height: 24px; }
 	.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-	.chip { width: 36px; height: 36px; border-radius: 10px; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.12); position: relative; overflow: hidden; }
+	.chip { width: 36px; height: 36px; border-radius: 6px; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.12); position: relative; overflow: hidden; }
 	.chip.step { width: 44px; display: grid; place-items: end center; font-size: 11px; line-height: 15px; font-weight: 600; color: #1d1d1f; letter-spacing: 0; }
 	.chip i, .mark i, .tile i { position: absolute; inset: 0; }
-	.chip span { position: relative; padding: 0 4px; border-radius: 5px; background: rgb(255 255 255 / 0.86); margin-bottom: 3px; }
+	.chip span { position: relative; padding: 0 4px; border-radius: 3px; background: rgb(255 255 255 / 0.86); margin-bottom: 3px; }
 	/* The checkerboard under a transparent color, at 20%, so the color still reads */
 	.checker { background-image: conic-gradient(rgb(128 128 128 / 0.2) 25%, transparent 0 50%, rgb(128 128 128 / 0.2) 0 75%, transparent 0); background-size: 8px 8px; }
 
@@ -97,11 +97,11 @@ const system = /*hardsoft:data*/ {"name":"Messy system","scale":"given","fit":2,
 	.name { overflow-wrap: anywhere; font-weight: 500; }
 	.name div + div { font-weight: 400; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0; }
 	/* A bar is a piece of the theme's ground with the color on it, so dark reads as dark */
-	.bar { padding: 6px; border-radius: 12px; box-shadow: inset 0 0 0 0.5px var(--hair); }
-	.tile { display: grid; grid-template-columns: 1fr 1fr; height: 32px; border-radius: 7px; overflow: hidden; }
+	.bar { padding: 6px; border-radius: 8px; box-shadow: inset 0 0 0 0.5px var(--hair); }
+	.tile { display: grid; grid-template-columns: 1fr 1fr; height: 32px; border-radius: 4px; overflow: hidden; }
 	.tile > div { position: relative; }
 	.now { display: flex; align-items: center; gap: 8px; min-width: 0; }
-	.mark { flex: none; width: 18px; height: 18px; border-radius: 5px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.15); }
+	.mark { flex: none; width: 18px; height: 18px; border-radius: 3px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.15); }
 	.moved { color: var(--warn); }
 	@media (max-width: 860px) {
 		.row, .one .row { grid-template-columns: 1fr 1fr; }
