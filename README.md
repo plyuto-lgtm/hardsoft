@@ -56,13 +56,13 @@ Numbers from the worked example, [examples/messy-system](examples/messy-system):
 
 | | Before | After |
 | --- | --- | --- |
-| Independent tokens | 36 | 8 |
-| Solid colors | 35 | 6 masters and 8 steps |
+| Independent tokens | 42 | 12 |
+| Solid colors | 41 | 7 masters and 8 steps |
 | Colors that only name a level or a state | 3 | 0 |
 | Values to edit to change all the grays | 23 | 1 |
-| Values a dark theme needs | 28 | 5 |
+| Values the dark theme needs | 42 | 14 |
 
-**Closeness: 97%.** 34 of 35 colors still look the same. The one that moved is named, with how far.
+**Closeness: 98%.** 29 of the 30 replaced colors still look the same, and the other 12 are untouched. The one that moved is named, with how far.
 
 The report also lists:
 
