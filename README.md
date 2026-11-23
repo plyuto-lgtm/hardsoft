@@ -6,7 +6,7 @@ hardsoft is a skill for coding agents. It rebuilds the colors of a design system
 
 The concept is explained in the article [Hard and soft surfaces: a concept of a highly flexible design system](https://plyuto.design/article/soft-and-hard-surfaces).
 
-![The preview page: masters, the scale, nested soft cards and a hard menu, in light and dark](docs/preview.png)
+![The preview page: how many colors had a value of their own and how many do now, a real screen before and after, and what replaces what](docs/preview.png)
 
 ## The problem
 
@@ -105,7 +105,7 @@ A few of them:
 ## How it checks itself
 
 - **The color math is a script, not a guess.** It finds the alpha of every color over the background it really sits on, builds both versions of the scale, measures text contrast, and counts the benchmarks. It has tests.
-- **The preview is one fixed page**, the same for every project, filled with your tokens.
+- **The preview is one fixed page**, the same for every project, made from your whole system: every color today next to what it becomes, light and dark side by side, and your real screens before and after with a slider.
 - **Real screens.** Where the app runs, it reads two or three screens with [census](https://github.com/leonidstern/census) before and after, and measures every element that changed. This catches what a token table can't: muted text that now sits on a darker nested card, a stroke doubled over a fill.
 
 ## Install

@@ -8,15 +8,29 @@
 
 | | Before | Now |
 | --- | --- | --- |
-| Colors with a value of their own | 36 | 8 |
-| Solid colors | 35 | 6 masters and one scale of 8 steps |
+| Colors with a value of their own | 42 | 12 |
+| Solid colors | 41 | 7 masters and one scale of 8 steps |
 | Colors that only name a level or a state | 3 | 0 |
 | Values to edit to change all the grays | 23 | 1 |
-| Values a second theme needs | 28 | 5 |
+| Values the dark theme needs | 42 | 14 |
 
-**It stays 97% the same.** 34 of 35 colors look exactly as they did. One moved a little: the overlay under modals is a touch lighter.
+| Family | Colors before | With a value of their own now | What they became |
+| --- | --- | --- | --- |
+| Ground | 1 | 1 | unchanged |
+| gray | 11 | 1 | gray-900 at 7 steps |
+| slate | 4 | 2 | gray-900 at 2 steps, and 2 kept as they are |
+| surface, border, text | 8 | 0 | gray-900 at a step |
+| blue | 6 | 2 | blue-600 at 3 steps, blue-900 kept as a key color |
+| red | 2 | 1 | red-600 at 1 step |
+| green | 2 | 1 | green-600 at 1 step |
+| violet | 3 | 1 | violet-600 at 2 steps |
+| chart | 3 | 3 | unchanged, not part of this |
+| effects | 2 | 0 | gray-900 at a step |
+| **All** | **42** | **12** | |
 
-**What did not change:** every token name, every component, the brand blue, red and green.
+**It stays 98% the same.** 29 of the 30 replaced colors look exactly as they did. One moved a little: the overlay under modals is a touch lighter.
+
+**What did not change:** every token name, every component, the brand blue and violet, red and green, the chart colors.
 
 ## Your answers
 
@@ -35,7 +49,7 @@ All answered. They are in "Decisions made" below.
 
 ## What changed
 
-- The 18 neutral grays are one ink at 7 steps.
+- The 23 grays are one ink at 7 steps.
 - Cards at every level use one token. The nested-card color and the card-hover color are gone as colors, and their names still work.
 - The blue, red and green tints are their master at a step.
 - The primary button's hover is the ink laid over the blue.
@@ -54,6 +68,7 @@ All answered. They are in "Decisions made" below.
 | page | #ffffff | The ground |
 | blue-600 | #2563eb | Brand |
 | blue-900 | #1e3a8a | Brand, dark: text on blue tints. New, approved (rule 5) |
+| violet-600 | #7c3aed | Second brand color |
 | red-600 | #dc2626 | Negative |
 | green-600 | #16a34a | Positive |
 
@@ -63,7 +78,7 @@ All answered. They are in "Decisions made" below.
 | --- | --- | --- | --- |
 | Same look | 20: 3, 5, 6, 7, 8, 10, 11, 12, 16, 18, 20, 23, 30, 40, 41, 43, 60, 61, 70, 82 | 1.6 | 100% |
 | Fewer steps | 9: 5, 12, 18, 23, 30, 41, 61, 70, 82 | 2.4 | 94% |
-| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 2.2 | 97% |
+| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 2.2 | 98% |
 
 Chosen: fewer steps, rounded. The user asked for round numbers, and the skill scored that scale with `map --steps`.
 

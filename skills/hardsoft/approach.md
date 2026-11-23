@@ -127,5 +127,5 @@ Every rule has a level. The level says how far it can bend.
 ### Care
 
 28. **Text must stay readable.** `Default` Measure text against WCAG AA: 4.5 to 1 for normal text, 3 to 1 for large text. Check it at the deepest level of nesting and in every theme. List every place that is too low with its number, whether it was low before or became low, and offer the nearest stronger step for each. The user says yes or no to each in the plan.
-29. **Leave non-interface colors alone**: gradients, photos, illustrations, charts, code highlighting, decorative drawings inside the interface, and the colors of tools around the product, like Storybook's own frame. `Strict` List them as left out.
+29. **Leave non-interface colors alone**: gradients, photos, illustrations, charts, code highlighting, decorative drawings inside the interface, and the colors of tools around the product, like Storybook's own frame. `Strict` They are untouched, not removed: count them and show them, unchanged. A brand or status family is never one of these unless the user says so.
 30. **Nothing changes before a yes.** `Strict` The plan and the preview come first. The preview carries its own copy of the tokens. The project's tokens change only after the user has seen both and said yes.

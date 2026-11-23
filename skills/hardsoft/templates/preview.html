@@ -7,219 +7,220 @@
 <!--
 	hardsoft: the preview page. https://plyuto.design/article/soft-and-hard-surfaces
 
-	Fill in the "system" object below and nothing else. The page draws itself from it, the same way
-	for every project: the masters, the scale with hovers, three nested cards with text, an input and
-	buttons, a hard menu above them, and the old colors next to the new ones.
-	The values here are placeholders from the example. Every color, step and name comes from the system.
-	List every master, with or without steps, every color that is kept as it is ("kept"), and every old
-	color in "before", not a sample. When dark has steps of its own, write steps and parts as { light, dark }.
+	Do not fill this in by hand. Make it from the system with the calculator, so no color is dropped:
+	  node scripts/hardsoft.mjs preview system.json --out hardsoft-preview.html
+	The page draws itself from the "system" object: every color of the design system, what it was and
+	what it is now, in every theme, and the real screens before and after.
 -->
 <script>
-const system = {
-	name: 'Example',
-
-	// The top strip: the same numbers as the report's summary. Set it to null for a new system.
-	summary: {
-		verdict: 'Worth it',
-		numbers: [
-			{ label: 'Colors with a value of their own', before: 36, after: 8 },
-			{ label: 'Values to change all the grays', before: 23, after: 1 },
-			{ label: 'Values a second theme needs', before: 28, after: 5 },
-		],
-		closeness: 97,
-	},
-
-	// The grays. "dark" is null when the system has no dark theme and nobody asked for one (rule 21).
-	ink: { name: 'gray-darkest', light: '#111111', dark: '#f4f4f4' },
-	ground: { name: 'gray-brightest', light: '#ffffff', dark: '#141414' },
-	medium: null, // { name: 'gray-medium', light: '#808080', dark: '#808080' }
-
-	// The scale: the steps of the ink. One scale for all masters (rule 6).
-	steps: [5, 10, 20, 40, 60, 80],
-
-	// The other masters, each with only the steps it uses. The first one is the brand button.
-	// Add dark: '#...' only when a color is hard to read on the dark ground (rule 20).
-	masters: [
-		{ name: 'brand-primary', value: '#2563eb', steps: [10, 30] },
-		{ name: 'system-negative', value: '#dc2626', steps: [10] },
-		{ name: 'system-positive', value: '#16a34a', steps: [10] },
-	],
-
-	// The layer a hover adds (rule 18), and which step plays which part in the demo.
-	hover: 10,
-	parts: { card: 5, fill: 10, stroke: 20, placeholder: 40, secondary: 60, text: 100 },
-
-	// Colors that fit no master and stay solid: { name, value, dark? }. Leave empty when there are none.
-	kept: [],
-
-	// Old colors next to the new ones, in the light theme. "on" is the background the color sits on.
-	// Leave it empty for a new system.
-	before: [
-		{ name: 'gray-100', value: '#f3f3f3', master: 'gray-darkest', step: 5 },
-		{ name: 'gray-200', value: '#e7e7e7', master: 'gray-darkest', step: 10 },
-		{ name: 'gray-400', value: '#a0a0a0', master: 'gray-darkest', step: 40 },
-		{ name: 'blue-100', value: '#dbe6fc', master: 'brand-primary', step: 10 },
-	],
-};
+const system = /*hardsoft:data*/ {"name":"Example","scale":"fewer","fit":2,"steps":[5,20,60],"light":{"ground":"#ffffff","ink":"#111111"},"dark":{"ground":"#0e0e0e","ink":"#f2f2f2"},"tokens":[{"name":"white","group":"Ground","value":"#ffffff","on":"#ffffff","kind":"master","dark":{"value":"#0e0e0e","on":"#0e0e0e"}},{"name":"gray-900","group":"gray","value":"#111111","on":"#ffffff","kind":"master","dark":{"value":"#f2f2f2","on":"#0e0e0e"}},{"name":"gray-500","group":"gray","value":"#707070","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":60,"shift":0.4,"dark":{"value":"#979797","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.3}},{"name":"gray-200","group":"gray","value":"#cfcfcf","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":20,"shift":0.2,"dark":{"value":"#3c3c3c","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.2}},{"name":"gray-50","group":"gray","value":"#f3f3f3","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":5,"shift":0.1,"dark":{"value":"#191919","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.1}},{"name":"blue-600","group":"blue","value":"#2563eb","on":"#ffffff","kind":"master"},{"name":"blue-100","group":"blue","value":"#d3e0fb","on":"#ffffff","kind":"soft","master":"blue-600","masterValue":"#2563eb","step":20,"shift":0.3},{"name":"blue-900","group":"blue","value":"#1e3a8a","on":"#ffffff","kind":"kept"},{"name":"chart-1","group":"chart","value":"#f59e0b","on":"#ffffff","kind":"untouched"}],"screens":[]} /*hardsoft:end*/;
 </script>
 <style>
 	* { box-sizing: border-box; margin: 0; }
+	:root { --text: #111; --quiet: #6b6b6b; --line: #e8e8e8; --page: #fff; --panel: #f5f5f5; }
 	html { font: 14px/20px system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
-	body { background: var(--ground); color: var(--ink); }
-
-	.summary { background: var(--ground); color: var(--ink); padding: 32px 24px 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
-	.summary .figure { font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: -0.02em; }
-	.summary .figure s { text-decoration: none; color: var(--placeholder); }
-	.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); }
-	.theme { background: var(--ground); color: var(--ink); padding: 32px 24px 48px; display: grid; gap: 40px; align-content: start; }
-	.theme > header { display: flex; justify-content: space-between; align-items: baseline; }
+	body { background: var(--page); color: var(--text); padding: 40px 24px 96px; }
+	main { max-width: 1120px; margin: 0 auto; display: grid; gap: 64px; }
 	h1 { font-size: 20px; line-height: 28px; font-weight: 500; }
-	h2 { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--secondary); margin-bottom: 12px; }
-	.quiet { color: var(--secondary); }
+	h2 { font-size: 20px; line-height: 28px; font-weight: 500; margin-bottom: 4px; }
+	h3 { font-size: 14px; line-height: 20px; font-weight: 500; }
+	.quiet { color: var(--quiet); }
 	.small { font-size: 12px; line-height: 16px; }
+	.head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 20px; }
 
-	.row { display: flex; flex-wrap: wrap; gap: 8px; }
-	.swatch { display: grid; gap: 8px; width: 104px; align-content: start; }
-	.scale .swatch { width: 56px; }
-	.scale .chip { height: 56px; }
-	.chip { height: 56px; border-radius: 8px; background-color: var(--c); }
-	.chip.edge { box-shadow: inset 0 0 0 1px var(--stroke); }
-	.chip.live { cursor: pointer; }
-	.chip.live:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
-	.chip.solid.live:hover { background-image: none; background-color: color-mix(in srgb, var(--c) calc(100% - var(--hover)), var(--ink)); }
-	.swatch b { font-weight: 500; display: block; overflow-wrap: anywhere; }
-	.scale { display: grid; gap: 16px; }
-	.line { display: grid; grid-template-columns: 112px 1fr; gap: 12px; }
-	.line > b { font-weight: 500; overflow-wrap: anywhere; }
+	/* The three proofs */
+	.proofs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+	.proof { background: var(--panel); border-radius: 16px; padding: 20px; display: grid; gap: 16px; align-content: space-between; min-height: 176px; }
+	.figure { font-size: 48px; line-height: 52px; font-weight: 500; letter-spacing: -0.03em; }
+	.figure s { text-decoration: none; color: #b0b0b0; }
+	.dots { display: flex; flex-wrap: wrap; gap: 4px; }
+	.dot { width: 24px; height: 24px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); }
 
-	/* Soft surfaces: transparent tokens over whatever is under them */
-	.stage { position: relative; padding-bottom: 96px; }
-	.card { background: var(--card); border-radius: 16px; padding: 16px; display: grid; gap: 16px; }
-	.card .card { border-radius: 12px; }
-	.card .card .card { border-radius: 8px; }
-	.card p + p { margin-top: 4px; }
-	.input { height: 40px; border-radius: 8px; padding: 0 12px; display: flex; align-items: center; color: var(--placeholder); box-shadow: inset 0 0 0 1px var(--stroke); }
-	.button { height: 40px; border-radius: 8px; padding: 0 16px; border: 0; font: inherit; font-weight: 500; color: var(--ink); background-color: var(--fill); cursor: pointer; }
-	.button:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
-	.button.brand { background-color: var(--brand); color: var(--on-brand); }
-	.button.brand:hover { background-image: none; background-color: color-mix(in srgb, var(--brand) calc(100% - var(--hover)), var(--ink)); }
-	.divider { height: 1px; background: var(--fill); }
+	/* The screen, before and after */
+	.tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+	.tab { font: inherit; border: 0; height: 32px; padding: 0 12px; border-radius: 8px; background: none; color: var(--quiet); cursor: pointer; }
+	.tab[aria-pressed='true'] { background: var(--panel); color: var(--text); }
+	.compare { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); line-height: 0; user-select: none; }
+	.compare img { display: block; width: 100%; }
+	.compare .old { position: absolute; inset: 0; overflow: hidden; width: var(--at, 50%); border-right: 1px solid #fff; box-shadow: 1px 0 0 rgb(0 0 0 / 0.3); }
+	.compare .old img { width: auto; height: 100%; max-width: none; }
+	.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+	.compare .tag { position: absolute; top: 12px; padding: 4px 8px; border-radius: 6px; background: rgb(0 0 0 / 0.72); color: #fff; font-size: 12px; line-height: 16px; pointer-events: none; }
+	.compare .tag.was { left: 12px; }
+	.compare .tag.now { right: 12px; }
 
-	/* A hard surface: solid, with an edge, and the count starts again inside it */
-	.menu { position: absolute; right: 16px; bottom: 0; width: 224px; padding: 4px; border-radius: 12px; background: var(--ground); box-shadow: 0 0 0 1px var(--fill), 0 12px 32px var(--shadow); }
-	.menu div { height: 36px; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-	.menu div:hover, .menu .on { background: var(--card); }
-	.menu .on:hover { background-image: linear-gradient(var(--layer), var(--layer)); }
+	/* What replaces what */
+	.swap { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr); gap: 16px; align-items: start; padding: 20px 0; border-top: 1px solid var(--line); }
+	.swap .arrow { color: var(--quiet); text-align: center; line-height: 32px; }
+	.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+	.chip { width: 32px; height: 32px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); position: relative; overflow: hidden; }
+	.chip.step { width: 40px; display: grid; place-items: end center; font-size: 10px; line-height: 14px; }
+	.checker { background-image: conic-gradient(#d9d9d9 25%, #fff 0 50%, #d9d9d9 0 75%, #fff 0); background-size: 8px 8px; }
+	.chip i, .mark i { position: absolute; inset: 0; }
+	.chip span { position: relative; padding: 0 3px; border-radius: 3px; background: rgb(255 255 255 / 0.85); margin-bottom: 2px; }
 
-	.pairs { display: grid; gap: 8px; }
-	.pair { display: grid; grid-template-columns: 112px 1fr; gap: 12px; align-items: center; }
-	.halves { display: grid; grid-template-columns: 1fr 1fr; height: 40px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px var(--fill); }
+	/* Every color */
+	.filters { display: flex; flex-wrap: wrap; gap: 4px; }
+	.group { border-top: 1px solid var(--line); padding: 20px 0 8px; }
+	.group > header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+	.rows { display: grid; gap: 6px; }
+	.row { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 220px; gap: 12px; align-items: center; }
+	.row.one { grid-template-columns: 200px minmax(0, 1fr) 220px; }
+	.row.labels { color: var(--quiet); font-size: 12px; line-height: 16px; }
+	.name { overflow-wrap: anywhere; }
+	.bar { display: grid; grid-template-columns: 1fr 1fr; height: 36px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+	.bar > div { position: relative; }
+	.bar i { position: absolute; inset: 0; }
+	.now { display: flex; align-items: center; gap: 8px; min-width: 0; }
+	.mark { flex: none; width: 16px; height: 16px; border-radius: 4px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1); }
+	.moved { color: #a15c00; }
+	[hidden] { display: none !important; }
+	@media (max-width: 800px) {
+		.row, .row.one { grid-template-columns: 1fr 1fr; }
+		.row .name, .row .now { grid-column: 1 / -1; }
+		.row.labels { display: none; }
+		.swap { grid-template-columns: 1fr; }
+		.swap .arrow { display: none; }
+	}
 </style>
 </head>
 <body>
-<div class="summary" id="summary" hidden></div>
-<div class="themes" id="themes"></div>
+<main id="page"></main>
 <script>
-const mix = (color, step) => `color-mix(in srgb, ${color} ${step}%, transparent)`;
 const el = (tag, props = {}, children = []) => {
 	const node = Object.assign(document.createElement(tag), props);
-	node.append(...[].concat(children));
+	node.append(...[].concat(children).filter((c) => c !== null && c !== undefined));
 	return node;
 };
-const swatch = (name, note, color, className = '') => {
-	const chip = el('div', { className: `chip live ${className}` });
-	chip.style.setProperty('--c', color);
-	return el('div', { className: 'swatch small' }, [chip, el('div', {}, [el('b', { textContent: name }), ...(note ? [el('span', { className: 'quiet', textContent: note })] : [])])]);
+const layer = (color, step) => `color-mix(in srgb, ${color} ${step}%, transparent)`;
+const paint = (node, ground, color) => {
+	node.style.background = ground;
+	const i = el('i');
+	i.style.background = color;
+	node.append(i);
+	return node;
 };
+const tokens = system.tokens;
+const themes = ['light', ...(system.dark ? ['dark'] : [])];
+const soft = tokens.filter((t) => t.kind === 'soft');
+const solid = tokens.filter((t) => t.kind !== 'soft');
+const masters = tokens.filter((t) => t.kind === 'master');
+const moved = soft.filter((t) => t.shift > system.fit);
+const WORDS = { master: 'Key color, unchanged', kept: 'Unchanged', hard: 'Unchanged, solid on a hard surface', untouched: 'Unchanged' };
 
-// Steps and parts can be one list for both themes, or { light, dark } when the themes differ.
-const per = (value, mode) => (value && !Array.isArray(value) && value[mode] ? value[mode] : value);
-const line = (name, steps, color) => el('div', { className: 'line small' }, [el('b', { textContent: name }), el('div', { className: 'row' }, steps.map((s) => swatch(s, '', mix(color, s))))]);
+// What a token was and is in one theme: { ground, was, now, shift }.
+function look(t, theme) {
+	const dark = theme === 'dark';
+	const ground = dark ? (t.dark?.on ?? system.dark.ground) : t.on;
+	const was = dark ? t.dark?.value : t.value;
+	if (t.kind !== 'soft') return { ground, was: was ?? t.value, now: was ?? t.value, fresh: dark && !t.dark };
+	const master = dark ? (t.dark?.masterValue ?? (t.masterValue === system.light.ink ? system.dark.ink : t.masterValue)) : t.masterValue;
+	return { ground, was, now: layer(master, t.step), shift: dark ? t.dark?.shift : t.shift, fresh: dark && !t.dark };
+}
 
-function theme(mode) {
-	const ink = system.ink[mode];
-	const ground = system.ground[mode];
-	const p = per(system.parts, mode);
-	const steps = per(system.steps, mode);
-	const colors = system.masters.map((m) => ({ ...m, value: (mode === 'dark' && m.dark) || m.value }));
-	const box = el('section', { className: 'theme' });
-	const vars = {
-		'--ink': ink, '--ground': ground, '--hover': `${system.hover}%`, '--layer': mix(ink, system.hover),
-		'--card': mix(ink, p.card), '--fill': mix(ink, p.fill), '--stroke': mix(ink, p.stroke),
-		'--placeholder': mix(ink, p.placeholder), '--secondary': mix(ink, p.secondary),
-		// These look the same in both themes (rule 20): the light ground on a brand color, a dark shadow.
-		'--brand': colors[0]?.value ?? ink, '--on-brand': colors[0] ? system.ground.light : ground,
-		'--shadow': mix(mode === 'dark' ? ground : system.ink.light, 20),
-	};
-	for (const [key, value] of Object.entries(vars)) box.style.setProperty(key, value);
-
-	box.append(el('header', {}, [el('h1', { textContent: system.name }), el('span', { className: 'quiet', textContent: mode })]));
-
-	const grays = [[system.ink.name, ink, ''], ...(system.medium ? [[system.medium.name, system.medium[mode], '']] : []), [system.ground.name, ground, 'edge']];
-	box.append(el('div', {}, [
-		el('h2', { textContent: 'Masters' }),
-		el('div', { className: 'row' }, [...grays.map(([n, v, c]) => swatch(n, v, v, `solid ${c}`)), ...colors.map((m) => swatch(m.name, m.value, m.value, 'solid'))]),
-	]));
-
-	box.append(el('div', {}, [
-		el('h2', { textContent: `Scale: ${steps.join(', ')}` }),
-		el('div', { className: 'scale' }, [
-			line(system.ink.name, steps, ink),
-			...colors.filter((m) => m.steps?.length).map((m) => line(m.name, m.steps, m.value)),
-		]),
-	]));
-
-	const kept = (system.kept ?? []).filter((k) => (mode === 'dark' ? k.dark : k.value));
-	if (kept.length) {
-		box.append(el('div', {}, [
-			el('h2', { textContent: `Kept as they are: ${kept.length}` }),
-			el('div', { className: 'row' }, kept.map((k) => swatch(k.name, (mode === 'dark' && k.dark) || k.value, (mode === 'dark' && k.dark) || k.value, 'solid'))),
-		]));
-	}
-
-	const inner = el('div', { className: 'card' }, [
-		el('div', {}, [el('p', { textContent: 'Third level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: `Text at ${p.secondary}, stroke at ${p.stroke}` })]),
-		el('div', { className: 'input', textContent: 'Placeholder' }),
-		el('div', { className: 'row' }, [el('button', { className: 'button brand', textContent: 'Primary' }), el('button', { className: 'button', textContent: 'Secondary' })]),
-	]);
-	const second = el('div', { className: 'card' }, [el('div', {}, [el('p', { textContent: 'Second level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: 'The same token again' })]), el('div', { className: 'divider' }), inner]);
-	const first = el('div', { className: 'card' }, [el('div', {}, [el('p', { textContent: 'First level', style: 'font-weight: 500' }), el('p', { className: 'quiet', textContent: `${system.ink.name} at ${p.card}` })]), second]);
-	const menu = el('div', { className: 'menu' }, ['Solid', 'Resets the count', 'Has an edge'].map((text, i) => el('div', { className: i === 1 ? 'on' : '' }, [el('span', { textContent: text })])));
-	box.append(el('div', {}, [el('h2', { textContent: 'Soft surfaces, three levels deep, and a hard menu' }), el('div', { className: 'stage' }, [first, menu])]));
-
-	if (mode === 'light' && system.before?.length) {
-		const value = (b) => (b.master === system.ink.name ? ink : b.master === system.ground.name ? ground : colors.find((m) => m.name === b.master)?.value ?? ink);
-		box.append(el('div', {}, [
-			el('h2', { textContent: 'Before and after' }),
-			el('div', { className: 'pairs' }, system.before.map((b) => {
-				const old = el('div');
-				old.style.background = b.value;
-				const now = el('div');
-				now.style.background = b.step >= 100 ? value(b) : mix(value(b), b.step);
-				const halves = el('div', { className: 'halves' }, [old, now]);
-				halves.style.backgroundColor = b.on ?? ground;
-				return el('div', { className: 'pair small' }, [el('div', {}, [el('b', { textContent: b.name, style: 'font-weight: 500; display: block' }), el('span', { className: 'quiet', textContent: b.step >= 100 ? b.master : `${b.master}-${b.step}` })]), halves]);
-			})),
-		]));
-	}
+function bar(t, theme) {
+	const l = look(t, theme);
+	const box = el('div', { className: 'bar' });
+	if (l.was && !l.fresh) box.append(paint(el('div'), l.ground, l.was));
+	const after = paint(el('div'), l.ground, l.now);
+	if (!l.was || l.fresh) after.style.gridColumn = '1 / -1';
+	box.append(after);
+	box.title = l.fresh ? `${theme}: no value today` : `${theme}: was ${l.was}${l.shift !== undefined ? `, shift ${l.shift}` : ''}`;
 	return box;
 }
 
-if (system.summary) {
-	const strip = document.getElementById('summary');
-	const ink = system.ink.light;
-	for (const [key, value] of Object.entries({ '--ink': ink, '--ground': system.ground.light, '--secondary': mix(ink, per(system.parts, 'light').secondary), '--placeholder': mix(ink, per(system.parts, 'light').placeholder) })) strip.style.setProperty(key, value);
-	const figure = (big, label) => el('div', {}, [el('div', { className: 'figure' }, big), el('div', { className: 'quiet small', textContent: label })]);
-	strip.append(
-		figure([system.summary.verdict], system.name),
-		...system.summary.numbers.map((n) => figure([el('s', { textContent: `${n.before} ` }), `${n.after}`], n.label)),
-		figure([`${system.summary.closeness}%`], 'Stays the same'),
-	);
-	strip.hidden = false;
+const page = document.getElementById('page');
+page.append(el('header', { className: 'head' }, [el('h1', { textContent: system.name }), el('span', { className: 'quiet', textContent: 'hardsoft preview' })]));
+
+// 1. The three proofs: fewer values, the key colors stay, it looks the same.
+const figure = (big, label, extra) => el('div', { className: 'proof' }, [el('div', {}, [el('div', { className: 'figure' }, big), el('div', { className: 'quiet', textContent: label })]), extra]);
+const dots = (list) => el('div', { className: 'dots' }, list.map((t) => { const d = el('div', { className: 'dot', title: t.name }); d.style.background = t.value; return d; }));
+const proofs = el('section', { className: 'proofs' }, [
+	figure([el('s', { textContent: `${tokens.length} ` }), `${solid.length}`], 'Colors with a value of their own', el('div', { className: 'quiet small', textContent: `${soft.length} of them are now a key color at a transparency.` })),
+	figure([`${solid.length}`], 'Colors that stay exactly as they are', dots(solid)),
+	figure([`${soft.length - moved.length}`, el('s', { textContent: ` of ${soft.length}` })], 'Replaced colors that look the same', el('div', { className: 'quiet small', textContent: moved.length ? `${moved.length} move a little: ${moved.map((t) => t.name).join(', ')}.` : 'None of them moves.' })),
+]);
+if (system.dark) {
+	const had = tokens.filter((t) => t.dark);
+	const need = had.filter((t) => t.kind !== 'soft' || t.dark.shift > system.fit + 1);
+	proofs.append(figure([el('s', { textContent: `${had.length} ` }), `${need.length}`], 'Values the dark theme needs', el('div', { className: 'quiet small', textContent: 'Dark uses the same tokens. Only the key colors change.' })));
+}
+page.append(proofs);
+
+// 2. The real screens, before and after.
+if (system.screens.length) {
+	const view = el('div');
+	const show = (s) => {
+		const range = el('input', { type: 'range', min: 0, max: 100, value: 50, ariaLabel: 'Before and after' });
+		const old = el('div', { className: 'old' }, [el('img', { src: s.before, alt: `${s.name}, before` })]);
+		const box = el('div', { className: 'compare' }, [el('img', { src: s.after, alt: `${s.name}, after` }), old, el('span', { className: 'tag was', textContent: 'Today' }), el('span', { className: 'tag now', textContent: 'With hardsoft' }), range]);
+		range.oninput = () => box.style.setProperty('--at', `${range.value}%`);
+		view.replaceChildren(box);
+	};
+	const tabs = el('div', { className: 'tabs' }, system.screens.map((s, i) => {
+		const b = el('button', { className: 'tab', textContent: s.name, ariaPressed: String(i === 0) });
+		b.onclick = () => { tabs.querySelectorAll('.tab').forEach((x) => (x.ariaPressed = String(x === b))); show(s); };
+		return b;
+	}));
+	show(system.screens[0]);
+	page.append(el('section', {}, [el('div', { className: 'head' }, [el('div', {}, [el('h2', { textContent: 'Your screens' }), el('p', { className: 'quiet', textContent: 'Drag to compare.' })]), tabs]), view]));
 }
 
+// 3. What replaces what: many solid colors on the left, one key color and its steps on the right.
+const used = [...new Set(soft.map((t) => t.master))];
+if (used.length) {
+	const section = el('section', {}, [el('h2', { textContent: 'What replaces what' }), el('p', { className: 'quiet', style: 'margin-bottom: 20px', textContent: 'The checkered squares are transparent.' })]);
+	for (const name of used) {
+		const mine = soft.filter((t) => t.master === name);
+		const steps = [...new Set(mine.map((t) => t.step))].sort((a, b) => a - b);
+		const value = mine[0].masterValue;
+		const olds = el('div', { className: 'chips' }, mine.map((t) => { const c = el('div', { className: 'chip', title: `${t.name} ${t.value}` }); paint(c, t.on, t.value); return c; }));
+		const key = el('div', { className: 'chip', title: `${name} ${value}` });
+		key.style.background = value;
+		const news = el('div', { className: 'chips' }, [key, ...steps.map((s) => { const c = el('div', { className: 'chip step checker', title: `${name} at ${s}%` }); const i = el('i'); i.style.background = layer(value, s); c.append(i, el('span', { textContent: s })); return c; })]);
+		section.append(el('div', { className: 'swap' }, [
+			el('div', {}, [el('h3', { textContent: `${mine.length} ${mine.length === 1 ? 'color' : 'colors'}` }), olds]),
+			el('div', { className: 'arrow', textContent: '→' }),
+			el('div', {}, [el('h3', { textContent: `${name} at ${steps.length} ${steps.length === 1 ? 'step' : 'steps'}` }), news]),
+		]));
+	}
+	page.append(section);
+}
+
+// 4. Every color of the system, grouped the way the system groups them.
+const groups = [...new Set(tokens.map((t) => t.group))];
+const list = el('div');
+const one = themes.length === 1 ? ' one' : '';
+for (const g of groups) {
+	const mine = tokens.filter((t) => t.group === g);
+	const left = mine.filter((t) => t.kind !== 'soft').length;
+	const rows = el('div', { className: 'rows' }, [
+		el('div', { className: `row labels${one}` }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `${th[0].toUpperCase()}${th.slice(1)}: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]),
+		...mine.map((t) => {
+			const now = el('div', { className: 'now small' });
+			if (t.kind === 'soft') {
+				const far = t.shift > system.fit || (t.dark?.shift ?? 0) > system.fit;
+				now.append(paint(el('span', { className: 'mark checker' }), 'transparent', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
+			} else now.append(el('span', { className: 'quiet', textContent: t.why ? `${WORDS[t.kind]}: ${t.why}` : WORDS[t.kind] }));
+			const row = el('div', { className: `row${one}` }, [el('div', { className: 'name' }, [el('div', { textContent: t.name }), el('div', { className: 'quiet small', textContent: t.value })]), ...themes.map((th) => bar(t, th)), now]);
+			row.dataset.kind = t.kind === 'soft' ? 'soft' : 'solid';
+			return row;
+		}),
+	]);
+	list.append(el('div', { className: 'group' }, [el('header', {}, [el('h3', { textContent: g }), el('span', { className: 'quiet', textContent: left === mine.length ? `${mine.length}, unchanged` : `${mine.length} → ${left}` })]), rows]));
+}
+const filters = el('div', { className: 'filters' }, [['all', `All ${tokens.length}`], ['soft', `Now transparent ${soft.length}`], ['solid', `Unchanged ${solid.length}`]].map(([kind, text], i) => {
+	const b = el('button', { className: 'tab', textContent: text, ariaPressed: String(i === 0) });
+	b.onclick = () => {
+		filters.querySelectorAll('.tab').forEach((x) => (x.ariaPressed = String(x === b)));
+		list.querySelectorAll('.row[data-kind]').forEach((r) => (r.hidden = kind !== 'all' && r.dataset.kind !== kind));
+		list.querySelectorAll('.group').forEach((gr) => (gr.hidden = !gr.querySelector('.row[data-kind]:not([hidden])')));
+	};
+	return b;
+}));
+page.append(el('section', {}, [el('div', { className: 'head' }, [el('div', {}, [el('h2', { textContent: 'Every color' }), el('p', { className: 'quiet', textContent: 'Left half today, right half with hardsoft.' })]), filters]), list]));
+
 document.title = `${system.name}: hardsoft preview`;
-document.getElementById('themes').append(...['light', 'dark'].filter((mode) => system.ink[mode] && system.ground[mode]).map(theme));
 </script>
 </body>
 </html>

@@ -124,6 +124,8 @@ In a codebase, read the project's rules, the tokens, the theme, the Tailwind con
 - Solid grays that only hard surfaces use, like a menu or a raised panel (rule 14).
 - Shadows and gradients (rules 22 and 29).
 
+**Read the whole design system, not the part one page uses.** Every color token of every family goes into `system.json`: the grays, the brand, the second and third brand colors, the status colors, tags, charts, syntax, the semantic names, both themes. The screens the user picks decide what you look at first. They never decide which colors are counted. A color you leave out of the file is a color the user thinks you deleted.
+
 In a chat, use the files, screenshots and links in the thread. If there are none, ask for them.
 
 ### 2. Map it
@@ -131,6 +133,8 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 - Sort what you found into the three layers: masters, transparent tokens, semantics.
 - Pick the masters from the colors the system already has (rules 1 to 3). The ink is the gray that text is made of. In a dark-first system it is the brightest gray: keep the project's names, and don't call it darkest.
 - A ramp, like blue 50 to 900, is one master and its tints (rule 5). Note which shades the interface really uses.
+- Every family keeps its key color as a master, also the second and third brand colors and each status color. Never drop a family because it is rare, decorative or used in gradients. Only the user can put a family out of this. Then its colors are marked `"untouched": true` with a `"why"`, and they are still counted and still shown, unchanged.
+- Give each color a `"group"` when its name does not show its family (`surface-card` goes to "surface"). Put the second theme in `"dark"`: its ground, the dark value of each master, and the dark value each token has today.
 - Write `system.json` and run `map`. It gives every color its master and step, the three scales: same look, fewer steps, and the fewer steps moved to round numbers (rule 8), what does not fit, and the tint check (rule 4).
 - Mark every surface as hard or soft (rules 10 to 13). The cases people get wrong:
 
@@ -146,7 +150,7 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 - Transfer the strokes with care (rule 16). A transparent stroke lies over the fill of its own shape, or over the surface behind it, or over both. Give it the `on` it really has, not the page. Offer one hairline token, a shadow with spread and no blur, that can be added to any other shadow, and list the borders that should move to it.
 - Keep the solid grays of hard surfaces solid (rule 14). The scale is built from the three grays. A hard surface may still have a gray of its own.
 - Run `contrast` for text at the deepest nesting, for text on every solid color, and for the hovers of solid colors (rule 28).
-- List what does not fit, what is left out (rule 29), the components with their own colors (rule 27), and what becomes removable (rule 26).
+- List what does not fit, what is untouched (rule 29), the components with their own colors (rule 27), and what becomes removable (rule 26).
 - Note what counts as unused only after the theme decision: a token that one theme doesn't use may be the ink of the other.
 - Count the four goals of the target, now and after, and take the two benchmarks from `map`.
 
@@ -167,7 +171,7 @@ The questions, in this order:
 | # | Ask | Options come from | It decides |
 | --- | --- | --- | --- |
 | 1 | What bothers you most about the colors today? | Too many grays. Nesting and states need new colors. Themes are painful. Nothing, just curious. | What the summary leads with |
-| 2 | Which screens matter most? | The 3 or 4 routes or pages you found with the most nesting, forms and menus | The screens you read and check (see "Seeing the real screens") |
+| 2 | Which screens do you want to see before and after? | The 3 or 4 routes or pages you found with the most nesting, forms and menus | The screens the preview compares, and the ones you read and check (see "Seeing the real screens"). Never which colors are counted |
 | 2a | How can I see them running? | Only when you cannot open them yourself (a sign-in, no dev server). A localhost that is already running. Storybook or a component page. Read the code only. | Whether the screens are measured or read from code. Say which in the report's first line |
 | 3 | How close must it stay to today's look? | Exactly the same. Small shifts are fine for fewer steps. Free to clean up. | Which scale the report leads with. It still shows all three (rule 8) |
 | 4 | Which of these float above the page, or have content passing under them? | Only the surfaces you could not classify, by name | Hard or soft (rules 10 to 13) |
@@ -188,7 +192,23 @@ The report is read by a designer or a design engineer who has two minutes. So:
 - No rule numbers in the summary. Plain words first, the rule in the details.
 - A term is explained once, the first time it is used.
 
-Draw the preview from [templates/preview.html](templates/preview.html): copy the file, fill in the `system` object at its top and change nothing else, so every project gets the same page. Its top strip carries the same numbers as the report's summary. For a report, use the scale the user's answer points to, or the same-look scale if they skipped. It goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report. In a chat it is an artifact, or the HTML file.
+Make the preview with the calculator, never by hand, so no color can be dropped and the numbers match the map:
+
+```bash
+node scripts/hardsoft.mjs preview system.json --scale fewer --out hardsoft-preview.html
+```
+
+The page proves one thing: the same app, with fewer values. It shows, in this order: how many colors had a value of their own and how many do now, the colors that stay exactly as they are, the real screens before and after with a slider, which solid colors each key color at a step replaces, and every color of the system in every theme, today next to with hardsoft. Light and dark are drawn side by side from the same tokens, so they always show the same list. Use the scale the user's answer points to (`fewer`, `round`, `same`, or `given` with `--steps`), or `same` if they skipped. The numbers in the report's summary are the ones this page shows.
+
+**The screens the user picked in the interview must be in it, before and after.** That is what they expect to see. Without applying anything:
+
+1. Write the new token values to a stylesheet of their own, outside the project's files, like `hardsoft-preview.css`: the same token names, the new values, nothing else.
+2. Open each picked screen in the running app and take a screenshot. Add the stylesheet to the page (a `<link>` or `page.addStyleTag` in the browser tool you have), and take the same screenshot again. Same size, same scroll, same state. Do this for each theme.
+3. List them in `system.json` as `"screens": [{ "name", "before", "after" }]`. The calculator puts the images inside the page.
+
+If the app cannot be opened even after question 2a, build the picked screen's main parts from its real component code and real token names in one static HTML file, draw it with both stylesheets, and say in the report's first line that the screens are rebuilt, not captured. Never ship a preview with no screen in it.
+
+The preview goes where the project already shows its system, like a `/system` page or Storybook, if its rules allow it. Otherwise it is a single HTML file next to the report. In a chat it is an artifact, or the HTML file.
 
 **The report action ends here.** Say in two or three lines what the system would win, link the report and the preview, and offer apply.
 

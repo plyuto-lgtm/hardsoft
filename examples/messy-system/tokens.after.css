@@ -1,4 +1,4 @@
-/* The system after hardsoft: 6 masters and one scale of 8 steps.
+/* The system after hardsoft: 7 masters and one scale of 8 steps.
    Every old name still works (rule 26). Two colors are kept as they are, on the user's word. */
 
 :root {
@@ -9,6 +9,7 @@
 	--blue-900: #1e3a8a; /* a second master, approved: text on blue tints (rule 5) */
 	--red-600: #dc2626;
 	--green-600: #16a34a;
+	--violet-600: #7c3aed; /* the second brand color */
 
 	/* 2. Transparent tokens: a master at each step it uses. The scale is 5, 10, 20, 30, 40, 60, 70, 80 */
 	--gray-900-5: color-mix(in srgb, var(--gray-900) 5%, transparent);
@@ -23,6 +24,8 @@
 	--blue-600-30: color-mix(in srgb, var(--blue-600) 30%, transparent);
 	--red-600-5: color-mix(in srgb, var(--red-600) 5%, transparent);
 	--green-600-10: color-mix(in srgb, var(--green-600) 10%, transparent);
+	--violet-600-10: color-mix(in srgb, var(--violet-600) 10%, transparent);
+	--violet-600-20: color-mix(in srgb, var(--violet-600) 20%, transparent);
 
 	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 18) */
 	--blue-600-hover: color-mix(in srgb, var(--blue-600) 90%, var(--gray-900));
@@ -50,10 +53,17 @@
 	--blue-50: var(--blue-600-10);
 	--red-50: var(--red-600-5);
 	--green-50: var(--green-600-10);
+	--violet-100: var(--violet-600-20);
+	--violet-50: var(--violet-600-10);
 
 	/* Kept as they are: they fit no master at any step, and the user chose to keep them (rule 23) */
 	--slate-500: #6f7f96;
 	--slate-300: #c3cddb;
+
+	/* Untouched: the chart series are not part of this */
+	--chart-1: #f59e0b;
+	--chart-2: #06b6d4;
+	--chart-3: #ec4899;
 
 	/* 6. Semantic tokens: the same names, pointed at the new tokens (rule 25) */
 	--surface-card: var(--gray-900-5);
@@ -69,4 +79,20 @@
 	--button-primary-hover: var(--blue-600-hover);
 	--overlay: var(--gray-900-40);
 	--shadow-color: var(--gray-900-10);
+}
+
+/* Dark: the key colors change, and every token above follows. The two kept grays and the two
+   effects that must stay dark in both themes (rule 22) keep values of their own. */
+[data-theme='dark'] {
+	--gray-900: #f2f2f2;
+	--page: #0f0f10;
+	--blue-600: #3b76f0;
+	--blue-900: #93b4f8;
+	--red-600: #ef4444;
+	--green-600: #22c55e;
+	--violet-600: #8b5cf6;
+	--slate-500: #7f8da3;
+	--slate-300: #2b3340;
+	--overlay: rgba(0, 0, 0, 0.6);
+	--shadow-color: rgba(0, 0, 0, 0.4);
 }

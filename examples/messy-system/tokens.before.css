@@ -1,4 +1,4 @@
-/* The system before hardsoft: 35 solid colors, and a new one for every level and every state. */
+/* The system before hardsoft: 41 solid colors, a new one for every level and every state, and all of them again for dark. */
 
 :root {
 	/* Grays */
@@ -32,6 +32,14 @@
 	--green-600: #16a34a;
 	--green-50: #edf8f1;
 
+	/* A second brand color, and the chart series */
+	--violet-600: #7c3aed;
+	--violet-100: #e5d8fb;
+	--violet-50: #f2ebfd;
+	--chart-1: #f59e0b;
+	--chart-2: #06b6d4;
+	--chart-3: #ec4899;
+
 	/* Semantic */
 	--page: #ffffff;
 	--surface-card: #f3f3f3;
@@ -47,4 +55,50 @@
 	--button-primary-hover: var(--blue-700);
 	--overlay: rgba(0, 0, 0, 0.4);
 	--shadow-color: rgba(17, 17, 17, 0.12);
+}
+
+/* Dark: every value set by hand again */
+[data-theme='dark'] {
+	--page: #0f0f10;
+	--gray-900: #f2f2f2;
+	--gray-700: #c5c5c5;
+	--gray-600: #aeaeae;
+	--gray-500: #979798;
+	--gray-400: #6c6c6d;
+	--gray-300: #3f3f3f;
+	--gray-250: #3a3a3b;
+	--gray-200: #282829;
+	--gray-150: #232324;
+	--gray-100: #1d1d1e;
+	--gray-50: #181819;
+	--surface-card: #1a1a1b;
+	--surface-card-nested: #252526;
+	--surface-card-hover: #262627;
+	--border-subtle: #282829;
+	--border-strong: #3c3c3d;
+	--text-muted: #99999a;
+	--text-placeholder: #6a6a6a;
+	--slate-100: #1a1a1b;
+	--slate-200: #262627;
+	--slate-300: #2b3340;
+	--slate-500: #7f8da3;
+	--sidebar-bg: #1a1a1b;
+	--blue-600: #3b76f0;
+	--blue-50: #131926;
+	--blue-100: #18253f;
+	--blue-200: #1c2d51;
+	--blue-700: #4d82f0;
+	--blue-900: #93b4f8;
+	--red-600: #ef4444;
+	--red-50: #1c1213;
+	--green-600: #22c55e;
+	--green-50: #112118;
+	--violet-600: #8b5cf6;
+	--violet-100: #281e3e;
+	--violet-50: #1b1727;
+	--chart-1: #f59e0b;
+	--chart-2: #06b6d4;
+	--chart-3: #ec4899;
+	--overlay: rgba(0, 0, 0, 0.6);
+	--shadow-color: rgba(0, 0, 0, 0.4);
 }

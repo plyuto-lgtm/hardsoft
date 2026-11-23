@@ -19,6 +19,11 @@
 | Values to edit to change all the grays | <n> | 1 |
 | Values a second theme needs | <n> | <n> |
 
+| Family | Colors today | With a value of their own after | What they become |
+| --- | --- | --- | --- |
+| <every family of the system, one row each, none missing> | <n> | <n> | <"<master> at <n> steps", or "unchanged"> |
+| **All** | **<n>** | **<n>** | |
+
 **It stays <n>% the same.** <n> of <n> colors look exactly as they do today. <The ones that move, by name, and how visibly.>
 
 **What does not change:** your token names, your components, your brand colors, <anything else the interview protected>.
@@ -124,9 +129,9 @@ Every old name still works (rule 26). These can go when the team chooses.
 | --- | --- |
 | <name> | <same as another token, unused, unused shade of a ramp> |
 
-### Left out
+### Untouched
 
-<Gradients, photos, illustrations, charts, code highlighting, tool colors (rule 29). One line each.>
+<Colors that are counted and shown but not changed: gradients, photos, illustrations, charts, code highlighting, tool colors (rule 29), and any family the user put out of this, with their words. One line each. Never a brand or status family on your own call.>
 
 ### Decisions made
 

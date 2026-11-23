@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orders</title>
+<!-- One invented screen that uses the tokens the way a real app does. The same markup is drawn with
+     either token file: screen.html?tokens=before or ?tokens=after, and &theme=dark for the dark theme.
+     The two screenshots of it are what the preview compares. -->
+<script>
+	const q = new URLSearchParams(location.search);
+	document.write(`<link rel="stylesheet" href="tokens.${q.get('tokens') === 'after' ? 'after' : 'before'}.css">`);
+	if (q.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+</script>
+<style>
+	* { box-sizing: border-box; margin: 0; }
+	html { font: 14px/20px system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+	body { background: var(--page); color: var(--text); display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+	.muted { color: var(--text-muted); }
+	.small { font-size: 12px; line-height: 16px; }
+	aside { background: var(--sidebar-bg); padding: 16px 12px; display: grid; gap: 2px; align-content: start; }
+	aside b { padding: 8px 12px 16px; font-weight: 600; }
+	aside a { padding: 8px 12px; border-radius: 8px; color: var(--gray-700); }
+	aside a.on { background: var(--surface-card-hover); color: var(--text); }
+	main { padding: 24px 32px; display: grid; gap: 24px; align-content: start; }
+	header { display: flex; justify-content: space-between; align-items: center; }
+	h1 { font-size: 20px; line-height: 28px; font-weight: 600; }
+	.actions { display: flex; gap: 8px; }
+	.input { height: 36px; width: 240px; border-radius: 8px; padding: 0 12px; display: flex; align-items: center; border: 1px solid var(--border-strong); color: var(--text-placeholder); }
+	.button { height: 36px; border-radius: 8px; padding: 0 14px; display: flex; align-items: center; font-weight: 500; background: var(--gray-200); }
+	.button.primary { background: var(--button-primary); color: #fff; }
+	.button.hover { background: var(--button-primary-hover); color: #fff; }
+	.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+	.card { background: var(--surface-card); border-radius: 12px; padding: 16px; display: grid; gap: 12px; }
+	.card .card { background: var(--surface-card-nested); border-radius: 8px; padding: 12px; gap: 4px; }
+	.big { font-size: 24px; line-height: 32px; font-weight: 600; }
+	.bars { display: flex; align-items: end; gap: 4px; height: 40px; }
+	.bars i { flex: 1; border-radius: 3px; }
+	table { width: 100%; border-collapse: collapse; }
+	th { text-align: left; font-weight: 500; color: var(--text-muted); font-size: 12px; padding: 8px 12px; border-bottom: 1px solid var(--border-strong); }
+	td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); }
+	tr.hover td { background: var(--surface-card-hover); }
+	.tag { display: inline-flex; height: 22px; padding: 0 8px; border-radius: 6px; align-items: center; font-size: 12px; font-weight: 500; }
+	.tag.blue { background: var(--blue-100); color: var(--blue-900); }
+	.tag.red { background: var(--red-50); color: var(--red-600); }
+	.tag.green { background: var(--green-50); color: var(--green-600); }
+	.tag.violet { background: var(--violet-100); color: var(--violet-600); }
+	.tag.gray { background: var(--gray-150); color: var(--gray-600); }
+	.wrap { position: relative; }
+	.menu { position: absolute; right: 24px; top: 96px; width: 200px; padding: 4px; border-radius: 10px; background: var(--page); border: 1px solid var(--border-subtle); box-shadow: 0 12px 32px var(--shadow-color); }
+	.menu div { padding: 8px 12px; border-radius: 6px; }
+	.menu .on { background: var(--gray-100); }
+</style>
+</head>
+<body>
+<aside>
+	<b>Acme</b>
+	<a>Home</a><a class="on">Orders</a><a>Customers</a><a>Products</a><a>Reports</a>
+	<a class="muted">Settings</a>
+</aside>
+<main>
+	<header>
+		<h1>Orders</h1>
+		<div class="actions"><div class="input">Search orders</div><div class="button">Export</div><div class="button primary">New order</div><div class="button hover">Hovered</div></div>
+	</header>
+	<div class="stats">
+		<div class="card"><span class="muted small">Revenue</span><span class="big">$48,200</span><div class="bars"><i style="height:40%;background:var(--chart-1)"></i><i style="height:70%;background:var(--chart-1)"></i><i style="height:55%;background:var(--chart-2)"></i><i style="height:90%;background:var(--chart-2)"></i><i style="height:65%;background:var(--chart-3)"></i><i style="height:100%;background:var(--chart-3)"></i></div></div>
+		<div class="card"><span class="muted small">Open orders</span><span class="big">132</span><div class="card"><span>12 need attention</span><span class="muted small">Oldest is 4 days late</span></div></div>
+		<div class="card"><span class="muted small">Returns</span><span class="big">2.4%</span><div class="card"><span>Down from 3.1%</span><span class="muted small">Last 30 days</span></div></div>
+	</div>
+	<div class="card wrap">
+		<table>
+			<tr><th>Order</th><th>Customer</th><th>Status</th><th>Plan</th><th>Total</th></tr>
+			<tr><td>#1042</td><td>Maya Lind</td><td><span class="tag green">Paid</span></td><td><span class="tag violet">Pro</span></td><td>$240.00</td></tr>
+			<tr class="hover"><td>#1041</td><td>Jon Aro</td><td><span class="tag blue">Shipped</span></td><td><span class="tag gray">Free</span></td><td>$89.00</td></tr>
+			<tr><td>#1040</td><td>Ines Costa</td><td><span class="tag red">Failed</span></td><td><span class="tag violet">Pro</span></td><td>$1,120.00</td></tr>
+			<tr><td>#1039</td><td class="muted">Guest</td><td><span class="tag gray">Draft</span></td><td><span class="tag gray">Free</span></td><td>$32.50</td></tr>
+			<tr><td>#1038</td><td>Tom Becker</td><td><span class="tag green">Paid</span></td><td><span class="tag blue">Team</span></td><td>$610.00</td></tr>
+		</table>
+		<div class="menu"><div>Open</div><div class="on">Duplicate</div><div>Refund</div></div>
+	</div>
+</main>
+</body>
+</html>
