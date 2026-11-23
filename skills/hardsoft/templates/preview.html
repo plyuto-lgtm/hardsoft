@@ -16,78 +16,106 @@
 const system = /*hardsoft:data*/ {"name":"Example","scale":"fewer","fit":2,"steps":[5,20,60],"light":{"ground":"#ffffff","ink":"#111111"},"dark":{"ground":"#0e0e0e","ink":"#f2f2f2"},"tokens":[{"name":"white","group":"Ground","value":"#ffffff","on":"#ffffff","kind":"master","dark":{"value":"#0e0e0e","on":"#0e0e0e"}},{"name":"gray-900","group":"gray","value":"#111111","on":"#ffffff","kind":"master","dark":{"value":"#f2f2f2","on":"#0e0e0e"}},{"name":"gray-500","group":"gray","value":"#707070","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":60,"shift":0.4,"dark":{"value":"#979797","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.3}},{"name":"gray-200","group":"gray","value":"#cfcfcf","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":20,"shift":0.2,"dark":{"value":"#3c3c3c","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.2}},{"name":"gray-50","group":"gray","value":"#f3f3f3","on":"#ffffff","kind":"soft","master":"gray-900","masterValue":"#111111","step":5,"shift":0.1,"dark":{"value":"#191919","on":"#0e0e0e","masterValue":"#f2f2f2","shift":0.1}},{"name":"blue-600","group":"blue","value":"#2563eb","on":"#ffffff","kind":"master"},{"name":"blue-100","group":"blue","value":"#d3e0fb","on":"#ffffff","kind":"soft","master":"blue-600","masterValue":"#2563eb","step":20,"shift":0.3},{"name":"blue-900","group":"blue","value":"#1e3a8a","on":"#ffffff","kind":"kept"},{"name":"chart-1","group":"chart","value":"#f59e0b","on":"#ffffff","kind":"untouched"}],"screens":[]} /*hardsoft:end*/;
 </script>
 <style>
+	/* The page's own look. It follows the platform: the system font, large titles, grouped lists,
+	   segmented controls, hairlines, and the reader's light or dark setting. None of it comes from the system shown. */
 	* { box-sizing: border-box; margin: 0; }
-	:root { --text: #111; --quiet: #6b6b6b; --line: #e8e8e8; --page: #fff; --panel: #f5f5f5; }
-	html { font: 14px/20px system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
-	body { background: var(--page); color: var(--text); padding: 40px 24px 96px; }
-	main { max-width: 1120px; margin: 0 auto; display: grid; gap: 64px; }
-	h1 { font-size: 20px; line-height: 28px; font-weight: 500; }
-	h2 { font-size: 20px; line-height: 28px; font-weight: 500; margin-bottom: 4px; }
-	h3 { font-size: 14px; line-height: 20px; font-weight: 500; }
-	.quiet { color: var(--quiet); }
-	.small { font-size: 12px; line-height: 16px; }
-	.head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+	:root {
+		color-scheme: light dark;
+		--bg: #f5f5f7; --card: #fff; --label: #1d1d1f; --second: #6e6e73; --third: #aeaeb2; --hair: rgb(0 0 0 / 0.1);
+		--fill: rgb(118 118 128 / 0.12); --seg: #fff; --bar: rgb(245 245 247 / 0.72); --warn: #b25000;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root { --bg: #000; --card: #1c1c1e; --label: #f5f5f7; --second: #98989d; --third: #636366; --hair: rgb(255 255 255 / 0.14); --fill: rgb(118 118 128 / 0.24); --seg: #636366; --bar: rgb(0 0 0 / 0.72); --warn: #ff9f0a; }
+	}
+	html { font: 17px/1.47 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.022em; }
+	body { background: var(--bg); color: var(--label); }
+	.second { color: var(--second); }
+	.foot { font-size: 13px; line-height: 18px; letter-spacing: -0.006em; }
+	.num { font-variant-numeric: tabular-nums; }
+	[hidden] { display: none !important; }
 
-	/* The three proofs */
-	.proofs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-	.proof { background: var(--panel); border-radius: 16px; padding: 20px; display: grid; gap: 16px; align-content: space-between; min-height: 176px; }
-	.figure { font-size: 48px; line-height: 52px; font-weight: 500; letter-spacing: -0.03em; }
-	.figure s { text-decoration: none; color: #b0b0b0; }
-	.dots { display: flex; flex-wrap: wrap; gap: 4px; }
-	.dot { width: 24px; height: 24px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); }
+	nav { position: sticky; top: 0; z-index: 2; height: 48px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 0.5px solid var(--hair); font-size: 15px; }
+	nav b { font-weight: 600; }
+	main { max-width: 1080px; margin: 0 auto; padding: 0 24px 120px; }
+
+	.hero { padding: 88px 0 56px; text-align: center; }
+	.hero h1 { font: 600 clamp(40px, 7vw, 72px)/1.05 -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif; letter-spacing: -0.035em; }
+	.hero h1 s { text-decoration: none; color: var(--third); }
+	.hero p { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.3; color: var(--second); max-width: 620px; margin: 20px auto 0; letter-spacing: -0.02em; }
+
+	.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+	.stat { background: var(--card); border-radius: 22px; padding: 24px; display: grid; gap: 20px; align-content: space-between; min-height: 200px; }
+	.stat .big { font: 600 48px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.03em; margin-bottom: 8px; }
+	.stat .big s { text-decoration: none; color: var(--third); }
+	.dots { display: flex; flex-wrap: wrap; gap: 5px; }
+	.dot { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 0.5px var(--hair); }
+
+	section { margin-top: 96px; }
+	.title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 24px; }
+	h2 { font: 600 32px/1.12 -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; letter-spacing: -0.028em; }
+	.title p { color: var(--second); margin-top: 6px; }
+	h3 { font-size: 17px; font-weight: 600; }
+	.card { background: var(--card); border-radius: 22px; }
+
+	/* Segmented control */
+	.seg { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--fill); }
+	.seg button { font: inherit; font-size: 13px; font-weight: 500; letter-spacing: -0.006em; border: 0; background: none; color: var(--label); height: 28px; padding: 0 14px; border-radius: 7px; cursor: pointer; }
+	.seg button[aria-pressed='true'] { background: var(--seg); box-shadow: 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04); font-weight: 600; }
 
 	/* The screen, before and after */
-	.tabs { display: flex; flex-wrap: wrap; gap: 4px; }
-	.tab { font: inherit; border: 0; height: 32px; padding: 0 12px; border-radius: 8px; background: none; color: var(--quiet); cursor: pointer; }
-	.tab[aria-pressed='true'] { background: var(--panel); color: var(--text); }
-	.compare { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); line-height: 0; user-select: none; }
+	.compare { position: relative; border-radius: 22px; overflow: hidden; line-height: 0; user-select: none; box-shadow: 0 0 0 0.5px var(--hair), 0 24px 60px rgb(0 0 0 / 0.12); }
 	.compare img { display: block; width: 100%; }
-	.compare .old { position: absolute; inset: 0; overflow: hidden; width: var(--at, 50%); border-right: 1px solid #fff; box-shadow: 1px 0 0 rgb(0 0 0 / 0.3); }
+	.compare .old { position: absolute; inset: 0; overflow: hidden; width: var(--at, 50%); }
 	.compare .old img { width: auto; height: 100%; max-width: none; }
+	.compare .split { position: absolute; top: 0; bottom: 0; left: var(--at, 50%); width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.25); pointer-events: none; }
+	.compare .split::after { content: ''; position: absolute; top: 50%; left: 50%; width: 36px; height: 36px; margin: -18px; border-radius: 50%; background: #fff; box-shadow: 0 2px 10px rgb(0 0 0 / 0.3), 0 0 0 0.5px rgb(0 0 0 / 0.15); }
 	.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
-	.compare .tag { position: absolute; top: 12px; padding: 4px 8px; border-radius: 6px; background: rgb(0 0 0 / 0.72); color: #fff; font-size: 12px; line-height: 16px; pointer-events: none; }
-	.compare .tag.was { left: 12px; }
-	.compare .tag.now { right: 12px; }
+	.compare .tag { position: absolute; bottom: 16px; padding: 5px 11px; border-radius: 999px; background: rgb(30 30 30 / 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #fff; font-size: 13px; line-height: 18px; font-weight: 500; pointer-events: none; }
+	.compare .tag.was { left: 16px; }
+	.compare .tag.now { right: 16px; }
 
 	/* What replaces what */
-	.swap { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr); gap: 16px; align-items: start; padding: 20px 0; border-top: 1px solid var(--line); }
-	.swap .arrow { color: var(--quiet); text-align: center; line-height: 32px; }
-	.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-	.chip { width: 32px; height: 32px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); position: relative; overflow: hidden; }
-	.chip.step { width: 40px; display: grid; place-items: end center; font-size: 10px; line-height: 14px; }
+	.swap { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 20px; align-items: start; padding: 24px; }
+	.swap + .swap { border-top: 0.5px solid var(--hair); }
+	.swap .arrow { color: var(--third); text-align: center; font-size: 20px; line-height: 24px; }
+	.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+	.chip { width: 36px; height: 36px; border-radius: 10px; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.12); position: relative; overflow: hidden; }
+	.chip.step { width: 44px; display: grid; place-items: end center; font-size: 11px; line-height: 15px; font-weight: 600; color: #1d1d1f; letter-spacing: 0; }
+	.chip i, .mark i, .tile i { position: absolute; inset: 0; }
+	.chip span { position: relative; padding: 0 4px; border-radius: 5px; background: rgb(255 255 255 / 0.86); margin-bottom: 3px; }
 	/* The checkerboard under a transparent color, at 20%, so the color still reads */
 	.checker { background-image: conic-gradient(rgb(128 128 128 / 0.2) 25%, transparent 0 50%, rgb(128 128 128 / 0.2) 0 75%, transparent 0); background-size: 8px 8px; }
-	.chip i, .mark i { position: absolute; inset: 0; }
-	.chip span { position: relative; padding: 0 3px; border-radius: 3px; background: rgb(255 255 255 / 0.85); margin-bottom: 2px; }
 
-	/* Every color */
-	.filters { display: flex; flex-wrap: wrap; gap: 4px; }
-	.group { border-top: 1px solid var(--line); padding: 20px 0 8px; }
-	.group > header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
-	.rows { display: grid; gap: 6px; }
-	.row { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 220px; gap: 12px; align-items: center; }
-	.row.one { grid-template-columns: 200px minmax(0, 1fr) 220px; }
-	.row.labels { color: var(--quiet); font-size: 12px; line-height: 16px; }
-	.name { overflow-wrap: anywhere; }
+	/* Every color: grouped lists */
+	.group { margin-top: 32px; }
+	.group > header { display: flex; align-items: baseline; gap: 10px; padding: 0 24px 8px; }
+	.group > header span { color: var(--second); }
+	.cols { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; padding: 0 24px 8px; color: var(--second); }
+	.row { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr) 240px; gap: 16px; align-items: center; padding: 10px 24px; position: relative; }
+	.one .cols, .one .row { grid-template-columns: 200px minmax(0, 1fr) 240px; }
+	.row + .row::before { content: ''; position: absolute; top: 0; left: 24px; right: 0; border-top: 0.5px solid var(--hair); }
+	.name { overflow-wrap: anywhere; font-weight: 500; }
+	.name div + div { font-weight: 400; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0; }
 	/* A bar is a piece of the theme's ground with the color on it, so dark reads as dark */
-	.bar { padding: 6px 8px; border-radius: 8px; box-shadow: 0 0 0 1px var(--line); }
-	.bar > div { display: grid; grid-template-columns: 1fr 1fr; height: 28px; border-radius: 6px; overflow: hidden; }
-	.bar > div > div { position: relative; }
-	.bar i { position: absolute; inset: 0; }
+	.bar { padding: 6px; border-radius: 12px; box-shadow: inset 0 0 0 0.5px var(--hair); }
+	.tile { display: grid; grid-template-columns: 1fr 1fr; height: 32px; border-radius: 7px; overflow: hidden; }
+	.tile > div { position: relative; }
 	.now { display: flex; align-items: center; gap: 8px; min-width: 0; }
-	.mark { flex: none; width: 16px; height: 16px; border-radius: 4px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1); }
-	.moved { color: #a15c00; }
-	[hidden] { display: none !important; }
-	@media (max-width: 800px) {
-		.row, .row.one { grid-template-columns: 1fr 1fr; }
+	.mark { flex: none; width: 18px; height: 18px; border-radius: 5px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.15); }
+	.moved { color: var(--warn); }
+	@media (max-width: 860px) {
+		.row, .one .row { grid-template-columns: 1fr 1fr; }
+		.one .row { grid-template-columns: 1fr; }
 		.row .name, .row .now { grid-column: 1 / -1; }
-		.row.labels { display: none; }
+		.cols { display: none; }
 		.swap { grid-template-columns: 1fr; }
 		.swap .arrow { display: none; }
+		.hero { padding: 56px 0 40px; }
 	}
 </style>
 </head>
 <body>
+<nav><b id="brand"></b><span class="second">hardsoft preview</span></nav>
 <main id="page"></main>
 <script>
 const el = (tag, props = {}, children = []) => {
@@ -103,13 +131,23 @@ const paint = (node, ground, color) => {
 	node.append(i);
 	return node;
 };
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const tokens = system.tokens;
 const themes = ['light', ...(system.dark ? ['dark'] : [])];
 const soft = tokens.filter((t) => t.kind === 'soft');
 const solid = tokens.filter((t) => t.kind !== 'soft');
-const masters = tokens.filter((t) => t.kind === 'master');
 const moved = soft.filter((t) => t.shift > system.fit);
 const WORDS = { master: 'Key color, unchanged', kept: 'Unchanged', hard: 'Unchanged, solid on a hard surface', untouched: 'Unchanged' };
+
+// A segmented control: pick one of a few.
+function segmented(options, onPick) {
+	const box = el('div', { className: 'seg', role: 'group' }, options.map(([value, text], i) => {
+		const b = el('button', { textContent: text, ariaPressed: String(i === 0) });
+		b.onclick = () => { box.querySelectorAll('button').forEach((x) => (x.ariaPressed = String(x === b))); onPick(value); };
+		return b;
+	}));
+	return box;
+}
 
 // What a token was and is in one theme: { ground, was, now, shift }.
 function look(t, theme) {
@@ -123,58 +161,59 @@ function look(t, theme) {
 
 function bar(t, theme) {
 	const l = look(t, theme);
-	const box = el('div');
-	if (l.was && !l.fresh) box.append(paint(el('div'), l.ground, l.was));
+	const tile = el('div', { className: 'tile' });
+	if (l.was && !l.fresh) tile.append(paint(el('div'), l.ground, l.was));
 	const after = paint(el('div', { className: t.kind === 'soft' ? 'checker' : '' }), l.ground, l.now);
 	if (!l.was || l.fresh) after.style.gridColumn = '1 / -1';
-	box.append(after);
-	const wrap = el('div', { className: 'bar' }, [box]);
+	tile.append(after);
+	const wrap = el('div', { className: 'bar' }, [tile]);
 	wrap.style.background = system[theme].ground;
-	box.title = l.fresh ? `${theme}: no value today` : `${theme}: was ${l.was}${l.shift !== undefined ? `, shift ${l.shift}` : ''}`;
+	wrap.title = l.fresh ? `${theme}: no value today` : `${theme}: was ${l.was}${l.shift !== undefined ? `, shift ${l.shift}` : ''}`;
 	return wrap;
 }
 
+document.getElementById('brand').textContent = system.name;
 const page = document.getElementById('page');
-page.append(el('header', { className: 'head' }, [el('h1', { textContent: system.name }), el('span', { className: 'quiet', textContent: 'hardsoft preview' })]));
 
-// 1. The three proofs: fewer values, the key colors stay, it looks the same.
-const figure = (big, label, extra) => el('div', { className: 'proof' }, [el('div', {}, [el('div', { className: 'figure' }, big), el('div', { className: 'quiet', textContent: label })]), extra]);
+// 1. The claim, then the proofs: fewer values, the key colors stay, it looks the same.
+page.append(el('header', { className: 'hero' }, [
+	el('h1', { className: 'num' }, [el('s', { textContent: `${tokens.length} colors.` }), el('br'), `Now ${solid.length}.`]),
+	el('p', { textContent: `${plural(soft.length, 'color')} became a key color at a transparency. The app looks the same.` }),
+]));
+const stat = (big, label, extra) => el('div', { className: 'stat' }, [el('div', {}, [el('div', { className: 'big num' }, big), el('div', { textContent: label })]), extra]);
 const dots = (list) => el('div', { className: 'dots' }, list.map((t) => { const d = el('div', { className: 'dot', title: t.name }); d.style.background = t.value; return d; }));
-const proofs = el('section', { className: 'proofs' }, [
-	figure([el('s', { textContent: `${tokens.length} ` }), `${solid.length}`], 'Colors with a value of their own', el('div', { className: 'quiet small', textContent: `${soft.length} of them are now a key color at a transparency.` })),
-	figure([`${solid.length}`], 'Colors that stay exactly as they are', dots(solid)),
-	figure([`${soft.length - moved.length}`, el('s', { textContent: ` of ${soft.length}` })], 'Replaced colors that look the same', el('div', { className: 'quiet small', textContent: moved.length ? `${moved.length} move a little: ${moved.map((t) => t.name).join(', ')}.` : 'None of them moves.' })),
+const stats = el('div', { className: 'stats' }, [
+	stat([el('s', { textContent: `${tokens.length} ` }), `${solid.length}`], 'Colors with a value of their own', el('div', { className: 'second foot', textContent: `${soft.length} are now made from the ${solid.length}.` })),
+	stat([`${solid.length}`], 'Stay exactly as they are', dots(solid)),
+	stat([`${soft.length - moved.length}`, el('s', { textContent: ` of ${soft.length}` })], 'Replaced colors look the same', el('div', { className: 'second foot', textContent: moved.length ? `${moved.map((t) => t.name).join(', ')} ${moved.length === 1 ? 'moves' : 'move'} a little.` : 'None of them moves.' })),
 ]);
 if (system.dark) {
 	const had = tokens.filter((t) => t.dark);
 	const need = had.filter((t) => t.kind !== 'soft' || t.dark.shift > system.fit + 1);
-	proofs.append(figure([el('s', { textContent: `${had.length} ` }), `${need.length}`], 'Values the dark theme needs', el('div', { className: 'quiet small', textContent: 'Dark uses the same tokens. Only the key colors change.' })));
+	stats.append(stat([el('s', { textContent: `${had.length} ` }), `${need.length}`], 'Values the dark theme needs', el('div', { className: 'second foot', textContent: 'Dark uses the same tokens. Only the key colors change.' })));
 }
-page.append(proofs);
+page.append(stats);
 
 // 2. The real screens, before and after.
 if (system.screens.length) {
 	const view = el('div');
 	const show = (s) => {
 		const range = el('input', { type: 'range', min: 0, max: 100, value: 50, ariaLabel: 'Before and after' });
-		const old = el('div', { className: 'old' }, [el('img', { src: s.before, alt: `${s.name}, before` })]);
-		const box = el('div', { className: 'compare' }, [el('img', { src: s.after, alt: `${s.name}, after` }), old, el('span', { className: 'tag was', textContent: 'Today' }), el('span', { className: 'tag now', textContent: 'With hardsoft' }), range]);
+		const box = el('div', { className: 'compare' }, [el('img', { src: s.after, alt: `${s.name}, with hardsoft` }), el('div', { className: 'old' }, [el('img', { src: s.before, alt: `${s.name}, today` })]), el('div', { className: 'split' }), el('span', { className: 'tag was', textContent: 'Today' }), el('span', { className: 'tag now', textContent: 'With hardsoft' }), range]);
 		range.oninput = () => box.style.setProperty('--at', `${range.value}%`);
 		view.replaceChildren(box);
 	};
-	const tabs = el('div', { className: 'tabs' }, system.screens.map((s, i) => {
-		const b = el('button', { className: 'tab', textContent: s.name, ariaPressed: String(i === 0) });
-		b.onclick = () => { tabs.querySelectorAll('.tab').forEach((x) => (x.ariaPressed = String(x === b))); show(s); };
-		return b;
-	}));
 	show(system.screens[0]);
-	page.append(el('section', {}, [el('div', { className: 'head' }, [el('div', {}, [el('h2', { textContent: 'Your screens' }), el('p', { className: 'quiet', textContent: 'Drag to compare.' })]), tabs]), view]));
+	page.append(el('section', {}, [
+		el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'Your screens' }), el('p', { textContent: 'Drag to compare.' })]), system.screens.length > 1 ? segmented(system.screens.map((s) => [s, s.name]), show) : null]),
+		view,
+	]));
 }
 
 // 3. What replaces what: many solid colors on the left, one key color and its steps on the right.
 const used = [...new Set(soft.map((t) => t.master))];
 if (used.length) {
-	const section = el('section', {}, [el('h2', { textContent: 'What replaces what' }), el('p', { className: 'quiet', style: 'margin-bottom: 20px', textContent: 'The checkered squares are transparent.' })]);
+	const card = el('div', { className: 'card' });
 	for (const name of used) {
 		const mine = soft.filter((t) => t.master === name);
 		const steps = [...new Set(mine.map((t) => t.step))].sort((a, b) => a - b);
@@ -183,47 +222,39 @@ if (used.length) {
 		const key = el('div', { className: 'chip', title: `${name} ${value}` });
 		key.style.background = value;
 		const news = el('div', { className: 'chips' }, [key, ...steps.map((s) => { const c = el('div', { className: 'chip step checker', title: `${name} at ${s}%` }); c.style.backgroundColor = '#fff'; const i = el('i'); i.style.background = layer(value, s); c.append(i, el('span', { textContent: s })); return c; })]);
-		section.append(el('div', { className: 'swap' }, [
-			el('div', {}, [el('h3', { textContent: `${mine.length} ${mine.length === 1 ? 'color' : 'colors'}` }), olds]),
+		card.append(el('div', { className: 'swap' }, [
+			el('div', {}, [el('h3', { textContent: plural(mine.length, 'color') }), olds]),
 			el('div', { className: 'arrow', textContent: '→' }),
-			el('div', {}, [el('h3', { textContent: `${name} at ${steps.length} ${steps.length === 1 ? 'step' : 'steps'}` }), news]),
+			el('div', {}, [el('h3', { textContent: `${name} at ${plural(steps.length, 'step')}` }), news]),
 		]));
 	}
-	page.append(section);
+	page.append(el('section', {}, [el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'What replaces what' }), el('p', { textContent: 'Checkered tiles are transparent.' })])]), card]));
 }
 
 // 4. Every color of the system, grouped the way the system groups them.
 const groups = [...new Set(tokens.map((t) => t.group))];
-const list = el('div');
-const one = themes.length === 1 ? ' one' : '';
+const list = el('div', { className: themes.length === 1 ? 'one' : '' });
+list.append(el('div', { className: 'cols foot' }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `On the ${th} ground: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]));
 for (const g of groups) {
 	const mine = tokens.filter((t) => t.group === g);
 	const left = mine.filter((t) => t.kind !== 'soft').length;
-	const rows = el('div', { className: 'rows' }, [
-		el('div', { className: `row labels${one}` }, [el('span'), ...themes.map((th) => el('span', { textContent: themes.length > 1 ? `On the ${th} ground: today, with hardsoft` : 'Today, with hardsoft' })), el('span')]),
-		...mine.map((t) => {
-			const now = el('div', { className: 'now small' });
-			if (t.kind === 'soft') {
-				const far = t.shift > system.fit || (t.dark?.shift ?? 0) > system.fit;
-				now.append(paint(el('span', { className: 'mark checker' }), '#fff', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
-			} else now.append(el('span', { className: 'quiet', textContent: t.why ? `${WORDS[t.kind]}: ${t.why}` : WORDS[t.kind] }));
-			const row = el('div', { className: `row${one}` }, [el('div', { className: 'name' }, [el('div', { textContent: t.name }), el('div', { className: 'quiet small', textContent: t.value })]), ...themes.map((th) => bar(t, th)), now]);
-			row.dataset.kind = t.kind === 'soft' ? 'soft' : 'solid';
-			return row;
-		}),
-	]);
-	list.append(el('div', { className: 'group' }, [el('header', {}, [el('h3', { textContent: g }), el('span', { className: 'quiet', textContent: left === mine.length ? `${mine.length}, unchanged` : `${mine.length} → ${left}` })]), rows]));
+	const rows = el('div', { className: 'card' }, mine.map((t) => {
+		const now = el('div', { className: 'now foot' });
+		if (t.kind === 'soft') {
+			const far = t.shift > system.fit || (t.dark?.shift ?? 0) > system.fit;
+			now.append(paint(el('span', { className: 'mark checker' }), '#fff', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
+		} else now.append(el('span', { className: 'second', textContent: t.why ? `${WORDS[t.kind]}: ${t.why}` : WORDS[t.kind] }));
+		const row = el('div', { className: 'row' }, [el('div', { className: 'name foot' }, [el('div', { textContent: t.name }), el('div', { className: 'second', textContent: t.value })]), ...themes.map((th) => bar(t, th)), now]);
+		row.dataset.kind = t.kind === 'soft' ? 'soft' : 'solid';
+		return row;
+	}));
+	list.append(el('div', { className: 'group' }, [el('header', {}, [el('h3', { textContent: g }), el('span', { className: 'foot num', textContent: left === mine.length ? `${mine.length}, unchanged` : `${mine.length} → ${left}` })]), rows]));
 }
-const filters = el('div', { className: 'filters' }, [['all', `All ${tokens.length}`], ['soft', `Now transparent ${soft.length}`], ['solid', `Unchanged ${solid.length}`]].map(([kind, text], i) => {
-	const b = el('button', { className: 'tab', textContent: text, ariaPressed: String(i === 0) });
-	b.onclick = () => {
-		filters.querySelectorAll('.tab').forEach((x) => (x.ariaPressed = String(x === b)));
-		list.querySelectorAll('.row[data-kind]').forEach((r) => (r.hidden = kind !== 'all' && r.dataset.kind !== kind));
-		list.querySelectorAll('.group').forEach((gr) => (gr.hidden = !gr.querySelector('.row[data-kind]:not([hidden])')));
-	};
-	return b;
-}));
-page.append(el('section', {}, [el('div', { className: 'head' }, [el('div', {}, [el('h2', { textContent: 'Every color' }), el('p', { className: 'quiet', textContent: 'Left half today, right half with hardsoft.' })]), filters]), list]));
+const filters = segmented([['all', `All ${tokens.length}`], ['soft', `Now transparent ${soft.length}`], ['solid', `Unchanged ${solid.length}`]], (kind) => {
+	list.querySelectorAll('.row').forEach((r) => (r.hidden = kind !== 'all' && r.dataset.kind !== kind));
+	list.querySelectorAll('.group').forEach((gr) => (gr.hidden = !gr.querySelector('.row:not([hidden])')));
+});
+page.append(el('section', {}, [el('div', { className: 'title' }, [el('div', {}, [el('h2', { textContent: 'Every color' }), el('p', { textContent: 'Left half today, right half with hardsoft.' })]), filters]), list]));
 
 document.title = `${system.name}: hardsoft preview`;
 </script>
