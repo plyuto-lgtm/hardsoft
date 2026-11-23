@@ -3,7 +3,7 @@
 
 :root {
 	/* 1. Masters */
-	--gray-900: #111111; /* the ink */
+	--gray-900: #16181d; /* the ink */
 	--page: #ffffff; /* the ground */
 	--blue-600: #2563eb;
 	--blue-900: #1e3a8a; /* a second master, approved: text on blue tints (rule 5) */

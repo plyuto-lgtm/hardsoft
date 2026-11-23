@@ -62,7 +62,7 @@ Numbers from the worked example, [examples/messy-system](examples/messy-system):
 | Values to edit to change all the grays | 23 | 1 |
 | Values the dark theme needs | 42 | 14 |
 
-**Closeness: 98%.** 29 of the 30 replaced colors still look the same, and the other 12 are untouched. The one that moved is named, with how far.
+**Closeness: 95%.** 28 of the 30 replaced colors still look the same, and the other 12 are untouched. The one that moved is named, with how far.
 
 The report also lists:
 

@@ -28,7 +28,7 @@
 | effects | 2 | 0 | gray-900 at a step |
 | **All** | **42** | **12** | |
 
-**It stays 98% the same.** 29 of the 30 replaced colors look exactly as they did. One moved a little: the overlay under modals is a touch lighter.
+**It stays 95% the same.** 28 of the 30 replaced colors look exactly as they did. Two moved a little: the overlay under modals was pure black and now takes the ink's tint, and slate-200 lost a little of its blue.
 
 **What did not change:** every token name, every component, the brand blue and violet, red and green, the chart colors.
 
@@ -64,7 +64,7 @@ All answered. They are in "Decisions made" below.
 
 | Master | Value | Role |
 | --- | --- | --- |
-| gray-900 | #111111 | The ink |
+| gray-900 | #16181d | The ink |
 | page | #ffffff | The ground |
 | blue-600 | #2563eb | Brand |
 | blue-900 | #1e3a8a | Brand, dark: text on blue tints. New, approved (rule 5) |
@@ -78,7 +78,7 @@ All answered. They are in "Decisions made" below.
 | --- | --- | --- | --- |
 | Same look | 20: 3, 5, 6, 7, 8, 10, 11, 12, 16, 18, 20, 23, 30, 40, 41, 43, 60, 61, 70, 82 | 1.6 | 100% |
 | Fewer steps | 9: 5, 12, 18, 23, 30, 41, 61, 70, 82 | 2.4 | 94% |
-| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 2.2 | 98% |
+| Fewer steps, rounded | 8: 5, 10, 20, 30, 40, 60, 70, 80 | 3.1 | 95% |
 
 Chosen: fewer steps, rounded. The user asked for round numbers, and the skill scored that scale with `map --steps`.
 
@@ -88,29 +88,29 @@ Shift is how far a color moves. Under 2 the eye barely sees it. Closeness is the
 
 | Token | Was | Sits on | Now | Shift |
 | --- | --- | --- | --- | --- |
-| gray-700 | #3d3d3d | page | gray-900-80 | 1.4 |
-| gray-600 | #585858 | page | gray-900-70 | 0.1 |
-| gray-500 | #707070 | page | gray-900-60 | 0.1 |
-| gray-400 | #a0a0a0 | page | gray-900-40 | 0.1 |
-| gray-300 | #cfcfcf | page | gray-900-20 | 0.1 |
-| gray-250 | #d4d4d4 | page | gray-900-20 | 1.4 |
-| gray-200 | #e7e7e7 | page | gray-900-10 | 0.1 |
-| gray-150 | #ebebeb | page | gray-900-10 | 1.1 |
-| gray-100 | #f3f3f3 | page | gray-900-5 | 0 |
+| gray-700 | #414347 | page | gray-900-80 | 1.4 |
+| gray-600 | #5b5d60 | page | gray-900-70 | 0.1 |
+| gray-500 | #737477 | page | gray-900-60 | 0.1 |
+| gray-400 | #a2a3a5 | page | gray-900-40 | 0.1 |
+| gray-300 | #d0d0d1 | page | gray-900-20 | 0.1 |
+| gray-250 | #d5d5d6 | page | gray-900-20 | 1.4 |
+| gray-200 | #e7e8e8 | page | gray-900-10 | 0.1 |
+| gray-150 | #ebecec | page | gray-900-10 | 1.1 |
+| gray-100 | #f3f3f4 | page | gray-900-5 | 0 |
 | gray-50 | #f7f7f7 | page | gray-900-5 | 1.2 |
 | slate-200 | #dde3ec | page | gray-900-10 | 2 |
 | slate-100 | #eef1f6 | page | gray-900-5 | 1 |
-| surface-card | #f3f3f3 | page | gray-900-5 | 0 |
-| surface-card-nested | #e8e8e8 | surface-card | gray-900-5 | 0.1 |
-| surface-card-hover | #ececec | page | gray-900-10 | 1.5 |
+| surface-card | #f3f3f4 | page | gray-900-5 | 0 |
+| surface-card-nested | #e8e8e9 | surface-card | gray-900-5 | 0.1 |
+| surface-card-hover | #eceded | page | gray-900-10 | 1.5 |
 | sidebar-bg | #f0f3f8 | page | gray-900-5 | 0.8 |
-| border-subtle | #e5e5e5 | page | gray-900-10 | 0.7 |
-| border-strong | #c9c9c9 | page | gray-900-20 | 2 |
-| text-muted | #6f6f6f | page | gray-900-60 | 0.4 |
-| text-placeholder | #9e9e9e | page | gray-900-40 | 0.6 |
+| border-subtle | #e6e6e6 | page | gray-900-10 | 0.7 |
+| border-strong | #cacbcc | page | gray-900-20 | 2 |
+| text-muted | #727376 | page | gray-900-60 | 0.4 |
+| text-placeholder | #a0a1a3 | page | gray-900-40 | 0.6 |
 | overlay | rgba(0, 0, 0, 0.4) | page | gray-900-40 | 2.2 |
-| shadow-color | rgba(17, 17, 17, 0.12) | page | gray-900-10 | 1.4 |
-| blue-700 | #235bd5 | blue-600 | blue-600 with the ink at 10 over it | 0 |
+| shadow-color | rgba(22, 24, 29, 0.12) | page | gray-900-10 | 1.4 |
+| blue-700 | #245cd6 | blue-600 | blue-600 with the ink at 10 over it | 0 |
 | blue-200 | #bed1f9 | page | blue-600-30 | 0.2 |
 | blue-100 | #dbe6fc | page | blue-600-20 | 2 |
 | blue-50 | #eef3fe | page | blue-600-10 | 1.2 |
@@ -135,9 +135,9 @@ Each one measured over what it really lies on (rule 16).
 
 | Stroke | Was | Lies on | Now | Move to the hairline |
 | --- | --- | --- | --- | --- |
-| Card border | border-subtle #e5e5e5 | page | gray-900-10 | Yes: `--hairline`, in src/components/Card.css |
-| Input border | border-strong #c9c9c9 | page | gray-900-20 | Yes: `--hairline-strong`, in src/components/Input.css |
-| Divider | border-subtle #e5e5e5 | page | gray-900-10 | No: it is a line, not a stroke on a fill |
+| Card border | border-subtle #e6e6e6 | page | gray-900-10 | Yes: `--hairline`, in src/components/Card.css |
+| Input border | border-strong #cacbcc | page | gray-900-20 | Yes: `--hairline-strong`, in src/components/Input.css |
+| Divider | border-subtle #e6e6e6 | page | gray-900-10 | No: it is a line, not a stroke on a fill |
 
 A card border over the card's own transparent fill would read as two layers. As a hairline it is one.
 
@@ -145,7 +145,7 @@ A card border over the card's own transparent fill would read as two layers. As 
 
 | Element | State | Was | Now |
 | --- | --- | --- | --- |
-| Card | Hover | #ececec | gray-900-10: the next step |
+| Card | Hover | #eceded | gray-900-10: the next step |
 | Primary button | Hover | blue-700 | blue-600 with the ink at 10 over it |
 | Input | Focus | 2 px ring, blue-600 | The same ring, blue-600 |
 
