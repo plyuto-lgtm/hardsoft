@@ -55,7 +55,8 @@ const system = /*hardsoft:data*/ {"name":"Example","scale":"fewer","fit":2,"step
 	.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
 	.chip { width: 32px; height: 32px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); position: relative; overflow: hidden; }
 	.chip.step { width: 40px; display: grid; place-items: end center; font-size: 10px; line-height: 14px; }
-	.checker { background-image: conic-gradient(#d9d9d9 25%, #fff 0 50%, #d9d9d9 0 75%, #fff 0); background-size: 8px 8px; }
+	/* The checkerboard under a transparent color, at 20%, so the color still reads */
+	.checker { background-image: conic-gradient(rgb(128 128 128 / 0.2) 25%, transparent 0 50%, rgb(128 128 128 / 0.2) 0 75%, transparent 0); background-size: 8px 8px; }
 	.chip i, .mark i { position: absolute; inset: 0; }
 	.chip span { position: relative; padding: 0 3px; border-radius: 3px; background: rgb(255 255 255 / 0.85); margin-bottom: 2px; }
 
@@ -94,7 +95,7 @@ const el = (tag, props = {}, children = []) => {
 };
 const layer = (color, step) => `color-mix(in srgb, ${color} ${step}%, transparent)`;
 const paint = (node, ground, color) => {
-	node.style.background = ground;
+	node.style.backgroundColor = ground;
 	const i = el('i');
 	i.style.background = color;
 	node.append(i);
@@ -122,7 +123,7 @@ function bar(t, theme) {
 	const l = look(t, theme);
 	const box = el('div', { className: 'bar' });
 	if (l.was && !l.fresh) box.append(paint(el('div'), l.ground, l.was));
-	const after = paint(el('div'), l.ground, l.now);
+	const after = paint(el('div', { className: t.kind === 'soft' ? 'checker' : '' }), l.ground, l.now);
 	if (!l.was || l.fresh) after.style.gridColumn = '1 / -1';
 	box.append(after);
 	box.title = l.fresh ? `${theme}: no value today` : `${theme}: was ${l.was}${l.shift !== undefined ? `, shift ${l.shift}` : ''}`;
@@ -177,7 +178,7 @@ if (used.length) {
 		const olds = el('div', { className: 'chips' }, mine.map((t) => { const c = el('div', { className: 'chip', title: `${t.name} ${t.value}` }); paint(c, t.on, t.value); return c; }));
 		const key = el('div', { className: 'chip', title: `${name} ${value}` });
 		key.style.background = value;
-		const news = el('div', { className: 'chips' }, [key, ...steps.map((s) => { const c = el('div', { className: 'chip step checker', title: `${name} at ${s}%` }); const i = el('i'); i.style.background = layer(value, s); c.append(i, el('span', { textContent: s })); return c; })]);
+		const news = el('div', { className: 'chips' }, [key, ...steps.map((s) => { const c = el('div', { className: 'chip step checker', title: `${name} at ${s}%` }); c.style.backgroundColor = '#fff'; const i = el('i'); i.style.background = layer(value, s); c.append(i, el('span', { textContent: s })); return c; })]);
 		section.append(el('div', { className: 'swap' }, [
 			el('div', {}, [el('h3', { textContent: `${mine.length} ${mine.length === 1 ? 'color' : 'colors'}` }), olds]),
 			el('div', { className: 'arrow', textContent: '→' }),
@@ -200,7 +201,7 @@ for (const g of groups) {
 			const now = el('div', { className: 'now small' });
 			if (t.kind === 'soft') {
 				const far = t.shift > system.fit || (t.dark?.shift ?? 0) > system.fit;
-				now.append(paint(el('span', { className: 'mark checker' }), 'transparent', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
+				now.append(paint(el('span', { className: 'mark checker' }), '#fff', layer(t.masterValue, t.step)), el('span', {}, [`${t.master} at ${t.step}%`, far ? el('span', { className: 'moved', textContent: ' · moves a little' }) : null]));
 			} else now.append(el('span', { className: 'quiet', textContent: t.why ? `${WORDS[t.kind]}: ${t.why}` : WORDS[t.kind] }));
 			const row = el('div', { className: `row${one}` }, [el('div', { className: 'name' }, [el('div', { textContent: t.name }), el('div', { className: 'quiet small', textContent: t.value })]), ...themes.map((th) => bar(t, th)), now]);
 			row.dataset.kind = t.kind === 'soft' ? 'soft' : 'solid';
