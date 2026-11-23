@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.0
+
+- A fill on its own color is removed, not mapped. A header with the panel's color inside that panel can't be seen today, and as a transparent token it would stack and get darker. The skill finds these on the real screens, lists them, and takes the fill away with the user's yes.
+- Round steps come from one ladder: 3, 5, 7, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90.
+
 ## 2.2.0
 
 From the first run on a real product.

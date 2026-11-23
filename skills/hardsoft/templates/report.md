@@ -121,6 +121,14 @@ Not edited (rule 27). Each one should use the token next to it.
 | --- | --- | --- |
 | <path:line> | <value> | <token> |
 
+### Fills on their own color
+
+A fill with the same color as the surface under it. It can't be seen today, and a transparent token would stack there and get darker, so the fill goes (rule 17).
+
+| Element | Where | Token | Sits on | Remove |
+| --- | --- | --- | --- | --- |
+| <element> | <file:line> | <token> | <same token> | <yes, no> |
+
 ### Removable
 
 Every old name still works (rule 26). These can go when the team chooses.

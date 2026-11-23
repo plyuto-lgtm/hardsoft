@@ -16,6 +16,8 @@ import { dirname, extname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const FIT = 2; // a color fits a master when its shift is at most this
+// The ladder round steps come from: fine where a small change shows, coarse where it does not.
+export const LADDER = [3, 5, 7, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90];
 export const TOLERANCE = 3; // how far a color may move in the "fewer steps" scale
 
 // ---------- colors ----------
@@ -246,8 +248,8 @@ export function map(input, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {}
 		fewer = cheapest.steps;
 	}
 	const fewerCost = fewer.length ? cost(fewer) : { worst: 0, assigned: {} };
-	// Round steps: the fewer steps, each moved to the nearest 5. Easier to name and to remember.
-	const roundSteps = [...new Set(fewer.map((s) => Math.min(95, Math.max(5, Math.round(s / 5) * 5))))].sort((a, b) => a - b);
+	// Round steps: the fewer steps, each moved to the nearest step of the ladder. Easier to name and to remember.
+	const roundSteps = [...new Set(fewer.map((s) => LADDER.reduce((a, b) => (Math.abs(b - s) < Math.abs(a - s) ? b : a))))].sort((a, b) => a - b);
 	const roundCost = roundSteps.length ? cost(roundSteps) : { worst: 0, assigned: {} };
 	const given = steps.length ? [...steps].sort((a, b) => a - b) : null;
 	const givenCost = given ? cost(given) : null;

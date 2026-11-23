@@ -1,7 +1,7 @@
 {
   "name": "hardsoft",
   "description": "Apply the hard and soft surfaces concept to a design system: a few master colors, one alpha scale, solid hard surfaces and transparent soft ones. Report what you would win, then apply it.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "author": {
     "name": "Alexander Plyuto",
     "url": "https://plyuto.design"

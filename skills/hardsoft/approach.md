@@ -89,7 +89,7 @@ Every rule has a level. The level says how far it can bend.
 
 6. **One alpha scale** for all masters. `Strict` Each master uses only the steps it needs.
 7. **The steps come from the system.** `Default` Use the alphas it already has. Where it has solid grays, convert each one to the closest alpha of the ink over the background it sits on.
-8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Round steps are the fewer steps moved to the nearest 5, which are easier to name: 5, 10, 20 instead of 4, 9, 21. Show all three, with the number of steps and the biggest color shift in each. Don't recommend one.
+8. **The user chooses between fewer steps and the same look.** `Strict` With fewer steps, grays that land close together share one step and some colors move a little. With the same look, every old gray keeps its best match and the scale is longer. Round steps are the fewer steps moved to the nearest step of one ladder, which are easier to name: 3, 5, 7, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90. The ladder is fine at the light end, where one point shows, and coarse at the dark end, where it does not. Show all three, with the number of steps and the biggest color shift in each. Don't recommend one.
 9. **A new system starts from 80, 40, 20, 10 and 5.** `Advice` Use this only when there is nothing to take the steps from.
 
 ### Surfaces
@@ -103,7 +103,7 @@ Every rule has a level. The level says how far it can bend.
 16. **A transparent stroke is a hairline shadow, not a border.** `Default` A border sits on the edge of a shape, half over the fill and half over the surface behind it, or in CSS fully over the fill. So a transparent stroke on a transparent fill is laid over two things at once: it reads darker than its token, and uneven. Draw it as a hairline: a shadow with spread and no blur. A hairline can be added to any other shadow of the element, as one more layer in the list. Make it an inner shadow when the surface is darker than the background under it, and an outer shadow when it is brighter. Decide it in the light theme and keep it in dark, so an element's size never changes between themes.
     - Transfer old strokes with care. Measure a stroke over what it really lies on, the fill or the surface behind, not over the page.
     - The components are not edited (rule 27): give the system a hairline token, and list the borders that should move to it.
-17. **Nesting adds no colors.** `Strict` A nested level uses the same tokens as the level above it. Semantic tokens that named each level, like `surface-1` and `surface-2`, end up with the same value: say so, and list them as mergeable (rule 26). Point out places where soft surfaces are nested deeper than 3 or 4 levels.
+17. **Nesting adds no colors.** `Strict` A nested level uses the same tokens as the level above it. Semantic tokens that named each level, like `surface-1` and `surface-2`, end up with the same value: say so, and list them as mergeable (rule 26). Point out places where soft surfaces are nested deeper than 3 or 4 levels. A fill that has the same color as the surface it sits on is not a level: today it can't be seen, so after the change it has no fill at all. A transparent token laid on itself gets darker, and that is a mistake, not a new look. Find every such pair on the real screens and list it with the fill to remove (rule 27).
 
 ### States and themes
 
@@ -122,7 +122,7 @@ Every rule has a level. The level says how far it can bend.
 24. **A transparent token is named by its master and its step**, like `gray-darkest-20`. `Default` If the project already has a way to name them, keep it.
 25. **Semantics are left as they are.** `Strict` If the project has semantic tokens, keep them and point each one at a master or a transparent token. If it has none, add only the few that rules 20 and 22 need.
 26. **Old names keep working.** `Strict` Every token name that existed before still exists after, pointed at a master or a transparent token. Nothing is deleted. Duplicates, unused tokens and unused ramp shades go into the report as removable, for the team to remove when they choose.
-27. **Tokens only.** `Strict` Change the token layer and nothing else. A component with a color written directly in it, like a hex value or a one-off gray, is not edited: list it in the report with the token it should use.
+27. **Tokens only.** `Strict` Change the token layer and nothing else. A component with a color written directly in it, like a hex value or a one-off gray, is not edited: list it in the report with the token it should use. One exception: a fill on its own color (rule 17) is removed, with the user's yes for each.
 
 ### Care
 
