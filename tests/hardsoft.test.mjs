@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { parse, hex, over, shift, contrast, fitAlpha, parseLayer, stack, contrastReport, map } from '../skills/hardsoft/scripts/hardsoft.mjs';
 
 const example = JSON.parse(readFileSync(new URL('../examples/messy-system/system.json', import.meta.url), 'utf8'));
@@ -91,6 +92,29 @@ test('the map: offers a tinted ink and says what it costs', () => {
 	assert.ok(r.tint.otherGraysShift > 2, 'the grays with no tint pay for it');
 	const neutral = map({ ...example, colors: example.colors.filter((c) => !/slate|sidebar/.test(c.name)) });
 	assert.equal(neutral.tint, null);
+});
+
+test('the map: counts independent tokens and closeness', () => {
+	const r = map(example, { steps: [5, 10, 20, 30, 40, 60, 70, 80] });
+	assert.deepEqual(r.tokens, { independentBefore: 36, independentAfter: 8 });
+	assert.equal(r.scales.sameLook.closeness, 100);
+	assert.ok(r.scales.given.closeness < 100 && r.scales.given.closeness > 90);
+	assert.ok(r.scales.given.averageShift < r.scales.given.maxShift);
+});
+
+test('the map: a solid gray of a hard surface stays solid', () => {
+	const r = map({ ...example, colors: [...example.colors, { name: 'menu-bg', value: '#fafafa', hard: true }] });
+	const row = r.rows.find((x) => x.name === 'menu-bg');
+	assert.equal(row.isHard, true);
+	assert.equal(r.tokens.independentAfter, 9);
+	assert.ok(!r.misfits.includes('menu-bg'));
+});
+
+test('the shift command: an element on screen, old against new', () => {
+	const out = execFileSync(process.execPath, [new URL('../skills/hardsoft/scripts/hardsoft.mjs', import.meta.url).pathname, 'shift', '#e8e8e8', '--now', '#1111110d', '--on', '#ffffff', '#1111110d', '--json']);
+	const r = JSON.parse(out);
+	assert.equal(r.same, true);
+	assert.ok(r.shift < 0.5);
 });
 
 test('shift is zero for the same color and grows with the difference', () => {

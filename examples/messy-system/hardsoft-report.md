@@ -4,6 +4,17 @@
 
 35 solid colors became 6 masters and one scale of 8 steps. Three colors that only named a level or a state are gone. A dark theme would now need 5 values, not 28.
 
+## Benchmarks
+
+| | Before | After |
+| --- | --- | --- |
+| Independent tokens | 36 | 8: 6 masters, 2 kept as they are |
+| Dependent tokens | 3 | 46 |
+
+**Closeness: 97%.** 34 of 35 colors look the same. Average shift 0.7, biggest 2.2.
+
+An independent token has a value of its own. A dependent one is made from another token. A color looks the same when its shift is 2 or less.
+
 ## What you win
 
 | Goal | Before | After |
@@ -81,6 +92,18 @@ Shift is how far a color moves. Under 2 the eye barely sees it.
 | Modal | Hard | page, over the overlay gray-900-40 | 11 |
 | Sticky table header | Hard | page: rows scroll under it | 12 |
 
+## Strokes
+
+Each one measured over what it really lies on (rule 16).
+
+| Stroke | Was | Lies on | Now | Move to the hairline |
+| --- | --- | --- | --- | --- |
+| Card border | border-subtle #e5e5e5 | page | gray-900-10 | Yes: `--hairline`, in src/components/Card.css |
+| Input border | border-strong #c9c9c9 | page | gray-900-20 | Yes: `--hairline-strong`, in src/components/Input.css |
+| Divider | border-subtle #e5e5e5 | page | gray-900-10 | No: it is a line, not a stroke on a fill |
+
+A card border over the card's own transparent fill would read as two layers. As a hairline it is one.
+
 ## States
 
 | Element | State | Was | Now |
@@ -150,6 +173,7 @@ Every old name still works (rule 26). These can go when the team chooses.
 | Muted text in nested cards | Step 70 there | User | 28 |
 | Hover of the primary button | The ink at 10 over blue-600 | Skill | 18 |
 | Shadow color | gray-900-10, the shape untouched | Skill | 22 |
+| Strokes | Two hairline tokens added, borders listed | Skill | 16 |
 | Dark theme | Not added: nobody asked | Skill | 21 |
 
 ## Screens
@@ -159,5 +183,6 @@ The example has no product to take screenshots of. See [preview.html](preview.ht
 ## What is left
 
 - Three components still carry their own colors.
+- Two borders should move to the hairline tokens.
 - Eight tokens can be removed.
 - slate-300 and slate-500 stay outside the system until someone decides.

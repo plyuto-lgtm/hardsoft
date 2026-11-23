@@ -38,6 +38,11 @@ The article promises four things. The report measures the system against each of
 | **Quick tuning** | Values someone must edit to make all the grays a little warmer or lighter. After: one, the ink. |
 | **Easy theme conversion** | Values a second theme has to redefine. After: the ink and the ground, plus the few things that must look the same in both themes (rule 20). |
 
+The report opens with two short benchmarks, both from `map`:
+
+- **Independent tokens**, before and after. An independent token has a value of its own. A dependent one is made from another token. After, the independent ones are the masters, the solid grays of hard surfaces, and any color kept as it is.
+- **Closeness**: the share of the colors that still look the way they did, as a percent. A color looks the same when its shift is 2 or less. Give it with the average and the biggest shift.
+
 Count honestly. If a number does not get better, say so. If the system already fits, say that there is little to win and stop there.
 
 ## The color math
@@ -74,11 +79,37 @@ node scripts/hardsoft.mjs contrast --text "#111111@60" --on "#ffffff" "#111111@5
 
 - `on` is the background the color really sits on: a color, or the name of another color in the list. A nested card sits on its parent card, not on the page. Leave it out for the ground.
 - `master` fixes the master when the name or the use tells you the family, like a gray that happens to be close to a pale brand tint.
+- `"hard": true` marks a solid gray that belongs to a hard surface, like a menu or a raised panel. It stays solid (rule 14).
 - A token used over several backgrounds: map it where it is used most, and note the others in the plan.
 
 "Shift" is how far a color moves, as a distance in OKLab times 100. Under 2 the eye barely sees it. A color fits a master when its best alpha gives a shift of 2 or less. Past that it is not this master at a step (rule 23).
 
+```bash
+# One element on screen: its old color against its new layer, over what is under it
+node scripts/hardsoft.mjs shift "#e8e8e8" --now "#1111110d" --on "#ffffff" "#1111110d"
+```
+
 If you can't run code, do it by hand: alpha = (background − color) ÷ (background − master), for red, green and blue, then take the one alpha that fits all three best. `#f2f2f2` on white with a black ink is (255 − 242) ÷ (255 − 0), so it is the ink at 5%. Say in the report that the numbers were worked out by hand.
+
+## Seeing the real screens
+
+The token file does not show everything. What a color really lies on, which states exist, where a stroke overlaps a fill, which components carry their own colors: these are on the screen. [Census](https://github.com/leonidstern/census) reads a running page in the browser and writes every fill, text color, line and state as text, with the element and its place. It needs Node 22 or newer, Chrome, and the app running. It is a separate tool that `npx` downloads, so use it only where the project's rules allow that.
+
+```bash
+# Before any change: two or three real screens with nesting, a form and a menu
+npx @leonidstern/census capture --out census-before home=http://localhost:3000/ orders=http://localhost:3000/orders
+
+# After applying: the same screens, then what changed
+npx @leonidstern/census capture --out census-after home=http://localhost:3000/ orders=http://localhost:3000/orders
+npx @leonidstern/census diff census-before/census.json census-after/census.json
+```
+
+- **When you find and map the system**, read the capture. A fill inside another fill tells you the `on` of a color. `states` shows the real hovers. `line` shows the strokes and the elements they sit on. A value marked `near` another is a one-off gray. The number of values in `fill`, `text` and `line` is the honest count of colors on screen.
+- **After applying**, read the diff. Every changed element is listed with its old and new value. A new value is written with its alpha, like `#1111110d`, so run `shift` on each changed element, with what is under it, to see how far it moved on screen. This catches what the token table can't: muted text that now sits on a darker nested card, a stroke doubled over a fill, a hover that changed.
+- Anything in the diff that is not a color, like a size, a radius or a layout change, is a mistake of yours. Fix it.
+- Keep the captures out of the project, or delete them when you are done.
+
+If census can't run, use screenshots of the same screens, and say so in the report.
 
 ## How to work
 
@@ -89,6 +120,8 @@ In a codebase, read the project's rules, the tokens, the theme, the Tailwind con
 - Code that reads the token file, like a Storybook page that parses it, so you don't break it.
 - Colors written directly in components: hex values, `rgb()`, one-off grays, arbitrary Tailwind values. You will list them, not edit them (rule 27).
 - How each state is shown: hover, pressed, selected, disabled, focus (rules 18 and 19).
+- Strokes: every border, outline and divider, and what each one lies on (rule 16).
+- Solid grays that only hard surfaces use, like a menu or a raised panel (rule 14).
 - Shadows and gradients (rules 22 and 29).
 
 In a chat, use the files, screenshots and links in the thread. If there are none, ask for them.
@@ -104,16 +137,18 @@ In a chat, use the files, screenshots and links in the thread. If there are none
   | Element | It is |
   | --- | --- |
   | Card, button, input, divider, a sidebar beside the content | Soft |
-  | Menu, modal, tooltip, toast, popover | Hard |
+  | Menu, modal, tooltip, toast, popover | Hard. It may have a solid gray of its own (rule 14) |
   | Sticky header, sticky column or bottom bar that content scrolls under | Hard (rule 12) |
   | Stacked avatars, a badge on a card corner: anything that covers a neighbor | Hard (rule 12) |
   | A button on a brand banner | Soft, the banner is its ground (rule 13) |
   | A button or a label on a photo, a video or a gradient | Hard (rule 13) |
 
+- Transfer the strokes with care (rule 16). A transparent stroke lies over the fill of its own shape, or over the surface behind it, or over both. Give it the `on` it really has, not the page. Offer one hairline token, a shadow with spread and no blur, that can be added to any other shadow, and list the borders that should move to it.
+- Keep the solid grays of hard surfaces solid (rule 14). The scale is built from the three grays. A hard surface may still have a gray of its own.
 - Run `contrast` for text at the deepest nesting, for text on every solid color, and for the hovers of solid colors (rule 28).
 - List what does not fit, what is left out (rule 29), the components with their own colors (rule 27), and what becomes removable (rule 26).
 - Note what counts as unused only after the theme decision: a token that one theme doesn't use may be the ink of the other.
-- Count the four goals of the target, now and after.
+- Count the four goals of the target, now and after, and take the two benchmarks from `map`.
 
 ### 3. Write the report
 
@@ -149,8 +184,8 @@ The plan is the same report, updated with the answers: the chosen scale, the old
 - Don't edit components (rule 27). They keep working because the names do.
 - Keep the design of every state, and rebuild only its color (rules 18 and 19).
 - Check the result: the project builds and its own checks pass.
-- Take before and after screenshots of two or three real screens, the same screens at the same size, in each theme. Pick screens with nesting, a form and a menu. If you can't run the app, name the screens for the user to look at, and say that you could not check them.
-- Finish the report: the real numbers, the screenshots, what is left. Tell the user what changed and what is left in a few lines, with the link.
+- Check two or three real screens, the same ones before and after, in each theme: with census where it can run (see above), and with screenshots at the same size for the user to look at. Pick screens with nesting, a form and a menu. If you can't run the app, name the screens for the user to look at, and say that you could not check them.
+- Finish the report: the real numbers, what changed on the real screens, the screenshots, what is left. Tell the user what changed and what is left in a few lines, with the link.
 
 ### Theme
 

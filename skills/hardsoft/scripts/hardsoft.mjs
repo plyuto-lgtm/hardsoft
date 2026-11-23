@@ -2,11 +2,13 @@
 // hardsoft: the color math behind the skill. No dependencies, Node 18 or newer.
 //
 //   node hardsoft.mjs alpha <color> --master <color> [--on <background>]
+//   node hardsoft.mjs shift <old color> --now <layer> [--on <ground> <layer> ...]
 //   node hardsoft.mjs contrast --text <layer> --on <layer> [<layer> ...] [--steps 40,60,80]
 //   node hardsoft.mjs map <system.json> [--json] [--fit 2] [--tolerance 3] [--steps 5,10,20,40,60,80]
 //
 // A color is hex, rgb() or hsl(). A layer is a color, or a color at an alpha: "#111@60".
 // "Shift" is how far a color moves, as a distance in OKLab times 100. Under 2 the eye barely sees it.
+// "Closeness" is the share of the colors that still look the same: a shift of 2 or less.
 
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -155,6 +157,7 @@ export function contrastReport(text, layers, steps = []) {
  * system: { ground, ink, masters: { name: color }, colors: [{ name, value, on?, master? }] }
  * "on" is the background a color sits on: a color, the name of another color in the list, or
  * nothing for the ground. "master" forces a master, for a color you already know the family of.
+ * "hard": true marks a solid gray that belongs to a hard surface: it stays solid (rule 14).
  * steps: a scale of your own to score, like [5, 10, 20, 40, 60, 80].
  */
 export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {}) {
@@ -181,6 +184,8 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		const bg = background(entry);
 		const color = parse(entry.value);
 		const target = color.a < 1 ? over(color, bg) : color;
+		// A solid gray of a hard surface stays solid (rule 14). It is not a master, and not a step of one.
+		if (entry.hard) return { name: entry.name, value: entry.value, on: hex(bg), master: null, alpha: 100, step: 100, shift: 0, fits: true, isHard: true };
 		const exact = order.find((n) => shift(target, masters[n]) < 0.5);
 		if (exact && !entry.master) {
 			return { name: entry.name, value: entry.value, on: hex(bg), master: exact, alpha: 100, step: 100, shift: 0, fits: true, isMaster: true };
@@ -205,7 +210,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 		};
 	});
 
-	const fitting = rows.filter((r) => r.fits && !r.isMaster);
+	const fitting = rows.filter((r) => r.fits && !r.isMaster && !r.isHard);
 	const sameLook = [...new Set(fitting.map((r) => r.step))].sort((a, b) => a - b);
 
 	// Fewer steps: drop the step that costs the least, while no color moves further than the tolerance.
@@ -222,7 +227,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 			assigned[r.name] = { step: bestStep, shift: round(bestShift) };
 			worst = Math.max(worst, bestShift);
 		}
-		return { worst, assigned };
+		return { worst, assigned, shifts: Object.values(assigned).map((a) => a.shift) };
 	};
 	let fewer = [...sameLook];
 	while (fewer.length > 1) {
@@ -234,7 +239,7 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 	const fewerCost = fewer.length ? cost(fewer) : { worst: 0, assigned: {} };
 	const given = steps.length ? [...steps].sort((a, b) => a - b) : null;
 	const givenCost = given ? cost(given) : null;
-	const tint = suggestTint(rows.filter((r) => r.master === ink && !r.isMaster), masters[ink], ground, fit);
+	const tint = suggestTint(rows.filter((r) => r.master === ink && !r.isMaster && !r.isHard), masters[ink], ground, fit);
 	for (const r of rows) {
 		if (fewerCost.assigned[r.name]) r.fewer = fewerCost.assigned[r.name];
 		if (givenCost?.assigned[r.name]) r.given = givenCost.assigned[r.name];
@@ -245,18 +250,27 @@ export function map(system, { fit = FIT, tolerance = TOLERANCE, steps = [] } = {
 
 	const misfits = rows.filter((r) => !r.fits);
 	// The ground is a color of the system too, and a master: the brightest gray.
+	// Closeness: how much of the system still looks the way it did. Masters and kept colors have not moved.
+	const closeness = (shifts) => {
+		const all = [...shifts, ...rows.filter((r) => r.isMaster || r.isHard || !r.fits).map(() => 0)];
+		return { closeness: Math.round((100 * all.filter((d) => d <= fit).length) / all.length), averageShift: round(all.reduce((a, b) => a + b, 0) / all.length) };
+	};
+	const listed = new Set(system.colors.map((c) => hex(solid(c)))).has(hex(ground)) ? 0 : 1;
 	const distinct = new Set([hex(ground), ...system.colors.map((c) => hex(solid(c)))]).size;
-	const usedMasters = new Set([hex(ground), ...rows.filter((r) => r.fits).map((r) => hex(masters[r.master]))]);
+	const usedMasters = new Set([hex(ground), ...rows.filter((r) => r.fits && !r.isHard).map((r) => hex(masters[r.master]))]);
+	const hard = rows.filter((r) => r.isHard);
 
 	return {
 		rows,
 		scales: {
-			sameLook: { steps: sameLook, count: sameLook.length, maxShift: round(Math.max(0, ...fitting.map((r) => r.shift))) },
-			fewer: { steps: fewer, count: fewer.length, maxShift: round(fewerCost.worst) },
-			...(given ? { given: { steps: given, count: given.length, maxShift: round(givenCost.worst) } } : {}),
+			sameLook: { steps: sameLook, count: sameLook.length, maxShift: round(Math.max(0, ...fitting.map((r) => r.shift))), ...closeness(fitting.map((r) => r.shift)) },
+			fewer: { steps: fewer, count: fewer.length, maxShift: round(fewerCost.worst), ...closeness(fewerCost.shifts ?? []) },
+			...(given ? { given: { steps: given, count: given.length, maxShift: round(givenCost.worst), ...closeness(givenCost.shifts) } } : {}),
 		},
 		misfits: misfits.map((r) => r.name),
 		tint,
+		// An independent token has a value of its own. A dependent one is made from another token.
+		tokens: { independentBefore: system.colors.length + listed, independentAfter: usedMasters.size + hard.length + misfits.length },
 		wins: { colorsBefore: distinct, masters: usedMasters.size, stepsSameLook: sameLook.length, stepsFewer: fewer.length, leftOver: misfits.length },
 	};
 }
@@ -328,7 +342,8 @@ function table(result) {
 	const own = result.scales.given;
 	const lines = [`| Token | Value | On | Master | Same look | Shift | Fewer steps | Shift |${own ? ' Your scale | Shift |' : ''}`, `| --- | --- | --- | --- | --- | --- | --- | --- |${own ? ' --- | --- |' : ''}`];
 	for (const r of result.rows) {
-		if (r.isMaster) lines.push(`| ${r.name} | ${r.value} | ${r.on} | ${r.master} | master | 0 | master | 0 |${own ? ' master | 0 |' : ''}`);
+		if (r.isHard) lines.push(`| ${r.name} | ${r.value} | ${r.on} | solid, hard surface | - | 0 | - | 0 |${own ? ' - | 0 |' : ''}`);
+		else if (r.isMaster) lines.push(`| ${r.name} | ${r.value} | ${r.on} | ${r.master} | master | 0 | master | 0 |${own ? ' master | 0 |' : ''}`);
 		else if (!r.fits) lines.push(`| ${r.name} | ${r.value} | ${r.on} | does not fit | - | ${r.shift} | - | - |${own ? ' - | - |' : ''}`);
 		else lines.push(`| ${r.name} | ${r.value} | ${r.on} | ${r.master} | ${r.step}% | ${r.shift} | ${r.fewer.step}% | ${r.fewer.shift} |${own ? ` ${r.given.step}% | ${r.given.shift} |` : ''}`);
 	}
@@ -336,9 +351,10 @@ function table(result) {
 	const w = result.wins;
 	lines.push(
 		'',
-		`Same look: ${sameLook.count} steps (${sameLook.steps.join(', ')}), biggest shift ${sameLook.maxShift}.`,
-		`Fewer steps: ${fewer.count} steps (${fewer.steps.join(', ')}), biggest shift ${fewer.maxShift}.`,
-		...(own ? [`Your scale: ${own.count} steps (${own.steps.join(', ')}), biggest shift ${own.maxShift}.`] : []),
+		`Same look: ${sameLook.count} steps (${sameLook.steps.join(', ')}), biggest shift ${sameLook.maxShift}, closeness ${sameLook.closeness}%.`,
+		`Fewer steps: ${fewer.count} steps (${fewer.steps.join(', ')}), biggest shift ${fewer.maxShift}, closeness ${fewer.closeness}%.`,
+		...(own ? [`Your scale: ${own.count} steps (${own.steps.join(', ')}), biggest shift ${own.maxShift}, closeness ${own.closeness}%.`] : []),
+		`Independent tokens: ${result.tokens.independentBefore} before, ${result.tokens.independentAfter} after (the masters, the solid grays of hard surfaces, and the colors that fit nothing).`,
 		`Colors: ${w.colorsBefore} before. After: ${w.masters} masters and ${w.stepsSameLook} steps (same look) or ${w.stepsFewer} steps (fewer).`,
 	);
 	if (result.misfits.length) lines.push(`Does not fit: ${result.misfits.join(', ')}.`);
@@ -374,6 +390,14 @@ function main(argv) {
 		const step = Math.max(1, Math.round(r.alpha * 100));
 		const out = { alpha: round(r.alpha * 100), step, result: hex(r.result), shift: round(r.shift), fits: r.shift <= FIT };
 		console.log(a.json ? JSON.stringify(out, null, 2) : `${out.step}% (exact ${out.alpha}%), gives ${out.result}, shift ${out.shift}${out.fits ? '' : ': does not fit this master'}`);
+	} else if (command === 'shift') {
+		// How far one element moved on screen: its old solid color against its new layer over what is under it.
+		if (!a._[0] || !one('now')) throw new Error('Use: shift <old color> --now <layer> [--on <ground> <layer> ...]');
+		const under = stack((a.on?.length ? a.on : ['#ffffff']).map(parseLayer));
+		const before = over(parse(a._[0]), under);
+		const after = over(parseLayer(one('now')), under);
+		const out = { before: hex(before), after: hex(after), shift: round(shift(before, after)), same: shift(before, after) <= FIT };
+		console.log(a.json ? JSON.stringify(out, null, 2) : `${out.before} is now ${out.after}, shift ${out.shift}: ${out.same ? 'looks the same' : 'a visible change'}`);
 	} else if (command === 'contrast') {
 		if (!one('text') || !a.on?.length) throw new Error('Use: contrast --text <layer> --on <ground> [<layer> ...] [--steps 40,60,80]');
 		const steps = one('steps', '').split(',').filter(Boolean).map(Number);
@@ -386,7 +410,7 @@ function main(argv) {
 		const result = map(JSON.parse(readFileSync(a._[0], 'utf8')), { fit: Number(one('fit', FIT)), tolerance: Number(one('tolerance', TOLERANCE)), steps: one('steps', '').split(',').filter(Boolean).map(Number) });
 		console.log(a.json ? JSON.stringify(result, null, 2) : table(result));
 	} else {
-		console.log('hardsoft: alpha, contrast or map. See the top of this file.');
+		console.log('hardsoft: alpha, shift, contrast or map. See the top of this file.');
 		process.exitCode = command ? 1 : 0;
 	}
 }

@@ -8,6 +8,17 @@
 
 <Two or three lines: what the system wins, in numbers.>
 
+## Benchmarks
+
+| | Before | After |
+| --- | --- | --- |
+| Independent tokens | <n> | <n>: <n> masters, <n> solid grays of hard surfaces, <n> kept as they are |
+| Dependent tokens | <n> | <n> |
+
+**Closeness: <n>%.** <n> of <n> colors look the same. Average shift <n>, biggest <n>.
+
+An independent token has a value of its own. A dependent one is made from another token. A color looks the same when its shift is 2 or less.
+
 ## What you win
 
 | Goal | Now | After |
@@ -45,6 +56,14 @@ Shift is how far a color moves. Under 2 the eye barely sees it.
 | Surface | Hard or soft | Made of | Rule |
 | --- | --- | --- | --- |
 | <card, menu, sticky header...> | <hard, soft> | <token, or solid color with its edge> | <number> |
+
+## Strokes
+
+Each one measured over what it really lies on (rule 16).
+
+| Stroke | Was | Lies on | Now | Move to the hairline |
+| --- | --- | --- | --- | --- |
+| <input border, divider...> | <value> | <the fill, the surface behind> | <token> | <yes, with the file, or no> |
 
 ## States
 
@@ -96,7 +115,13 @@ Every old name still works (rule 26). These can go when the team chooses.
 
 ## Screens
 
-<After applying. The same screens at the same size, before and after, in each theme. Or the list of screens to check by eye.>
+<After applying. The same screens before and after, in each theme.>
+
+| Screen | Elements that changed color | Biggest shift on screen | Anything else changed |
+| --- | --- | --- | --- |
+| <name> | <n> | <shift, and the element> | <none, or what> |
+
+<How it was checked: census, screenshots, or the list of screens to check by eye.>
 
 ## What is left
 

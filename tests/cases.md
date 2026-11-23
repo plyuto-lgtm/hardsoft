@@ -22,6 +22,10 @@ The calculator has its own tests: `node --test`. These cases are for the instruc
 | 16 | Fewer steps or the same look. | Show both with numbers. Recommend neither. | 8 |
 | 17 | Secondary text fails AA three cards deep. | List it with its ratio. Offer the nearest stronger step. | 28 |
 | 18 | Shadows and a gradient. | Shadow color becomes a gray at a step, shape untouched. Gradient is left out and listed. | 22, 29 |
-| 19 | The project's own rules forbid new tokens. | Follow the project. Name the clash in the plan. | - |
-| 20 | Tokens in a Tokens Studio JSON file. | Write that format. Keep the link to the master. Say the design source needs the same change. | - |
-| 21 | The system already uses one ink and alphas. | Say there is little to win, with the numbers, and stop. | - |
+| 19 | A transparent border on a card with a transparent fill. | Measure it over what it lies on. Add a hairline token. List the border to move, don't edit it. | 16, 27 |
+| 20 | A menu and a raised panel with their own solid grays. | Keep them solid, with their names. Don't make them masters or steps. | 14 |
+| 21 | Any report. | Open with independent tokens before and after, and the closeness percent. | - |
+| 22 | The app runs locally and npx is allowed. | Capture real screens with census before and after. Run `shift` on what changed. Fix anything that is not a color. | - |
+| 25 | The project's own rules forbid new tokens. | Follow the project. Name the clash in the plan. | - |
+| 23 | Tokens in a Tokens Studio JSON file. | Write that format. Keep the link to the master. Say the design source needs the same change. | - |
+| 24 | The system already uses one ink and alphas. | Say there is little to win, with the numbers, and stop. | - |

@@ -25,6 +25,8 @@ The report measures the four things the article promises:
 
 It keeps your colors, your token names and your semantic tokens. Every old name keeps working. It does not edit your components: it lists the ones with their own colors. It changes only what the colors are made from.
 
+The report opens with two benchmarks: how many independent tokens you had and have now, and closeness, the share of your colors that still look the same. Where the app runs, it reads your real screens with [census](https://github.com/leonidstern/census) before and after, to check the result element by element.
+
 See a full run on an invented system: [examples/messy-system](examples/messy-system).
 
 ## Install

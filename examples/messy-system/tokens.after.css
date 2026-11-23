@@ -27,7 +27,11 @@
 	/* 3. Hover of a solid color: the ink at 10% laid over it (rule 18) */
 	--blue-600-hover: color-mix(in srgb, var(--blue-600) 90%, var(--gray-900));
 
-	/* 4. Old names, kept (rule 26) */
+	/* 4. The hairline: a transparent stroke drawn as a shadow (rule 16) */
+	--hairline: 0 0 0 1px var(--gray-900-10);
+	--hairline-strong: inset 0 0 0 1px var(--gray-900-20);
+
+	/* 5. Old names, kept (rule 26) */
 	--gray-700: var(--gray-900-80);
 	--gray-600: var(--gray-900-70);
 	--gray-500: var(--gray-900-60);
@@ -51,7 +55,7 @@
 	--slate-500: #6f7f96;
 	--slate-300: #c3cddb;
 
-	/* 5. Semantic tokens: the same names, pointed at the new tokens (rule 25) */
+	/* 6. Semantic tokens: the same names, pointed at the new tokens (rule 25) */
 	--surface-card: var(--gray-900-5);
 	--surface-card-nested: var(--gray-900-5); /* the same token again (rule 17) */
 	--surface-card-hover: var(--gray-900-10);
