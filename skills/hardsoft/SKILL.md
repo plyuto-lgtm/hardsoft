@@ -135,7 +135,7 @@ In a chat, use the files, screenshots and links in the thread. If there are none
 - A ramp, like blue 50 to 900, is one master and its tints (rule 5). Note which shades the interface really uses.
 - Every family keeps its key color as a master, also the second and third brand colors and each status color. Never drop a family because it is rare, decorative or used in gradients. Only the user can put a family out of this. Then its colors are marked `"untouched": true` with a `"why"`, and they are still counted and still shown, unchanged.
 - Give each color a `"group"` when its name does not show its family (`surface-card` goes to "surface"). Put the second theme in `"dark"`: its ground, the dark value of each master, and the dark value each token has today.
-- Write `system.json` and run `map`. It gives every color its master and step, the three scales: same look, fewer steps, and the fewer steps moved to round numbers (rule 8), what does not fit, and the tint check (rule 4).
+- Write `system.json` and run `map`. It gives every color its master and step, the three scales: same look, fewer steps, and the fewer steps moved to the round ladder 3, 5, 7, 10, 15, 20, 25, 30, 40, 50 and on by tens (rule 8), what does not fit, and the tint check (rule 4).
 - Mark every surface as hard or soft (rules 10 to 13). The cases people get wrong:
 
   | Element | It is |
@@ -147,6 +147,7 @@ In a chat, use the files, screenshots and links in the thread. If there are none
   | A button on a brand banner | Soft, the banner is its ground (rule 13) |
   | A button or a label on a photo, a video or a gradient | Hard (rule 13) |
 
+- Look for a fill that sits on its own color: a section header with the panel's token inside that panel, a row with the card's token inside that card. Today it can't be seen. As a transparent token it would stack and get darker, so it is a fill to remove, not a color to map (rule 17). List each one with its file and line. In the preview stylesheet, set those elements to no fill, so the screens show the real result.
 - Transfer the strokes with care (rule 16). A transparent stroke lies over the fill of its own shape, or over the surface behind it, or over both. Give it the `on` it really has, not the page. Offer one hairline token, a shadow with spread and no blur, that can be added to any other shadow, and list the borders that should move to it.
 - Keep the solid grays of hard surfaces solid (rule 14). The scale is built from the three grays. A hard surface may still have a gray of its own.
 - Run `contrast` for text at the deepest nesting, for text on every solid color, and for the hovers of solid colors (rule 28).
@@ -237,10 +238,10 @@ The plan is the same report, updated with the answers: the chosen scale, the old
 - The templates are patterns with no colors. Every color, step and name you write comes from the system.
 - Write only the steps each master really uses, not every master at every step.
 - Every old name keeps working, pointed at a master or a transparent token (rule 26). Point the semantic tokens the same way (rule 25).
-- Don't edit components (rule 27). They keep working because the names do.
+- Don't edit components (rule 27). They keep working because the names do. The one exception is a fill on its own color (rule 17): remove that fill, each one the user said yes to in the plan. If the user says no, that token stays solid and counts as kept.
 - Keep the design of every state, and rebuild only its color (rules 18 and 19).
 - Check the result: the project builds and its own checks pass.
-- Check two or three real screens, the same ones before and after, in each theme: with census where it can run (see above), and with screenshots at the same size for the user to look at. Pick screens with nesting, a form and a menu. If you can't run the app, name the screens for the user to look at, and say that you could not check them.
+- Check two or three real screens, the same ones before and after, in each theme: with census where it can run (see above), and with screenshots at the same size for the user to look at. Pick screens with nesting, a form and a menu. Nothing that had no visible fill before may show one now: an element that got darker than its surface when it matched it before is a fill on its own color you missed, so fix it before you show anything. If you can't run the app, name the screens for the user to look at, and say that you could not check them.
 - Finish the report: the real numbers, what changed on the real screens, the screenshots, what is left. Tell the user what changed and what is left in a few lines, with the link.
 
 ### Theme
